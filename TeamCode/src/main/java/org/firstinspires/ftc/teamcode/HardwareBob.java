@@ -14,13 +14,11 @@ public class HardwareBob {
     public HardwareMap hwmap = null;
     private ElapsedTime runtime = new ElapsedTime(); //idk what it does, just trying to get public methods to work
     
-<<<<<<< HEAD
-=======
+
     public HardwareBob() {
     
     }
 
->>>>>>> 7ffc12ddaa375f32757245761af18a44c0aa91de
     public void init(HardwareMap aMap){
         // Hardware Map assignment
         hwmap = aMap;
@@ -65,8 +63,12 @@ public class HardwareBob {
         rightFrontMotor.setPower(DRIVE_SPEED);
         rightBackMotor.setPower(DRIVE_SPEED);
         runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < x)) {
+        //TODO Does this code have to be in the opMode?
+        /*while (opModeIsActive() && (runtime.seconds() < x)) {
             idle();
+        }*/
+        while ((runtime.seconds() < x)) {
+            wait();
         }
     }
 }

@@ -11,6 +11,13 @@ public class HardwareBob {
 
     public HardwareMap hwmap = null;
     
+<<<<<<< HEAD
+=======
+    public HardwareBob() {
+    
+    }
+
+>>>>>>> 7ffc12ddaa375f32757245761af18a44c0aa91de
     public void init(HardwareMap aMap){
         // Hardware Map assignment
         hwmap = aMap;
@@ -22,19 +29,19 @@ public class HardwareBob {
         rightBackMotor = hwmap.dcMotor.get("Right_Back_Motor");
 
         //Set Mode
-
         rightFrontMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftBackMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightBackMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftFrontMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         //Set Power to 0
+        stopMoving();
+
+    }
+    public void stopMoving() {
         rightFrontMotor.setPower(0);
         leftBackMotor.setPower(0);
         rightBackMotor.setPower(0);
         leftFrontMotor.setPower(0);
-
-
-
     }
 }

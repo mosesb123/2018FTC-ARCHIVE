@@ -10,7 +10,7 @@ public class HardwareBob {
     public DcMotor rightBackMotor = null;
 
     public HardwareMap hwmap = null;
-
+    
     public void init(HardwareMap aMap){
         // Hardware Map assignment
         hwmap = aMap;

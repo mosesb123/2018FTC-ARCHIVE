@@ -57,10 +57,10 @@ public class HardwareBob {
         leftFrontMotor.setPower(0);
     }
     public void driveStraight(double x) throws InterruptedException {
-        robot.leftFrontMotor.setPower((DRIVE_SPEED + LEFT_MOTOR_OFFSET));
-        robot.leftBackMotor.setPower((DRIVE_SPEED + LEFT_MOTOR_OFFSET));
-        robot.rightFrontMotor.setPower(DRIVE_SPEED);
-        robot.rightBackMotor.setPower(DRIVE_SPEED);
+        leftFrontMotor.setPower((DRIVE_SPEED + LEFT_MOTOR_OFFSET));
+        leftBackMotor.setPower((DRIVE_SPEED + LEFT_MOTOR_OFFSET));
+        rightFrontMotor.setPower(DRIVE_SPEED);
+        rightBackMotor.setPower(DRIVE_SPEED);
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < x)) {
             idle();

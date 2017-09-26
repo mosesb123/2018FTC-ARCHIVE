@@ -29,15 +29,15 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Pushbot: Auto Drive To Corner Red Close", group="Pushbot")
+@Autonomous(name="Pushbot: autoNoDelayRedLeft", group="Pushbot")
 public class autoNoDelayRedLeft extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareBob robot   = new HardwareBob();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
 
-
     static final double     FORWARD_SPEED = 0.6;
+
     static final double     LEFT_MOTOR_OFFSET = 0.0; //Probably > 0 because robot moves left when going straight
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP

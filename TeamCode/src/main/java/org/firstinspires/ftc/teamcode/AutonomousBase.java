@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
@@ -30,14 +32,16 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  */
 
 @Autonomous(name="Pushbot: autoNoDelayRedLeft", group="Pushbot")
-public class autoNoDelayRedLeft extends LinearOpMode {
+public class AutonomousBase extends OpMode {
 
     /* Declare OpMode members. */
-    HardwareBob robot   = new HardwareBob();   // Use a Pushbot's hardware
+    HardwareBigBoy robot   = new HardwareBigBoy();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
+    private ElapsedTime     runtime2 = new ElapsedTime();
+    static final double     COLOR_ARM_ANGLE = ; //need to test
+    private String teamColor = "" //our teams color, 2 dif autos
 
     static final double     FORWARD_SPEED = 0.6;
-
     static final double     LEFT_MOTOR_OFFSET = 0.0; //Probably > 0 because robot moves left when going straight
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
@@ -65,10 +69,8 @@ public class autoNoDelayRedLeft extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        driveStraight(1.2);
-        turnLeft(1.5);
-        driveStraight(2);
-        stopDriving();
+       colorActions();
+        cryptoActions(); //unfinished
 
         telemetry.addData("Path", "Complete");
 
@@ -83,11 +85,14 @@ public class autoNoDelayRedLeft extends LinearOpMode {
         robot.rightFrontMotor.setPower(0);
         robot.leftBackMotor.setPower(0);
         robot.rightBackMotor.setPower(0);
+        rightServoArm.setPosition(robot.SLIDE_ARM_HOME);
+        leftServoArm.setPosition(robot.SLIDE_ARM_HOME);
+        colorServoArm.setPostition(robot.COLOR_ARM_HOME);
     }
 
     private void driveStraight(double x) throws InterruptedException {
-        robot.leftFrontMotor.setPower((DRIVE_SPEED+LEFT_MOTOR_OFFSET));
-        robot.leftBackMotor.setPower((DRIVE_SPEED+LEFT_MOTOR_OFFSET));
+        robot.leftFrontMotor.setPower((DRIVE_SPEED + LEFT_MOTOR_OFFSET));
+        robot.leftBackMotor.setPower((DRIVE_SPEED + LEFT_MOTOR_OFFSET));
         robot.rightFrontMotor.setPower(DRIVE_SPEED);
         robot.rightBackMotor.setPower(DRIVE_SPEED);
         runtime.reset();
@@ -95,6 +100,29 @@ public class autoNoDelayRedLeft extends LinearOpMode {
             idle();
         }
     }
+    private void driveBackwards(double x) throws InterruptedException {
+        robot.leftFrontMotor.setPower((-1*DRIVE_SPEED+LEFT_MOTOR_OFFSET));
+        robot.leftBackMotor.setPower((-1*DRIVE_SPEED+LEFT_MOTOR_OFFSET));
+        robot.rightFrontMotor.setPower(-1*DRIVE_SPEED);
+        robot.rightBackMotor.setPower(-1*DRIVE_SPEED);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < x)) {
+            idle();
+        }
+    }
+    private void driveStraightThenBack() throws InterruptedException {
+        runtime2.reset();
+        while (runtime2.seconds < 2.5)
+            driveStraight(runtime);
+        driveBackwards(2.5);
+    }
+    private void driveStraightThenBack() throws InterruptedException {
+        runtime2.reset();
+        while (runtime2.seconds < 2.5)
+            driveBackwards(runtime);
+        driveStraight(2.5);
+    }
+
     private void turnLeft(double x) throws InterruptedException {
         robot.leftFrontMotor.setPower(-(TURN_SPEED+LEFT_MOTOR_OFFSET));
         robot.leftBackMotor.setPower(-(TURN_SPEED+LEFT_MOTOR_OFFSET));
@@ -107,5 +135,25 @@ public class autoNoDelayRedLeft extends LinearOpMode {
             idle();
         }
     }
-
+    private void colorActions() throws InturruptedException { //this all assumes that teamColor == our teams color and the color sensor is in the same direction that forward drive is
+        robot.colorServoArm.setPosition(COLOR_ARM_ANGLE);
+        boolean red = colorSensor.red();
+        boolean blue = colorSensor.blue();
+        double trueColor = red - blue;
+        if (teamColor.compareTo("blue") == 0 && trueColor < 0)
+            driveStraightThenBack();
+        else if (teamColor.compareTo("red") == 0 && trueColor > 0)
+            driveBackThenStraight();
+        robot.colorServoArm.setPosition(robot.COLOR_ARM_HOME);
+    }
 }
+    private void cryptoActions() throws InturruptedException { //finished, none of the other functions are written though
+        int picture = imageSense(); //EASY DOGGY
+        if (imageSense == 1)
+            leftKey(); // drive to put it in the left
+        else if (imageSense == 2)
+            middleKey(); // drive to put it in the middle
+        else
+            rightKey(); //drive to put it in the right
+        stopDriving();
+    }

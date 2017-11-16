@@ -3,19 +3,33 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 
-public class HardwareBob {
+public class HardwareBigBoy {
     public DcMotor rightFrontMotor = null;
     public DcMotor leftFrontMotor = null;
     public DcMotor leftBackMotor = null;
     public DcMotor rightBackMotor = null;
 
+    public Servo rightServoArm = null;
+    public Servo leftServoArm = null;
+    public DcMotor rightSlide = null;
+    public DcMotor leftSlide = null;
+    public final static double  SLIDE_ARM_HOME; //need to test and find, probs 0.0
+    public final static double SLIDE_MIN_RANGE; //need to test and find, probs 0.0
+    public final static double SLIDE_MAX_RANGE; //need to test and find, probs 0.5
+
+    public Servo colorServoArm = null;
+    public ColorSensor colorSensor = null;
+    public final static double  COLOR_ARM_HOME; //need to test and find
+
     public HardwareMap hwmap = null;
     private ElapsedTime runtime = new ElapsedTime(); //idk what it does, just trying to get public methods to work
     
 
-    public HardwareBob() {
+    public HardwareBigBoy() {
     
     }
 
@@ -29,11 +43,26 @@ public class HardwareBob {
         leftBackMotor = hwmap.dcMotor.get("Left_Back_Motor");
         rightBackMotor = hwmap.dcMotor.get("Right_Back_Motor");
 
+        rightServoArm = hwmap.servo.get("Right_Servo_Arm");
+        leftServoArm = hwmap.servo.get("Left_Servo_Arm");
+        rightSlide = hwmap.dcMotor.get("Right_Slide");
+        leftSlide= hwmap.dcMotor.get("Left_Slide");
+
+        colorServoArm = hwmap.servo.get("Color_Servo_Arm");
+        colorSensor = hwMap.colorSensor.get("color");
+
+
+
         //Set Mode
         rightFrontMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftBackMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightBackMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftFrontMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        slideRight.setMode(DcMotor.RunMode.RUN_WITH_ENCODER);
+        slideLeft.setMode(DcMotor.RunMode.RUN_WITH_ENCODER);
+        rightServoArm.setPosition(SLIDE_ARM_HOME);
+        leftServoArm.setPosition(SLIDE_ARM_HOME);
+        colorServoArm.setPostition(COLOR_ARM_HOME);
 
         //Set Power to 0
         stopMoving();
@@ -56,6 +85,7 @@ public class HardwareBob {
         leftBackMotor.setPower(0);
         rightBackMotor.setPower(0);
         leftFrontMotor.setPower(0);
+
     }
     public void driveStraight(double x) throws InterruptedException {
         leftFrontMotor.setPower((DRIVE_SPEED + LEFT_MOTOR_OFFSET));

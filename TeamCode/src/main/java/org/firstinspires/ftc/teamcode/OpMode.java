@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.robotcontroller.external.samples;
+package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -113,19 +113,21 @@ public class OpMode extends LinearOpMode {
                 ;//lower slides, *(gamepad1.left_trigger + 1)
              else if (gamepad1.right_trigger >= .2) //if right Trigger is pressed
                 ;//raise slides *(gamepad1.right_trigger + 1)
-            if(gamepad.left_bumper) //slide clamps
+            if(gamepad1.left_bumper) //slide clamps
                 slideArmPosition += ARM_SPEED;
-            else if(gamepad.right_bumper)
+            else if(gamepad1.right_bumper)
                 slideArmPosition -= ARM_SPEED;
 
             slideArmPosition = Range.clip(slideArmPosition, robot.SLIDE_MIN_RANGE, robot.SLIDE_MAX_RANGE); //make sure position is allowed
-            robot.arm.setPosition(slideArmPosition); //set position of servos
+            robot.rightServoArm.setPosition(slideArmPosition); //set position of servos
+            robot.leftServoArm.setPosition(slideArmPosition); //set position of servos
+
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());// value of slide servo arm
             telemetry.addData("Slide motors", "Angle", slideArmPosition);
             telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
-            telemetry.addData("Lets go Big Boy");
+            telemetry.addData("Let's go Big Boy", "Big Boy");
             telemetry.update();
         }
     }

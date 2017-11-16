@@ -17,6 +17,7 @@ public class HardwareBigBoy {
     public Servo leftServoArm = null;
     public DcMotor rightSlide = null;
     public DcMotor leftSlide = null;
+
     public final static double  SLIDE_ARM_HOME; //need to test and find, probs 0.0
     public final static double SLIDE_MIN_RANGE; //need to test and find, probs 0.0
     public final static double SLIDE_MAX_RANGE; //need to test and find, probs 0.5
@@ -49,7 +50,7 @@ public class HardwareBigBoy {
         leftSlide= hwmap.dcMotor.get("Left_Slide");
 
         colorServoArm = hwmap.servo.get("Color_Servo_Arm");
-        colorSensor = hwMap.colorSensor.get("color");
+        colorSensor = hwmap.colorSensor.get("color");
 
 
 
@@ -58,11 +59,11 @@ public class HardwareBigBoy {
         leftBackMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightBackMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftFrontMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        slideRight.setMode(DcMotor.RunMode.RUN_WITH_ENCODER);
-        slideLeft.setMode(DcMotor.RunMode.RUN_WITH_ENCODER);
+        rightSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightServoArm.setPosition(SLIDE_ARM_HOME);
         leftServoArm.setPosition(SLIDE_ARM_HOME);
-        colorServoArm.setPostition(COLOR_ARM_HOME);
+        colorServoArm.setPosition(COLOR_ARM_HOME);
 
         //Set Power to 0
         stopMoving();

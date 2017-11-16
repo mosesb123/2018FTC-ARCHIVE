@@ -38,8 +38,8 @@ public class AutonomousBase extends LinearOpMode {
     HardwareBigBoy robot   = new HardwareBigBoy();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
     private ElapsedTime     runtime2 = new ElapsedTime();
-    static final double     COLOR_ARM_ANGLE = ; //need to test
-    private String teamColor = "" //our teams color, 2 dif autos
+    static final double     COLOR_ARM_ANGLE = .3; //need to test
+    private String teamColor = ""; //our teams color, 2 dif autos
 
     static final double     FORWARD_SPEED = 0.6;
     static final double     LEFT_MOTOR_OFFSET = 0.0; //Probably > 0 because robot moves left when going straight
@@ -69,8 +69,8 @@ public class AutonomousBase extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-       colorActions();
-        cryptoActions(); //unfinished
+        colorActions();
+//        cryptoActions(); //unfinished
 
         telemetry.addData("Path", "Complete");
 
@@ -85,9 +85,9 @@ public class AutonomousBase extends LinearOpMode {
         robot.rightFrontMotor.setPower(0);
         robot.leftBackMotor.setPower(0);
         robot.rightBackMotor.setPower(0);
-        rightServoArm.setPosition(robot.SLIDE_ARM_HOME);
-        leftServoArm.setPosition(robot.SLIDE_ARM_HOME);
-        colorServoArm.setPostition(robot.COLOR_ARM_HOME);
+        robot.rightServoArm.setPosition(robot.SLIDE_ARM_HOME);
+        robot.leftServoArm.setPosition(robot.SLIDE_ARM_HOME);
+        robot.colorServoArm.setPosition(robot.COLOR_ARM_HOME);
     }
 
     private void driveStraight(double x) throws InterruptedException {
@@ -101,8 +101,8 @@ public class AutonomousBase extends LinearOpMode {
         }
     }
     private void driveBackwards(double x) throws InterruptedException {
-        robot.leftFrontMotor.setPower((-1*DRIVE_SPEED+LEFT_MOTOR_OFFSET));
-        robot.leftBackMotor.setPower((-1*DRIVE_SPEED+LEFT_MOTOR_OFFSET));
+        robot.leftFrontMotor.setPower((-1*(DRIVE_SPEED+LEFT_MOTOR_OFFSET)));
+        robot.leftBackMotor.setPower((-1*(DRIVE_SPEED+LEFT_MOTOR_OFFSET));
         robot.rightFrontMotor.setPower(-1*DRIVE_SPEED);
         robot.rightBackMotor.setPower(-1*DRIVE_SPEED);
         runtime.reset();
@@ -112,14 +112,14 @@ public class AutonomousBase extends LinearOpMode {
     }
     private void driveStraightThenBack() throws InterruptedException {
         runtime2.reset();
-        while (runtime2.seconds < 2.5)
-            driveStraight(runtime);
+        while (runtime2.seconds() < 2.5)
+            driveStraight(runtime.seconds());
         driveBackwards(2.5);
     }
-    private void driveStraightThenBack() throws InterruptedException {
+    private void driveBackThenStraight() throws InterruptedException {
         runtime2.reset();
-        while (runtime2.seconds < 2.5)
-            driveBackwards(runtime);
+        while (runtime2.seconds() < 2.5)
+            driveBackwards(runtime.seconds());
         driveStraight(2.5);
     }
 
@@ -135,10 +135,10 @@ public class AutonomousBase extends LinearOpMode {
             idle();
         }
     }
-    private void colorActions() throws InturruptedException { //this all assumes that teamColor == our teams color and the color sensor is in the same direction that forward drive is
+    private void colorActions() throws InterruptedException { //this all assumes that teamColor == our teams color and the color sensor is in the same direction that forward drive is
         robot.colorServoArm.setPosition(COLOR_ARM_ANGLE);
-        boolean red = colorSensor.red();
-        boolean blue = colorSensor.blue();
+        int red = robot.colorSensor.red();
+        int blue = robot.colorSensor.blue();
         double trueColor = red - blue;
         if (teamColor.compareTo("blue") == 0 && trueColor < 0)
             driveStraightThenBack();
@@ -147,13 +147,13 @@ public class AutonomousBase extends LinearOpMode {
         robot.colorServoArm.setPosition(robot.COLOR_ARM_HOME);
     }
 }
-    private void cryptoActions() throws InturruptedException { //finished, none of the other functions are written though
-        int picture = imageSense(); //EASY DOGGY
-        if (imageSense == 1)
-            leftKey(); // drive to put it in the left
-        else if (imageSense == 2)
-            middleKey(); // drive to put it in the middle
-        else
-            rightKey(); //drive to put it in the right
-        stopDriving();
-    }
+//    private void cryptoActions() throws InterruptedException { //finished, none of the other functions are written though
+//        int picture = imageSense(); //EASY DOGGY
+//        if (imageSense == 1)
+//            leftKey(); // drive to put it in the left
+//        else if (imageSense == 2)
+//            middleKey(); // drive to put it in the middle
+//        else
+//            rightKey(); //drive to put it in the right
+//        stopDriving();
+//    }

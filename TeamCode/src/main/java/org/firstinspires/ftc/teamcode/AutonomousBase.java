@@ -35,22 +35,21 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 public class AutonomousBase extends LinearOpMode {
 
     /* Declare OpMode members. */
-    HardwareBigBoy robot   = new HardwareBigBoy();   // Use a Pushbot's hardware
-    private ElapsedTime     runtime = new ElapsedTime();
-    private ElapsedTime     runtime2 = new ElapsedTime();
-    static final double     COLOR_ARM_ANGLE = .3; //need to test
+    HardwareBigBoy robot = new HardwareBigBoy();   // Use a Pushbot's hardware
+    private ElapsedTime runtime = new ElapsedTime();
+    private ElapsedTime runtime2 = new ElapsedTime();
+    static final double COLOR_ARM_ANGLE = .3; //need to test
     private String teamColor = ""; //our teams color, 2 dif autos
 
-    static final double     FORWARD_SPEED = 0.6;
-    static final double     LEFT_MOTOR_OFFSET = 0.0; //Probably > 0 because robot moves left when going straight
-    static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
-    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
-    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+    static final double FORWARD_SPEED = 0.6;
+    static final double LEFT_MOTOR_OFFSET = 0.0; //Probably > 0 because robot moves left when going straight
+    static final double COUNTS_PER_MOTOR_REV = 1440;    // eg: TETRIX Motor Encoder
+    static final double DRIVE_GEAR_REDUCTION = 2.0;     // This is < 1.0 if geared UP
+    static final double WHEEL_DIAMETER_INCHES = 4.0;     // For figuring circumference
+    static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.6;
-    static final double     TURN_SPEED              = 0.5;
-
+    static final double DRIVE_SPEED = 0.6;
+    static final double TURN_SPEED = 0.5;
 
 
     @Override
@@ -70,8 +69,8 @@ public class AutonomousBase extends LinearOpMode {
         waitForStart();
 
         colorActions();
-//        cryptoActions(); //unfinished
-
+        cryptoActions(); //unfinished
+        robot.stopMoving();
         telemetry.addData("Path", "Complete");
 
         telemetry.update();
@@ -79,16 +78,6 @@ public class AutonomousBase extends LinearOpMode {
         idle();
     }
 
-
-    private void stopDriving() {
-        robot.leftFrontMotor.setPower(0);
-        robot.rightFrontMotor.setPower(0);
-        robot.leftBackMotor.setPower(0);
-        robot.rightBackMotor.setPower(0);
-        robot.rightServoArm.setPosition(robot.SLIDE_ARM_HOME);
-        robot.leftServoArm.setPosition(robot.SLIDE_ARM_HOME);
-        robot.colorServoArm.setPosition(robot.COLOR_ARM_HOME);
-    }
 
     private void driveStraight(double x) throws InterruptedException {
         robot.leftFrontMotor.setPower((DRIVE_SPEED + LEFT_MOTOR_OFFSET));
@@ -100,22 +89,25 @@ public class AutonomousBase extends LinearOpMode {
             idle();
         }
     }
+
     private void driveBackwards(double x) throws InterruptedException {
-        robot.leftFrontMotor.setPower((-1*(DRIVE_SPEED+LEFT_MOTOR_OFFSET)));
-        robot.leftBackMotor.setPower((-1*(DRIVE_SPEED+LEFT_MOTOR_OFFSET));
-        robot.rightFrontMotor.setPower(-1*DRIVE_SPEED);
-        robot.rightBackMotor.setPower(-1*DRIVE_SPEED);
+        robot.leftFrontMotor.setPower((-1 * (DRIVE_SPEED + LEFT_MOTOR_OFFSET)));
+        robot.leftBackMotor.setPower((-1 * (DRIVE_SPEED + LEFT_MOTOR_OFFSET)));
+        robot.rightFrontMotor.setPower(-1 * DRIVE_SPEED);
+        robot.rightBackMotor.setPower(-1 * DRIVE_SPEED);
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < x)) {
             idle();
         }
     }
+
     private void driveStraightThenBack() throws InterruptedException {
         runtime2.reset();
         while (runtime2.seconds() < 2.5)
             driveStraight(runtime.seconds());
         driveBackwards(2.5);
     }
+
     private void driveBackThenStraight() throws InterruptedException {
         runtime2.reset();
         while (runtime2.seconds() < 2.5)
@@ -124,8 +116,8 @@ public class AutonomousBase extends LinearOpMode {
     }
 
     private void turnLeft(double x) throws InterruptedException {
-        robot.leftFrontMotor.setPower(-(TURN_SPEED+LEFT_MOTOR_OFFSET));
-        robot.leftBackMotor.setPower(-(TURN_SPEED+LEFT_MOTOR_OFFSET));
+        robot.leftFrontMotor.setPower(-(TURN_SPEED + LEFT_MOTOR_OFFSET));
+        robot.leftBackMotor.setPower(-(TURN_SPEED + LEFT_MOTOR_OFFSET));
         robot.rightFrontMotor.setPower(TURN_SPEED);
         robot.rightBackMotor.setPower(TURN_SPEED);
         runtime.reset();
@@ -135,6 +127,7 @@ public class AutonomousBase extends LinearOpMode {
             idle();
         }
     }
+
     private void colorActions() throws InterruptedException { //this all assumes that teamColor == our teams color and the color sensor is in the same direction that forward drive is
         robot.colorServoArm.setPosition(COLOR_ARM_ANGLE);
         int red = robot.colorSensor.red();
@@ -144,16 +137,17 @@ public class AutonomousBase extends LinearOpMode {
             driveStraightThenBack();
         else if (teamColor.compareTo("red") == 0 && trueColor > 0)
             driveBackThenStraight();
-        robot.colorServoArm.setPosition(robot.COLOR_ARM_HOME);
+        robot.stopMoving();
+    }
+
+    private void cryptoActions() throws InterruptedException { //finished, none of the other functions are written though
+        int picture = imageSense(); //EASY DOGGY
+        if (imageSense == 1)
+            leftKey(); // drive to put it in the left
+        else if (imageSense == 2)
+            middleKey(); // drive to put it in the middle
+        else
+            rightKey(); //drive to put it in the right
+        robot.stopMoving();
     }
 }
-//    private void cryptoActions() throws InterruptedException { //finished, none of the other functions are written though
-//        int picture = imageSense(); //EASY DOGGY
-//        if (imageSense == 1)
-//            leftKey(); // drive to put it in the left
-//        else if (imageSense == 2)
-//            middleKey(); // drive to put it in the middle
-//        else
-//            rightKey(); //drive to put it in the right
-//        stopDriving();
-//    }

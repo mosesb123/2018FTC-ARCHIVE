@@ -18,13 +18,13 @@ public class HardwareBigBoy {
     public DcMotor rightSlide = null;
     public DcMotor leftSlide = null;
 
-    public final static double  SLIDE_ARM_HOME; //need to test and find, probs 0.0
+    public final static double SLIDE_ARM_HOME; //need to test and find, probs 0.0
     public final static double SLIDE_MIN_RANGE; //need to test and find, probs 0.0
     public final static double SLIDE_MAX_RANGE; //need to test and find, probs 0.5
 
     public Servo colorServoArm = null;
     public ColorSensor colorSensor = null;
-    public final static double  COLOR_ARM_HOME; //need to test and find
+    public final static double COLOR_ARM_HOME; //need to test and find
 
     public HardwareMap hwmap = null;
     private ElapsedTime runtime = new ElapsedTime(); //idk what it does, just trying to get public methods to work
@@ -86,6 +86,9 @@ public class HardwareBigBoy {
         leftBackMotor.setPower(0);
         rightBackMotor.setPower(0);
         leftFrontMotor.setPower(0);
+        rightServoArm.setPosition(SLIDE_ARM_HOME);
+        leftServoArm.setPosition(SLIDE_ARM_HOME);
+        colorServoArm.setPosition(COLOR_ARM_HOME);
 
     }
     public void driveStraight(double x) throws InterruptedException {

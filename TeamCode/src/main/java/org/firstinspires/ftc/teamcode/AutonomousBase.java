@@ -34,7 +34,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 @Autonomous(name="Pushbot: autoNoDelayRedLeft", group="Pushbot")
 public class AutonomousBase extends LinearOpMode {
 
-    /* Declare OpMode members. */
+    /* Declare OpMode boys. */
     HardwareBigBoy robot = new HardwareBigBoy();   // Use a Pushbot's hardware
     private ElapsedTime runtime = new ElapsedTime();
     private ElapsedTime runtime2 = new ElapsedTime();

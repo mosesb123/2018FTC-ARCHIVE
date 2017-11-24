@@ -60,7 +60,7 @@ public class AutonomousBase extends LinearOpMode {
 
         colorActions();
 //        cryptoActions(); //unfinished
-        robot.stopMoving();
+
         telemetry.addData("Path", "Complete");
 
         telemetry.update();
@@ -68,19 +68,6 @@ public class AutonomousBase extends LinearOpMode {
         idle();
     }
 
-    //TODO do we need these?
-    private void driveStraightThenBack() throws InterruptedException {
-        runtime2.reset();
-        while (runtime2.seconds() < 2.5)
-            robot.driveStraight(runtime.seconds());
-        robot.driveBackwards(2.5);
-    }
-    private void driveBackThenStraight() throws InterruptedException {
-        runtime2.reset();
-        while (runtime2.seconds() < 2.5)
-            robot.driveBackwards(runtime.seconds());
-        robot.driveStraight(2.5);
-    }
 
     private void turnLeft(double x) throws InterruptedException {
         robot.leftFrontMotor.setPower(-(robot.TURN_SPEED + robot.LEFT_MOTOR_OFFSET));
@@ -93,6 +80,7 @@ public class AutonomousBase extends LinearOpMode {
             telemetry.update();
             idle();
         }
+        robot.stopMoving();
     }
 
     private void colorActions() throws InterruptedException { //this all assumes that teamColor == our teams color and the color sensor is in the same direction that forward drive is

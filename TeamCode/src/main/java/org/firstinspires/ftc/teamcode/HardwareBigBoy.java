@@ -97,7 +97,7 @@ public class HardwareBigBoy {
         rightFrontMotor.setPower(DRIVE_SPEED);
         rightBackMotor.setPower(DRIVE_SPEED);
         runtime.reset();
-        //TODO Does this code have to be in the opMode?
+        //TODO Does this code have to bed in the opMode?
         /*while (opModeIsActive() && (runtime.seconds() < x)) {
             idle();
         }*/

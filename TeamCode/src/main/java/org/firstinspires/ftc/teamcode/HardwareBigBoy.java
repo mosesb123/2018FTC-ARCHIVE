@@ -18,13 +18,13 @@ public class HardwareBigBoy {
     public DcMotor rightSlide = null;
     public DcMotor leftSlide = null;
 
-    public final static double SLIDE_ARM_HOME; //need to test and find, probs 0.0
-    public final static double SLIDE_MIN_RANGE; //need to test and find, probs 0.0
-    public final static double SLIDE_MAX_RANGE; //need to test and find, probs 0.5
+    public final static double SLIDE_ARM_HOME = 0.0; //need to test and find, probs 0.0
+    public final static double SLIDE_MIN_RANGE = 0.0; //need to test and find, probs 0.0
+    public final static double SLIDE_MAX_RANGE = 0.5; //need to test and find, probs 0.5
 
     public Servo colorServoArm = null;
     public ColorSensor colorSensor = null;
-    public final static double COLOR_ARM_HOME; //need to test and find
+    public final static double COLOR_ARM_HOME = 0.0; //need to test and find
 
     public HardwareMap hwmap = null;
     private ElapsedTime runtime = new ElapsedTime(); //idk what it does, just trying to get public methods to work
@@ -53,7 +53,6 @@ public class HardwareBigBoy {
         colorSensor = hwmap.colorSensor.get("color");
 
 
-
         //Set Mode
         rightFrontMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftBackMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -72,7 +71,7 @@ public class HardwareBigBoy {
 
 /* Braha Testing Zone */
     static final double     FORWARD_SPEED = 0.6;
-    static final double     LEFT_MOTOR_OFFSET = 0.0; //Probably > 0 because robot moves left when going straight
+    static final double     LEFT_MOTOR_OFFSET = 0.0; //Probably > 0 because robot moves left when going straight, but maybe we can kish it
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
@@ -97,12 +96,26 @@ public class HardwareBigBoy {
         rightFrontMotor.setPower(DRIVE_SPEED);
         rightBackMotor.setPower(DRIVE_SPEED);
         runtime.reset();
-        //TODO Does this code have to bed in the opMode?
-        /*while (opModeIsActive() && (runtime.seconds() < x)) {
-            idle();
-        }*/
         while ((runtime.seconds() < x)) {
             wait();
         }
+    }
+    public void driveBackwards(double x) throws InterruptedException {
+        leftFrontMotor.setPower((-1 * (DRIVE_SPEED + LEFT_MOTOR_OFFSET)));
+        leftBackMotor.setPower((-1 * (DRIVE_SPEED + LEFT_MOTOR_OFFSET)));
+        rightFrontMotor.setPower(-1 * DRIVE_SPEED);
+        rightBackMotor.setPower(-1 * DRIVE_SPEED);
+        runtime.reset();
+        while (runtime.seconds() < x) {
+            wait();
+        }
+    }
+    public void driveStB() throws InterruptedException {
+        driveStraight(2.5);
+        driveBackwards(2.5);
+    }
+    public void driveBtS() throws InterruptedException {
+        driveBackwards(2.5);
+        driveStraight(2.5);
     }
 }

@@ -41,16 +41,6 @@ public class AutonomousBase extends LinearOpMode {
     static final double COLOR_ARM_ANGLE = .3; //need to test
     private String teamColor = ""; //our teams color, 2 dif autos
 
-    static final double FORWARD_SPEED = 0.6;
-    static final double LEFT_MOTOR_OFFSET = 0.0; //Probably > 0 because robot moves left when going straight
-    static final double COUNTS_PER_MOTOR_REV = 1440;    // eg: TETRIX Motor Encoder
-    static final double DRIVE_GEAR_REDUCTION = 2.0;     // This is < 1.0 if geared UP
-    static final double WHEEL_DIAMETER_INCHES = 4.0;     // For figuring circumference
-    static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-            (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double DRIVE_SPEED = 0.6;
-    static final double TURN_SPEED = 0.5;
-
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -62,14 +52,14 @@ public class AutonomousBase extends LinearOpMode {
         robot.init(hardwareMap);
 
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Status", "Ready to run");    //
+        telemetry.addData("Status", "Big Boy Ready to run");    //
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
         colorActions();
-        cryptoActions(); //unfinished
+//        cryptoActions(); //unfinished
         robot.stopMoving();
         telemetry.addData("Path", "Complete");
 
@@ -78,48 +68,25 @@ public class AutonomousBase extends LinearOpMode {
         idle();
     }
 
-
-    private void driveStraight(double x) throws InterruptedException {
-        robot.leftFrontMotor.setPower((DRIVE_SPEED + LEFT_MOTOR_OFFSET));
-        robot.leftBackMotor.setPower((DRIVE_SPEED + LEFT_MOTOR_OFFSET));
-        robot.rightFrontMotor.setPower(DRIVE_SPEED);
-        robot.rightBackMotor.setPower(DRIVE_SPEED);
-        runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < x)) {
-            idle();
-        }
-    }
-
-    private void driveBackwards(double x) throws InterruptedException {
-        robot.leftFrontMotor.setPower((-1 * (DRIVE_SPEED + LEFT_MOTOR_OFFSET)));
-        robot.leftBackMotor.setPower((-1 * (DRIVE_SPEED + LEFT_MOTOR_OFFSET)));
-        robot.rightFrontMotor.setPower(-1 * DRIVE_SPEED);
-        robot.rightBackMotor.setPower(-1 * DRIVE_SPEED);
-        runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < x)) {
-            idle();
-        }
-    }
-
+    //TODO do we need these?
     private void driveStraightThenBack() throws InterruptedException {
         runtime2.reset();
         while (runtime2.seconds() < 2.5)
-            driveStraight(runtime.seconds());
-        driveBackwards(2.5);
+            robot.driveStraight(runtime.seconds());
+        robot.driveBackwards(2.5);
     }
-
     private void driveBackThenStraight() throws InterruptedException {
         runtime2.reset();
         while (runtime2.seconds() < 2.5)
-            driveBackwards(runtime.seconds());
-        driveStraight(2.5);
+            robot.driveBackwards(runtime.seconds());
+        robot.driveStraight(2.5);
     }
 
     private void turnLeft(double x) throws InterruptedException {
-        robot.leftFrontMotor.setPower(-(TURN_SPEED + LEFT_MOTOR_OFFSET));
-        robot.leftBackMotor.setPower(-(TURN_SPEED + LEFT_MOTOR_OFFSET));
-        robot.rightFrontMotor.setPower(TURN_SPEED);
-        robot.rightBackMotor.setPower(TURN_SPEED);
+        robot.leftFrontMotor.setPower(-(robot.TURN_SPEED + robot.LEFT_MOTOR_OFFSET));
+        robot.leftBackMotor.setPower(-(robot.TURN_SPEED + robot.LEFT_MOTOR_OFFSET));
+        robot.rightFrontMotor.setPower(robot.TURN_SPEED);
+        robot.rightBackMotor.setPower(robot.TURN_SPEED);
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < x)) {
             telemetry.addData("Path", "Leg 2: %2.5f S Elapsed", runtime.seconds());
@@ -134,20 +101,20 @@ public class AutonomousBase extends LinearOpMode {
         double blue = robot.colorSensor.blue();
         double trueColor = red - blue;
         if (teamColor.compareTo("blue") == 0 && trueColor < 0)
-            driveStraightThenBack();
+            robot.driveStB();
         else if (teamColor.compareTo("red") == 0 && trueColor > 0)
-            driveBackThenStraight();
+            robot.driveBtS();
         robot.stopMoving();
     }
 
-    private void cryptoActions() throws InterruptedException { //finished, none of the other functions are written though
-        int picture = imageSense(); //EASY DOGGY
-        if (imageSense == 1)
-            leftKey(); // drive to put it in the left
-        else if (imageSense == 2)
-            middleKey(); // drive to put it in the middle
-        else
-            rightKey(); //drive to put it in the right
-        robot.stopMoving();
-    }
+//    private void cryptoActions() throws InterruptedException { //finished, none of the other functions are written though
+//        int picture = imageSense(); //EASY DOGGY
+//        if (imageSense == 1)
+//            leftKey(); // drive to put it in the left
+//        else if (imageSense == 2)
+//            middleKey(); // drive to put it in the middle
+//        else
+//            rightKey(); //drive to put it in the right
+//        robot.stopMoving();
+//    }
 }

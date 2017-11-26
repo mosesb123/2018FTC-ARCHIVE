@@ -39,17 +39,17 @@ public class HardwareBigBoy {
         hwmap = aMap;
 
         //Motor assignments from config in app
-        rightFrontMotor = hwmap.dcMotor.get("Right_Front_Motor");
-        leftFrontMotor = hwmap.dcMotor.get("Left_Front_Motor");
-        leftBackMotor = hwmap.dcMotor.get("Left_Back_Motor");
-        rightBackMotor = hwmap.dcMotor.get("Right_Back_Motor");
+        rightFrontMotor = hwmap.dcMotor.get("rightFrontMotor");
+        leftFrontMotor = hwmap.dcMotor.get("leftFrontMotor");
+        leftBackMotor = hwmap.dcMotor.get("leftBackMotor");
+        rightBackMotor = hwmap.dcMotor.get("rightBackMotor");
 
-        rightServoArm = hwmap.servo.get("Right_Servo_Arm");
-        leftServoArm = hwmap.servo.get("Left_Servo_Arm");
-        rightSlide = hwmap.dcMotor.get("Right_Slide");
-        leftSlide= hwmap.dcMotor.get("Left_Slide");
+        rightServoArm = hwmap.servo.get("rightServoArm");
+        leftServoArm = hwmap.servo.get("leftServoArm");
+        rightSlide = hwmap.dcMotor.get("rightSlide");
+        leftSlide= hwmap.dcMotor.get("leftSlide");
 
-        colorServoArm = hwmap.servo.get("Color_Servo_Arm");
+        colorServoArm = hwmap.servo.get("colorServoArm");
         colorSensor = hwmap.colorSensor.get("color");
 
 

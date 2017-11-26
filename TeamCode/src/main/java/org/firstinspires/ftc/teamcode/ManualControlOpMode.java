@@ -50,7 +50,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
 , */
 
-@TeleOp(name="Basic: BBB Linear OpMode", group="Linear Opmode")
+@TeleOp(name="Basic: Big Boy Linear OpMode", group="Linear Opmode")
 
 public class ManualControlOpMode extends LinearOpMode {
 

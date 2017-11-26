@@ -52,7 +52,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name="Basic: BBB Linear OpMode", group="Linear Opmode")
 
-public class OpMode extends LinearOpMode {
+public class ManualControlOpMode extends LinearOpMode {
 
     // Declare OpMode members.
     HardwareBigBoy robot = new HardwareBigBoy();
@@ -60,8 +60,10 @@ public class OpMode extends LinearOpMode {
     double slideArmPosition = robot.SLIDE_ARM_HOME;
     double colorArmPosition = robot.COLOR_ARM_HOME;
     final double ARM_SPEED = .05;
-    private DcMotor leftDrive = null;
-    private DcMotor rightDrive = null;
+    private DcMotor rightFrontMotor = null;
+    private DcMotor leftFrontMotor = null;
+    private DcMotor leftBackMotor = null;
+    private DcMotor rightBackMotor = null;
 
     @Override
     public void runOpMode() {
@@ -71,13 +73,16 @@ public class OpMode extends LinearOpMode {
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
-        rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
-
+        rightFrontMotor  = hardwareMap.get(DcMotor.class, "Right_Front_Motor");
+        leftFrontMotor = hardwareMap.get(DcMotor.class, "Left_Front_Motor");
+        leftBackMotor = hardwareMap.get(DcMotor.class, "Left_Back_Motor");
+        rightBackMotor = hardwareMap.get(DcMotor.class, "Right_Back_Motor");
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
-        leftDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftBackMotor.setDirection(DcMotor.Direction.FORWARD);
+        leftFrontMotor.setDirection(DcMotor.Direction.FORWARD);
+        rightFrontMotor.setDirection(DcMotor.Direction.REVERSE);
+        rightBackMotor.setDirection(DcMotor.Direction.REVERSE);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -106,9 +111,11 @@ public class OpMode extends LinearOpMode {
             // rightPower = -gamepad1.right_stick_y ;
 
             // Send calculated power to wheels
-            leftDrive.setPower(leftPower);
-            rightDrive.setPower(rightPower);
-
+            leftBackMotor.setPower(leftPower);
+            leftFrontMotor.setPower(leftPower);
+            rightFrontMotor.setPower(rightPower);
+            rightBackMotor.setPower(rightPower);
+          /*
             if(gamepad1.left_trigger >= .2) //if left Trigger is pressed
                 ;//lower slides, *(gamepad1.left_trigger + 1)
              else if (gamepad1.right_trigger >= .2) //if right Trigger is pressed
@@ -121,7 +128,7 @@ public class OpMode extends LinearOpMode {
             slideArmPosition = Range.clip(slideArmPosition, robot.SLIDE_MIN_RANGE, robot.SLIDE_MAX_RANGE); //make sure position is allowed
             robot.rightServoArm.setPosition(slideArmPosition); //set position of servos
             robot.leftServoArm.setPosition(slideArmPosition); //set position of servos
-
+*/
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());// value of slide servo arm

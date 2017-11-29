@@ -124,15 +124,21 @@ public class AutonomousBase extends LinearOpMode {
         double red = robot.colorSensor.red();
         double blue = robot.colorSensor.blue();
         double trueColor = red - blue;
-        if (teamColor.compareTo("blue") == 0 && trueColor < 0)
-            robot.driveStB();
-        else if (teamColor.compareTo("red") == 0 && trueColor > 0)
-            robot.driveBtS();
+        if (trueColor > 0 /*red*/) {
+            if (teamColor.compareTo("red") == 0)
+                robot.driveBtS();
+            else robot.driveStB();
+        }
+        else {
+            if (teamColor.compareTo("blue") == 0)
+                robot.driveBtS();
+            else robot.driveStB();
+        }
         robot.stopMoving();
     }
 
     private void leftKey() {
-
+        //for all of them, strafe a bit to the left(red) or right(blue) and then go straight. Difference is in how much to strafe
     }
     private void middleKey() {
 

@@ -99,6 +99,7 @@ public class HardwareBigBoy {
         while ((runtime.seconds() < x)) {
             wait();
         }
+        stopMoving();
     }
     public void driveBackwards(double x) throws InterruptedException {
         leftFrontMotor.setPower((-1 * (DRIVE_SPEED + LEFT_MOTOR_OFFSET)));
@@ -109,6 +110,7 @@ public class HardwareBigBoy {
         while (runtime.seconds() < x) {
             wait();
         }
+        stopMoving();
     }
     //TODO find the proper time it takes to turn (currently 1)
     public void turnRight() throws InterruptedException {

@@ -115,8 +115,8 @@ public class ManualControlOpMode extends LinearOpMode {
             leftFrontMotor.setPower(leftPower);
             rightFrontMotor.setPower(rightPower);
             rightBackMotor.setPower(rightPower);
-          /*
-            if(gamepad1.left_trigger >= .2) //if left Trigger is pressed
+
+            if (gamepad1.left_trigger >= .2) //if left Trigger is pressed
                 ;//lower slides, *(gamepad1.left_trigger + 1)
              else if (gamepad1.right_trigger >= .2) //if right Trigger is pressed
                 ;//raise slides *(gamepad1.right_trigger + 1)
@@ -128,7 +128,7 @@ public class ManualControlOpMode extends LinearOpMode {
             slideArmPosition = Range.clip(slideArmPosition, robot.SLIDE_MIN_RANGE, robot.SLIDE_MAX_RANGE); //make sure position is allowed
             robot.rightServoArm.setPosition(slideArmPosition); //set position of servos
             robot.leftServoArm.setPosition(slideArmPosition); //set position of servos
-*/
+
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());// value of slide servo arm

@@ -110,6 +110,29 @@ public class HardwareBigBoy {
             wait();
         }
     }
+    //TODO find the proper time it takes to turn (currently 1)
+    public void turnRight() throws InterruptedException {
+        leftFrontMotor.setPower(DRIVE_SPEED + LEFT_MOTOR_OFFSET);
+        leftBackMotor.setPower(DRIVE_SPEED + LEFT_MOTOR_OFFSET);
+        rightFrontMotor.setPower(-1 * DRIVE_SPEED);
+        rightBackMotor.setPower(-1 * DRIVE_SPEED);
+        runtime.reset();
+        while (runtime.seconds() < 1) {
+            wait();
+        }
+        stopMoving();
+    }
+    public void turnLeft() throws InterruptedException {
+        leftFrontMotor.setPower(-1*(DRIVE_SPEED + LEFT_MOTOR_OFFSET));
+        leftBackMotor.setPower(-1*(DRIVE_SPEED + LEFT_MOTOR_OFFSET));
+        rightFrontMotor.setPower(DRIVE_SPEED);
+        rightBackMotor.setPower(DRIVE_SPEED);
+        runtime.reset();
+        while (runtime.seconds() < 1) {
+            wait();
+        }
+        stopMoving();
+    }
     public void driveStB() throws InterruptedException {
         driveStraight(2.5);
         driveBackwards(2.5);

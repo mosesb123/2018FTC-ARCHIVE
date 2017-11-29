@@ -4,6 +4,10 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import android.app.Activity;
+import android.graphics.Color;
+import android.view.View;
+
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
@@ -99,12 +103,10 @@ public class AutonomousBase extends LinearOpMode {
         while (opModeIsActive()) {
             String key = vuforiate();
             telemetry.addData("Image is", key);
-            // colorActions();
-           //cryptoActions(key); //unfinished
+            colorActions();
+            cryptoActions(); //unfinished
 
         }
-
-
 
 
         telemetry.addData("Path", "Complete");
@@ -115,19 +117,7 @@ public class AutonomousBase extends LinearOpMode {
     }
 
 
-    private void turnLeft(double x) throws InterruptedException {
-        robot.leftFrontMotor.setPower(-(robot.TURN_SPEED + robot.LEFT_MOTOR_OFFSET));
-        robot.leftBackMotor.setPower(-(robot.TURN_SPEED + robot.LEFT_MOTOR_OFFSET));
-        robot.rightFrontMotor.setPower(robot.TURN_SPEED);
-        robot.rightBackMotor.setPower(robot.TURN_SPEED);
-        runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < x)) {
-            telemetry.addData("Path", "Leg 2: %2.5f S Elapsed", runtime.seconds());
-            telemetry.update();
-            idle();
-        }
-        robot.stopMoving();
-    }
+
 
     private void colorActions() throws InterruptedException { //this all assumes that teamColor == our teams color and the color sensor is in the same direction that forward drive is
         robot.colorServoArm.setPosition(COLOR_ARM_ANGLE);
@@ -138,6 +128,26 @@ public class AutonomousBase extends LinearOpMode {
             robot.driveStB();
         else if (teamColor.compareTo("red") == 0 && trueColor > 0)
             robot.driveBtS();
+        robot.stopMoving();
+    }
+
+    private void leftKey() {
+
+    }
+    private void middleKey() {
+
+    }
+    private void rightKey() {
+
+    }
+    private void cryptoActions() throws InterruptedException { //finished, none of the other functions are written though
+        String picture = vuforiate(); //EASY DOGGY
+        if (picture == "Left")
+            leftKey(); // drive to put it in the left
+        else if (picture == "Middle")
+            middleKey(); // drive to put it in the middle
+        else
+            rightKey(); //drive to put it in the right
         robot.stopMoving();
     }
 
@@ -169,14 +179,4 @@ public class AutonomousBase extends LinearOpMode {
         return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
     }
 
-//    private void cryptoActions() throws InterruptedException { //finished, none of the other functions are written though
-//        String picture = vuforiate(); //EASY DOGGY
-//        if (picture == 1)
-//            leftKey(); // drive to put it in the left
-//        else if (picture == 2)
-//            middleKey(); // drive to put it in the middle
-//        else
-//            rightKey(); //drive to put it in the right
-//        robot.stopMoving();
-//    }
 }

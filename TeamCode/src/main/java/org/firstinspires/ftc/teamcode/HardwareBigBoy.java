@@ -25,6 +25,7 @@ public class HardwareBigBoy {
     public Servo colorServoArm = null;
     public ColorSensor colorSensor = null;
     public final static double COLOR_ARM_HOME = 0.0; //need to test and find
+    public final static double COLOR_ARM_DESTNATION = 0.5; //test it
 
     public HardwareMap hwmap = null;
     private ElapsedTime runtime = new ElapsedTime(); //idk what it does, just trying to get public methods to work
@@ -69,7 +70,7 @@ public class HardwareBigBoy {
 
     }
 
-/* Braha Testing Zone */
+/* Braha Testing Zone
     static final double     FORWARD_SPEED = 0.6;
     static final double     LEFT_MOTOR_OFFSET = 0.0; //Probably > 0 because robot moves left when going straight, but maybe we can kish it
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
@@ -79,7 +80,7 @@ public class HardwareBigBoy {
             (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
-
+*/
     public void stopMoving() {
         rightFrontMotor.setPower(0);
         leftBackMotor.setPower(0);
@@ -89,7 +90,7 @@ public class HardwareBigBoy {
         leftServoArm.setPosition(SLIDE_ARM_HOME);
         colorServoArm.setPosition(COLOR_ARM_HOME);
 
-    }
+    } /*
     public void driveStraight(double x) throws InterruptedException {
         leftFrontMotor.setPower((DRIVE_SPEED + LEFT_MOTOR_OFFSET));
         leftBackMotor.setPower((DRIVE_SPEED + LEFT_MOTOR_OFFSET));
@@ -112,6 +113,7 @@ public class HardwareBigBoy {
         }
         stopMoving();
     }
+
     //TODO find the proper time it takes to turn (currently 1)
     public void turnRight() throws InterruptedException {
         leftFrontMotor.setPower(DRIVE_SPEED + LEFT_MOTOR_OFFSET);
@@ -135,12 +137,13 @@ public class HardwareBigBoy {
         }
         stopMoving();
     }
+    */ //TODO make real driving functions involving mech wheels
     public void driveStB() throws InterruptedException {
-        driveStraight(2.5);
-        driveBackwards(2.5);
+        //driveStraight(2.5);
+       // driveBackwards(2.5);
     }
     public void driveBtS() throws InterruptedException {
-        driveBackwards(2.5);
-        driveStraight(2.5);
+       // driveBackwards(2.5);
+       // driveStraight(2.5);
     }
 }

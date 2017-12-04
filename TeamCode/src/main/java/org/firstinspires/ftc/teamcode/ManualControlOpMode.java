@@ -33,9 +33,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.hardware.Servo;
+import java.lang.Math;
 
 
 /**
@@ -81,8 +83,16 @@ public class ManualControlOpMode extends LinearOpMode {
         // Reverse the motor that runs backwards when connected directly to the battery
         leftBackMotor.setDirection(DcMotor.Direction.FORWARD);
         leftFrontMotor.setDirection(DcMotor.Direction.FORWARD);
-        rightFrontMotor.setDirection(DcMotor.Direction.REVERSE);
-        rightBackMotor.setDirection(DcMotor.Direction.REVERSE);
+        rightFrontMotor.setDirection(DcMotor.Direction.FORWARD);
+        rightBackMotor.setDirection(DcMotor.Direction.FORWARD);
+
+
+        double leftBackPower = 0;
+        double leftFrontPower = 0;
+        double rightFrontPower = 0;
+        double rightBackPower = 0 ;
+        //motor powers are here idk why
+
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -91,30 +101,18 @@ public class ManualControlOpMode extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            // Setup a variable for each drive wheel to save power level for telemetry
-            double leftPower;
-            double rightPower;
+            //Drivetrain functions
+            //moving ifs
+            double moveHoriz = gamepad1.left_stick_x;
+            double moveVert = gamepad1.left_stick_y;
 
-            // Choose to drive using either Tank Mode, or POV Mode
-            // Comment out the method that's not used.  The default below is POV.
+            if(Math.abs(moveHoriz) <= threshhold;
 
-            // POV Mode uses left stick to go forward, and right stick to turn.
-            // - This uses basic math to combine motions and is easier to drive straight.
-            double drive = -gamepad1.left_stick_y;
-            double turn  =  gamepad1.right_stick_x;
-            leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
-            rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
 
-            // Tank Mode uses one stick to control each wheel.
-            // - This requires no math, but it is hard to drive forward slowly and keep straight.
-            // leftPower  = -gamepad1.left_stick_y ;
-            // rightPower = -gamepad1.right_stick_y ;
-
-            // Send calculated power to wheels
-            leftBackMotor.setPower(leftPower);
-            leftFrontMotor.setPower(leftPower);
-            rightFrontMotor.setPower(rightPower);
-            rightBackMotor.setPower(rightPower);
+            leftBackMotor.setPower(leftBackPower);
+            leftFrontMotor.setPower(leftFrontPower);
+            rightFrontMotor.setPower(rightFrontPower);
+            rightBackMotor.setPower(rightBackPower);
 
             if (gamepad1.left_trigger >= .2) //if left Trigger is pressed
                 ;//lower slides, *(gamepad1.left_trigger + 1)
@@ -133,7 +131,7 @@ public class ManualControlOpMode extends LinearOpMode {
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());// value of slide servo arm
             telemetry.addData("Slide motors", "Angle", slideArmPosition);
-            telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+            telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftFrontPower, rightFrontPower, leftBackPower, rightBackPower);
             telemetry.addData("Let's go Big Boy", "Big Boy");
             telemetry.update();
         }

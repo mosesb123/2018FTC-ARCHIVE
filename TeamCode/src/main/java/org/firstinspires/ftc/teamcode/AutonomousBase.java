@@ -1,5 +1,23 @@
 
 package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.robotcontroller.external.samples;
+
+        import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+        import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+        import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
+        import org.firstinspires.ftc.robotcore.external.ClassFactory;
+        import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+        import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
+        import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+        import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+        import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+        import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+        import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+        import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
+        import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+        import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+        import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -34,7 +52,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 @Autonomous(name="Pushbot: autoBase", group="Pushbot")
 public class AutonomousBase extends LinearOpMode {
 
-    /* Declare OpMode boys. */
+    /* Declare OpMode boys. */...............0
     HardwareBigBoy robot = new HardwareBigBoy();   // Use a Pushbot's hardware
     private ElapsedTime runtime = new ElapsedTime();
     private ElapsedTime runtime2 = new ElapsedTime();
@@ -94,15 +112,44 @@ public class AutonomousBase extends LinearOpMode {
             robot.driveBtS();
         robot.stopMoving();
     }
-
-//    private void cryptoActions() throws InterruptedException { //finished, none of the other functions are written though
-//        int picture = imageSense(); //EASY DOGGY
-//        if (imageSense == 1)
+    private void cryptoActions() throws InterruptedException { //finished, none of the other functions are written though
+        int picture = imageSense(); //EASY DOGGY
+           if (picture == 1)
 //            leftKey(); // drive to put it in the left
-//        else if (imageSense == 2)
+        else if (picture == 2)
 //            middleKey(); // drive to put it in the middle
-//        else
+        else
 //            rightKey(); //drive to put it in the right
-//        robot.stopMoving();
-//    }
-}
+        robot.stopMoving();
+    }
+    public int imageSense() {
+
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+
+        parameters.vuforiaLicenseKey = "AXEsTGf/////AAAAGbF6lsrAgkrrmU3OaMt7gcc7l46IpUxtcXzsdAYiAx7YESYV/QxSwRN72H5y9jgaCjE4lXFjk0K6a6n80oMQhOJ1/siCcfgrEJ1fmI6IHZPm/VAxGi29eLo1ItkuAhpi5apmatTnCamd1be54REtj10OOKPNO2W+ww7UjA23++9Rb55mtU+xRBO2wQd91ugpl6VmkUaQ3cw5YDbqc0v06cmALmoy1x4d6agXpSXDRLm6V1V+r3GYo9g1LdNiB6zSwb+dIwU6e3P8dl9iVGDM3HrBPbf/M/wmEDFEiYEOXa7nQspunnfJKEHckUJU7+qMWqddM9TBpFNLO+ExQK0rAA40plID4wZ9F83qsYh5pCcS";
+
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+
+        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        VuforiaTrackable relicTemplate = relicTrackables.get(0);
+        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
+
+        relicTrackables.activate();
+
+        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+        while (vuMark == RelicRecoveryVuMark.UNKNOWN) {
+            vuMark = RelicRecoveryVuMark.from(relicTemplate);
+        }
+        telemetry.addData("VuMark", "%s visible", vuMark);
+
+        if (vuMark == RelicRecoveryVuMark.LEFT)
+            return 1;
+        if (vuMark == RelicRecoveryVuMark.CENTER)
+            return 2;
+        if (vuMark == RelicRecoveryVuMark.RIGHT)
+            return 3;
+
+    }
+    }

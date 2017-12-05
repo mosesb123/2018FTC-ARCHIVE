@@ -14,4 +14,8 @@ android {
     compileSdkVersion 23
 }
 dependencies {
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> Saturday-Night-Live

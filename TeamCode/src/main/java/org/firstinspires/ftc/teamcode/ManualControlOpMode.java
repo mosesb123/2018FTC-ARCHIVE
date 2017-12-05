@@ -89,11 +89,11 @@ public class ManualControlOpMode extends LinearOpMode {
         rightSlideMotor = hardwareMap.get(DcMotor.class, "rightSlideMotor");
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
-        leftBackMotor.setDirection(DcMotor.Direction.FORWARD);
-        leftFrontMotor.setDirection(DcMotor.Direction.FORWARD);
+        leftBackMotor.setDirection(DcMotor.Direction.REVERSE);
+        leftFrontMotor.setDirection(DcMotor.Direction.REVERSE);
         rightFrontMotor.setDirection(DcMotor.Direction.FORWARD);
         rightBackMotor.setDirection(DcMotor.Direction.FORWARD);
-        leftSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+        leftSlideMotor.setDirection(DcMotor.Direction.REVERSE);
         rightSlideMotor.setDirection(DcMotor.Direction.FORWARD);//TODO Find out which are forward and which are reverse and move to AutoBase
 
 
@@ -144,7 +144,13 @@ public class ManualControlOpMode extends LinearOpMode {
                 rightBackPower=(-1 * moveVert*moveHoriz*(moveVert/Math.abs(moveVert)));
             }
             //turning ifs
-
+            else if (gamepad1.right_stick_button) //turn around
+            {
+                leftFrontPower= -1 * MOTOR_SPEED;
+                rightFrontPower=MOTOR_SPEED;
+                leftBackPower=-1 *MOTOR_SPEED;
+                rightBackPower=MOTOR_SPEED;
+            }
             else if(turnHoriz >= DEADZONE && moveVert >= DEADZONE) // turn right and left off of different wheels
                 rightFrontPower= (turnHoriz*turnVert);
             else if(turnHoriz <= -1 * DEADZONE && moveVert >= DEADZONE)
@@ -153,13 +159,7 @@ public class ManualControlOpMode extends LinearOpMode {
                 rightBackPower=(Math.abs(turnHoriz*turnVert));
             else if(turnHoriz <= -1 * DEADZONE && moveVert <= -1 * DEADZONE)
                 leftBackPower=(turnHoriz*turnVert);
-            else if (gamepad1.right_stick_button) //turn around
-            {
-                leftFrontPower= -1 * MOTOR_SPEED;
-                rightFrontPower=MOTOR_SPEED;
-                leftBackPower=-1 *MOTOR_SPEED;
-                rightBackPower=MOTOR_SPEED;
-            }
+
             else if(Math.abs(turnHoriz) <= DEADZONE && Math.abs(turnVert) >= DEADZONE) //turn on front and rear axis
             {
                 if (turnVert >= 1)

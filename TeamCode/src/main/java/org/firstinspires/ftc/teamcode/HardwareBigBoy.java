@@ -24,6 +24,7 @@ public class HardwareBigBoy {
 
     public Servo colorServoArm = null;
     public ColorSensor colorSensor = null;
+    public final static double DRIVE_SPEED = .8; //TODO find real drive speed
     public final static double COLOR_ARM_HOME = 0.0; //need to test and find
     public final static double COLOR_ARM_DESTNATION = 0.5; //test it
 
@@ -82,10 +83,10 @@ public class HardwareBigBoy {
         leftServoArm.setPosition(SLIDE_ARM_HOME);
         colorServoArm.setPosition(COLOR_ARM_HOME);
 
-    } /*
+    }
     public void driveStraight(double x) throws InterruptedException {
-        leftFrontMotor.setPower((DRIVE_SPEED + LEFT_MOTOR_OFFSET));
-        leftBackMotor.setPower((DRIVE_SPEED + LEFT_MOTOR_OFFSET));
+        leftFrontMotor.setPower(DRIVE_SPEED );
+        leftBackMotor.setPower(DRIVE_SPEED );
         rightFrontMotor.setPower(DRIVE_SPEED);
         rightBackMotor.setPower(DRIVE_SPEED);
         runtime.reset();
@@ -95,8 +96,8 @@ public class HardwareBigBoy {
         stopMoving();
     }
     public void driveBackwards(double x) throws InterruptedException {
-        leftFrontMotor.setPower((-1 * (DRIVE_SPEED + LEFT_MOTOR_OFFSET)));
-        leftBackMotor.setPower((-1 * (DRIVE_SPEED + LEFT_MOTOR_OFFSET)));
+        leftFrontMotor.setPower(-1 *DRIVE_SPEED ) ;
+        leftBackMotor.setPower(-1 * DRIVE_SPEED  );
         rightFrontMotor.setPower(-1 * DRIVE_SPEED);
         rightBackMotor.setPower(-1 * DRIVE_SPEED);
         runtime.reset();
@@ -105,7 +106,7 @@ public class HardwareBigBoy {
         }
         stopMoving();
     }
-
+/*
     //TODO find the proper time it takes to turn (currently 1)
     public void turnRight() throws InterruptedException {
         leftFrontMotor.setPower(DRIVE_SPEED + LEFT_MOTOR_OFFSET);
@@ -130,12 +131,12 @@ public class HardwareBigBoy {
         stopMoving();
     }
     */ //TODO make real driving functions involving mech wheels
-    public void driveStB() throws InterruptedException {
-        //driveStraight(2.5);
-        // driveBackwards(2.5);
+    public void driveStB(double time) throws InterruptedException {
+        driveStraight(time);
+         driveBackwards(time);
     }
-    public void driveBtS() throws InterruptedException {
-        // driveBackwards(2.5);
-        // driveStraight(2.5);
+    public void driveBtS(double time) throws InterruptedException {
+         driveBackwards(time);
+         driveStraight(time);
     }
 }

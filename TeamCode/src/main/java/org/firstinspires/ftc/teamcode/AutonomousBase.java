@@ -168,15 +168,15 @@ public class AutonomousBase extends LinearOpMode {
          * UNKNOWN will be returned by {@link RelicRecoveryVuMark#from(VuforiaTrackable)}.
          */
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-        if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+        while (vuMark == RelicRecoveryVuMark.UNKNOWN) {
 
                 /* Found an instance of the template. In the actual game, you will probably
                  * loop until this condition occurs, then move on to act accordingly depending
                  * on which VuMark was visible. */
-            telemetry.addData("VuMark", "%s visible", vuMark);
-        }
-        else {
+            vuMark = RelicRecoveryVuMark.from(relicTemplate);
             telemetry.addData("VuMark", "not visible");
+
+            telemetry.addData("VuMark", "%s visible", vuMark);
         }
         telemetry.update();
         return vuMark + " ";

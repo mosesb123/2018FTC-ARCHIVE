@@ -125,13 +125,13 @@ public class AutonomousBase extends LinearOpMode {
         double trueColor = red - blue;
         if (trueColor > 0 /*red*/) {
             if (teamColor.compareTo("red") == 0)
-                robot.driveBtS();
-            else robot.driveStB();
+                robot.driveBtS(2.5); //TODO find real time
+            else robot.driveStB(2.5);
         }
         else {
             if (teamColor.compareTo("blue") == 0)
-                robot.driveBtS();
-            else robot.driveStB();
+                robot.driveBtS(2.5);
+            else robot.driveStB(2.5);
         }
         robot.stopMoving();
     }

@@ -50,7 +50,7 @@ import java.lang.Math;
  * It includes all the skeletal structure that all linear OpModes contain.
  *
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
-, */
+ , */
 
 
 @TeleOp(name="Basic: BigBoy Linear OpMode", group="Linear Opmode")
@@ -64,10 +64,14 @@ public class ManualControlOpMode extends LinearOpMode {
     double slideArmPosition = robot.SLIDE_ARM_HOME;
     double colorArmPosition = robot.COLOR_ARM_HOME;
     final double ARM_SPEED = .05;
+    final double MOTOR_SPEED = .8;
+    final double DEADZONE = .3;
     private DcMotor rightFrontMotor = null;
     private DcMotor leftFrontMotor = null;
     private DcMotor leftBackMotor = null;
     private DcMotor rightBackMotor = null;
+    private DcMotor leftSlideMotor = null;
+    private DcMotor rightSlideMotor = null;
 
     @Override
     public void runOpMode() {
@@ -77,23 +81,30 @@ public class ManualControlOpMode extends LinearOpMode {
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        rightFrontMotor  = hardwareMap.get(DcMotor.class, "Right_Front_Motor");
-        leftFrontMotor = hardwareMap.get(DcMotor.class, "Left_Front_Motor");
-        leftBackMotor = hardwareMap.get(DcMotor.class, "Left_Back_Motor");
-        rightBackMotor = hardwareMap.get(DcMotor.class, "Right_Back_Motor");
+        rightFrontMotor  = hardwareMap.get(DcMotor.class, "rightFrontMotor");
+        leftFrontMotor = hardwareMap.get(DcMotor.class, "leftFrontMotor");
+        leftBackMotor = hardwareMap.get(DcMotor.class, "leftBackMotor");
+        rightBackMotor = hardwareMap.get(DcMotor.class, "rightBackMotor");
+        leftSlideMotor= hardwareMap.get(DcMotor.class, "leftSlideMotor");
+        rightSlideMotor = hardwareMap.get(DcMotor.class, "rightSlideMotor");
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
         leftBackMotor.setDirection(DcMotor.Direction.FORWARD);
         leftFrontMotor.setDirection(DcMotor.Direction.FORWARD);
         rightFrontMotor.setDirection(DcMotor.Direction.FORWARD);
         rightBackMotor.setDirection(DcMotor.Direction.FORWARD);
+        leftSlideMotor.setDirection(DcMotor.Direction.FORWARD);
+        rightSlideMotor.setDirection(DcMotor.Direction.FORWARD);//TODO Find out which are forward and which are reverse and move to AutoBase
 
 
         double leftBackPower = 0;
         double leftFrontPower = 0;
         double rightFrontPower = 0;
         double rightBackPower = 0 ;
-        //motor powers are here idk why
+        double leftSlidePower = 0;
+        double rightSlidePower = 0;
+
+        //motor powers are here
 
 
         // Wait for the game to start (driver presses PLAY)
@@ -107,35 +118,105 @@ public class ManualControlOpMode extends LinearOpMode {
             //moving ifs
             double moveHoriz = gamepad1.left_stick_x;
             double moveVert = gamepad1.left_stick_y;
+            double turnHoriz = gamepad1.right_stick_x;
+            double turnVert = gamepad1.right_stick_y;
 
-            if(Math.abs(moveHoriz) <= 0)
+            if(Math.abs(moveHoriz) <= DEADZONE && Math.abs(moveVert) >= DEADZONE) //move forwards or backwards
+            {
+                leftFrontPower=(moveVert);
+                rightFrontPower=(moveVert);
+                leftBackPower=(moveVert);
+                rightBackPower=(moveVert);
+            }
+            else if(Math.abs(moveHoriz) >= DEADZONE && Math.abs(moveVert) <= DEADZONE) //move right or left
+            {
+                leftFrontPower=(moveHoriz);
+                rightBackPower=(moveHoriz);
+            }
+            else if(moveHoriz >= DEADZONE && moveVert >= DEADZONE) //move right up or left down
+            {
+                leftFrontPower=(moveVert*moveHoriz*(moveHoriz/Math.abs(moveHoriz))); // Math.abs item so that we know if we are reversing or forward
+                rightBackPower=(moveVert*moveHoriz*(moveHoriz/Math.abs(moveHoriz)));
+            }
+            else if(moveHoriz <= -1 * DEADZONE && moveVert <= -1 * DEADZONE) //move right down or left up
+            {
+                leftFrontPower=(-1 * moveVert*moveHoriz*(moveVert/Math.abs(moveVert)));
+                rightBackPower=(-1 * moveVert*moveHoriz*(moveVert/Math.abs(moveVert)));
+            }
+            //turning ifs
 
-
+            else if(turnHoriz >= DEADZONE && moveVert >= DEADZONE) // turn right and left off of different wheels
+                rightFrontPower= (turnHoriz*turnVert);
+            else if(turnHoriz <= -1 * DEADZONE && moveVert >= DEADZONE)
+                leftFrontPower=(Math.abs(turnHoriz*turnVert));
+            else if(turnHoriz >= DEADZONE && moveVert <= -1 * DEADZONE)
+                rightBackPower=(Math.abs(turnHoriz*turnVert));
+            else if(turnHoriz <= -1 * DEADZONE && moveVert <= -1 * DEADZONE)
+                leftBackPower=(turnHoriz*turnVert);
+            else if (gamepad1.right_stick_button) //turn around
+            {
+                leftFrontPower= -1 * MOTOR_SPEED;
+                rightFrontPower=MOTOR_SPEED;
+                leftBackPower=-1 *MOTOR_SPEED;
+                rightBackPower=MOTOR_SPEED;
+            }
+            else if(Math.abs(turnHoriz) <= DEADZONE && Math.abs(turnVert) >= DEADZONE) //turn on front and rear axis
+            {
+                if (turnVert >= 1)
+                {
+                    leftBackPower= -1* MOTOR_SPEED;
+                    rightBackPower= MOTOR_SPEED;
+                }
+                else
+                    leftFrontPower =MOTOR_SPEED;
+                rightFrontPower= -1 * MOTOR_SPEED;
+            }
+            else {
+                leftBackPower = 0;
+                leftFrontPower = 0;
+                rightFrontPower = 0;
+                rightBackPower =0;
+            }
             leftBackMotor.setPower(leftBackPower);
-            leftFrontMotor.setPower(leftFrontPower);
-            rightFrontMotor.setPower(rightFrontPower);
             rightBackMotor.setPower(rightBackPower);
+            rightFrontMotor.setPower(rightFrontPower);
+            leftFrontMotor.setPower(leftFrontPower);
 
-            if (gamepad1.left_trigger >= .2) //if left Trigger is pressed
-                ;//lower slides, *(gamepad1.left_trigger + 1)
-             else if (gamepad1.right_trigger >= .2) //if right Trigger is pressed
-                ;//raise slides *(gamepad1.right_trigger + 1)
+            //Slide control
+            if (gamepad1.left_trigger >= DEADZONE) { //if left Trigger is pressed lower slides
+                leftSlidePower = -1 * MOTOR_SPEED; //TODO find correct motor standard power and controller deadzones
+                rightSlidePower = -1 * MOTOR_SPEED;
+            }
+            else if (gamepad1.right_trigger >= DEADZONE) //if right Trigger is pressed raise slides
+            {
+                leftSlidePower = MOTOR_SPEED;
+                rightSlidePower = MOTOR_SPEED;
+            }
+            else
+            {
+                leftSlidePower = 0;
+                rightSlidePower = 0;
+            }
+            rightSlideMotor.setPower(rightSlidePower);
+            leftSlideMotor.setPower(leftSlidePower);
+
             if(gamepad1.left_bumper) //slide clamps
                 slideArmPosition += ARM_SPEED;
             else if(gamepad1.right_bumper)
                 slideArmPosition -= ARM_SPEED;
-
             slideArmPosition = Range.clip(slideArmPosition, robot.SLIDE_MIN_RANGE, robot.SLIDE_MAX_RANGE); //make sure position is allowed
             robot.rightServoArm.setPosition(slideArmPosition); //set position of servos
             robot.leftServoArm.setPosition(slideArmPosition); //set position of servos
 
 
             // Show the elapsed game time and wheel power.
-            telemetry.addData("Status", "Run Time: " + runtime.toString());// value of slide servo arm
-            telemetry.addData("Slide motors", "Angle", slideArmPosition);
-            telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftFrontPower, rightFrontPower, leftBackPower, rightBackPower);
+            telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.addData("SlideServos", "Angle", slideArmPosition);
+            telemetry.addData("SlideMotors", "Both", leftSlidePower);
+            telemetry.addData("DriveMotors", "FrontLeft (%.2f), BackLeft (%.2f) ,FrontRight (%.2f,BackRight (%.2f)", leftFrontPower,  leftBackPower,rightFrontPower, rightBackPower);
             telemetry.addData("Let's go Big Boy", "Big Boy");
             telemetry.update();
         }
+
     }
 }

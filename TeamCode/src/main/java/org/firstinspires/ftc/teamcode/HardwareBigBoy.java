@@ -15,8 +15,8 @@ public class HardwareBigBoy {
 
     public Servo rightServoArm = null;
     public Servo leftServoArm = null;
-    public DcMotor rightSlide = null;
-    public DcMotor leftSlide = null;
+    public DcMotor rightSlideMotor = null;
+    public DcMotor leftSlideMotor = null;
 
     public final static double SLIDE_ARM_HOME = 0.0; //need to test and find, probs 0.0
     public final static double SLIDE_MIN_RANGE = 0.0; //need to test and find, probs 0.0
@@ -29,10 +29,10 @@ public class HardwareBigBoy {
 
     public HardwareMap hwmap = null;
     private ElapsedTime runtime = new ElapsedTime(); //idk what it does, just trying to get public methods to work
-    
+
 
     public HardwareBigBoy() {
-    
+
     }
 
     public void init(HardwareMap aMap){
@@ -47,20 +47,20 @@ public class HardwareBigBoy {
 
         rightServoArm = hwmap.servo.get("rightServoArm");
         leftServoArm = hwmap.servo.get("leftServoArm");
-        rightSlide = hwmap.dcMotor.get("rightSlide");
-        leftSlide= hwmap.dcMotor.get("leftSlide");
+        rightSlideMotor = hwmap.dcMotor.get("rightSlideMotor");
+        leftSlideMotor= hwmap.dcMotor.get("leftSlideMotor");
 
         colorServoArm = hwmap.servo.get("colorServoArm");
         colorSensor = hwmap.colorSensor.get("color");
 
 
         //Set Mode
-        rightFrontMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftBackMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightBackMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftFrontMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftBackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightBackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightServoArm.setPosition(SLIDE_ARM_HOME);
         leftServoArm.setPosition(SLIDE_ARM_HOME);
         colorServoArm.setPosition(COLOR_ARM_HOME);
@@ -76,6 +76,8 @@ public class HardwareBigBoy {
         leftBackMotor.setPower(0);
         rightBackMotor.setPower(0);
         leftFrontMotor.setPower(0);
+        rightSlideMotor.setPower(0);
+        leftSlideMotor.setPower(0);
         rightServoArm.setPosition(SLIDE_ARM_HOME);
         leftServoArm.setPosition(SLIDE_ARM_HOME);
         colorServoArm.setPosition(COLOR_ARM_HOME);
@@ -130,10 +132,10 @@ public class HardwareBigBoy {
     */ //TODO make real driving functions involving mech wheels
     public void driveStB() throws InterruptedException {
         //driveStraight(2.5);
-       // driveBackwards(2.5);
+        // driveBackwards(2.5);
     }
     public void driveBtS() throws InterruptedException {
-       // driveBackwards(2.5);
-       // driveStraight(2.5);
+        // driveBackwards(2.5);
+        // driveStraight(2.5);
     }
 }

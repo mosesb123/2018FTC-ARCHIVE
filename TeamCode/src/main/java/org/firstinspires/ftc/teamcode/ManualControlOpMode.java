@@ -52,11 +52,9 @@ import java.lang.Math;
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
 , */
 
-<<<<<<< HEAD:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/OpMode.java
+
 @TeleOp(name="Basic: BigBoy Linear OpMode", group="Linear Opmode")
-=======
-@TeleOp(name="Basic: Big Boy Linear OpMode", group="Linear Opmode")
->>>>>>> Saturday-Night-Live:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/ManualControlOpMode.java
+
 
 public class ManualControlOpMode extends LinearOpMode {
 
@@ -110,7 +108,7 @@ public class ManualControlOpMode extends LinearOpMode {
             double moveHoriz = gamepad1.left_stick_x;
             double moveVert = gamepad1.left_stick_y;
 
-            if(Math.abs(moveHoriz) <= threshhold;
+            if(Math.abs(moveHoriz) <= 0)
 
 
             leftBackMotor.setPower(leftBackPower);

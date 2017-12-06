@@ -18,8 +18,8 @@ public class HardwareBigBoy {
     public DcMotor rightSlideMotor = null;
     public DcMotor leftSlideMotor = null;
 
-    public final static double SLIDE_ARM_HOME = 0.0; //need to test and find, probs 0.0
-    public final static double SLIDE_MIN_RANGE = 0.0; //need to test and find, probs 0.0
+    public final static double SLIDE_ARM_HOME = 0.2; //need to test and find, probs 0.0
+    public final static double SLIDE_MIN_RANGE = 0.2; //need to test and find, probs 0.0
     public final static double SLIDE_MAX_RANGE = 0.5; //need to test and find, probs 0.5
 
     public Servo colorServoArm = null;
@@ -70,7 +70,7 @@ public class HardwareBigBoy {
 
         //Set Power to 0
         stopMoving();
-        rightServoArm.setPosition(SLIDE_ARM_HOME);
+        rightServoArm.setPosition(1-SLIDE_ARM_HOME);
         leftServoArm.setPosition(SLIDE_ARM_HOME);
         colorServoArm.setPosition(COLOR_ARM_HOME);
 
@@ -84,7 +84,7 @@ public class HardwareBigBoy {
         leftFrontMotor.setPower(0);
         rightSlideMotor.setPower(0);
         leftSlideMotor.setPower(0);
-        rightServoArm.setPosition(SLIDE_ARM_HOME);
+        rightServoArm.setPosition(1-SLIDE_ARM_HOME);
         leftServoArm.setPosition(SLIDE_ARM_HOME);
         colorServoArm.setPosition(COLOR_ARM_HOME);
 

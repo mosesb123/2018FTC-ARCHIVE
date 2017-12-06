@@ -62,7 +62,14 @@ public class AutonomousBase extends LinearOpMode {
     public static final String TAG = "Vuforia VuMark Sample"; //Vuforia stuff
     OpenGLMatrix lastLocation = null; //Vuforia stuff
     VuforiaLocalizer vuforia; //youll never guess what this is for
-
+    final double ARM_SPEED = .05;
+    final double MOTOR_SPEED = .8;
+    private DcMotor rightFrontMotor = null;
+    private DcMotor leftFrontMotor = null;
+    private DcMotor leftBackMotor = null;
+    private DcMotor rightBackMotor = null;
+    private DcMotor leftSlideMotor = null;
+    private DcMotor rightSlideMotor = null;
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -93,13 +100,38 @@ public class AutonomousBase extends LinearOpMode {
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Big Boy Ready to run");    //
         telemetry.update();
+        // Initialize the hardware variables. Note that the strings used here as parameters
+        // to 'get' must correspond to the names assigned during the robot configuration
+        // step (using the FTC Robot Controller app on the phone).
+        rightFrontMotor  = hardwareMap.get(DcMotor.class, "rightFrontMotor");
+        leftFrontMotor = hardwareMap.get(DcMotor.class, "leftFrontMotor");
+        leftBackMotor = hardwareMap.get(DcMotor.class, "leftBackMotor");
+        rightBackMotor = hardwareMap.get(DcMotor.class, "rightBackMotor");
+        leftSlideMotor= hardwareMap.get(DcMotor.class, "leftSlideMotor");
+        rightSlideMotor = hardwareMap.get(DcMotor.class, "rightSlideMotor");
+        // Most robots need the motor on one side to be reversed to drive forward
+        // Reverse the motor that runs backwards when connected directly to the battery
+        leftBackMotor.setDirection(DcMotor.Direction.REVERSE);
+        leftFrontMotor.setDirection(DcMotor.Direction.REVERSE);
+        rightFrontMotor.setDirection(DcMotor.Direction.FORWARD);
+        rightBackMotor.setDirection(DcMotor.Direction.FORWARD);
+        leftSlideMotor.setDirection(DcMotor.Direction.REVERSE);
+        rightSlideMotor.setDirection(DcMotor.Direction.FORWARD);//TODO Find out which are forward and which are reverse and move to AutoBase
 
+
+        double leftBackPower = 0;
+        double leftFrontPower = 0;
+        double rightFrontPower = 0;
+        double rightBackPower = 0 ;
+        double leftSlidePower = 0;
+        double rightSlidePower = 0;
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         relicTrackables.activate();
 
 
         while (opModeIsActive()) {
+            compensate();
             String key = vuforiate();
             telemetry.addData("Image is", key);
             colorActions();
@@ -115,7 +147,21 @@ public class AutonomousBase extends LinearOpMode {
         idle();
     }
 
+    private void compensate() throws InterruptedException { //TODO needs some testing work
+        leftSlideMotor.setPower(MOTOR_SPEED);
+        rightSlideMotor.setPower(MOTOR_SPEED);
+        sleep(1500);
+        robot.rightServoArm.setPosition(.5);
+        robot.leftServoArm.setPosition(.5);
 
+        sleep(1500);
+        leftSlideMotor.setPower(-1 * MOTOR_SPEED);
+        rightSlideMotor.setPower(-1 * MOTOR_SPEED);
+        sleep(1500);
+        robot.rightServoArm.setPosition(.0);
+        robot.leftServoArm.setPosition(.0);
+        sleep(1500);
+    }
 
 
     private void colorActions() throws InterruptedException { //this all assumes that teamColor == our teams color and the color sensor is in the same direction that forward drive is

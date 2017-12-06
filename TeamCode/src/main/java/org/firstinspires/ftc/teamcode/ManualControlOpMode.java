@@ -72,6 +72,9 @@ public class ManualControlOpMode extends LinearOpMode {
     private DcMotor rightBackMotor = null;
     private DcMotor leftSlideMotor = null;
     private DcMotor rightSlideMotor = null;
+    private Servo   leftServoArm = null;
+    private Servo   rightServoArm = null;
+ 
 
     @Override
     public void runOpMode() {
@@ -89,7 +92,8 @@ public class ManualControlOpMode extends LinearOpMode {
         rightSlideMotor = hardwareMap.get(DcMotor.class, "rightSlideMotor");
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
-
+        rightServoArm = hardwareMap.get(Servo.class, "rightServoArm");
+        leftServoArm = hardwareMap.get(Servo.class, "leftServoArm");
 
         double leftBackPower = 0;
         double leftFrontPower = 0;
@@ -199,8 +203,8 @@ public class ManualControlOpMode extends LinearOpMode {
             else if(gamepad1.right_bumper)
                 slideArmPosition -= ARM_SPEED;
             slideArmPosition = Range.clip(slideArmPosition, robot.SLIDE_MIN_RANGE, robot.SLIDE_MAX_RANGE); //make sure position is allowed
-            robot.rightServoArm.setPosition(slideArmPosition); //set position of servos
-            robot.leftServoArm.setPosition(slideArmPosition); //set position of servos
+            rightServoArm.setPosition(slideArmPosition); //set position of servos
+            leftServoArm.setPosition(slideArmPosition); //set position of servos
 
 
             // Show the elapsed game time and wheel power.

@@ -159,17 +159,21 @@ public class AutonomousBase extends LinearOpMode {
     private void compensate() throws InterruptedException { //TODO needs some testing work
         leftSlideMotor.setPower(MOTOR_SPEED);
         rightSlideMotor.setPower(MOTOR_SPEED);
-        sleep(1500);
+        sleep(500);
+        leftSlideMotor.SetPower(0);
+        rightSlideMoter.SetPower(0);
         robot.rightServoArm.setPosition(.5);
         robot.leftServoArm.setPosition(.5);
 
-        sleep(1500);
+        sleep(500);
         leftSlideMotor.setPower(-1 * MOTOR_SPEED);
         rightSlideMotor.setPower(-1 * MOTOR_SPEED);
-        sleep(1500);
-        rightServoArm.setPosition(.0);
-         leftServoArm.setPosition(.0);
-        sleep(1500);
+        sleep(500);
+        leftSlideMotor.setPower(0);
+        rightSlideMotor.setPower(0);
+        rightServoArm.setPosition(.7);
+         leftServoArm.setPosition(.2);
+        sleep(500);
     }
 
 

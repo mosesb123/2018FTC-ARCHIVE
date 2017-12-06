@@ -175,9 +175,9 @@ public class AutonomousBase extends LinearOpMode {
 
     private void colorActions() throws InterruptedException { //this all assumes that teamColor == our teams color and the color sensor is in the same direction that forward drive is
         driveRight(.3);
-        robot.colorServoArm.setPosition(COLOR_ARM_ANGLE);
-        double red = robot.colorSensor.red();
-        double blue = robot.colorSensor.blue();
+        colorServoArm.setPosition(COLOR_ARM_ANGLE);
+        double red = colorSensor.red();
+        double blue = colorSensor.blue();
         double trueColor = red - blue;
         if (trueColor > 0 /*red*/) {
             if (teamColor.compareTo("red") == 0)

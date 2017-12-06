@@ -160,10 +160,17 @@ public class AutonomousBase extends LinearOpMode {
         leftSlideMotor.setPower(MOTOR_SPEED);
         rightSlideMotor.setPower(MOTOR_SPEED);
         sleep(500);
+<<<<<<< HEAD
         leftSlideMotor.setPower(0);
         rightSlideMotor.setPower(0);
         robot.rightServoArm.setPosition(.5);
         robot.leftServoArm.setPosition(.5);
+=======
+        leftSlideMotor.SetPower(0);
+        rightSlideMoter.SetPower(0);
+        rightServoArm.setPosition(0);
+        leftServoArm.setPosition(1);
+>>>>>>> 824c107eb4f8237938b890122722d49f93efb5ed
 
         sleep(500);
         leftSlideMotor.setPower(-1 * MOTOR_SPEED);
@@ -171,8 +178,8 @@ public class AutonomousBase extends LinearOpMode {
         sleep(500);
         leftSlideMotor.setPower(0);
         rightSlideMotor.setPower(0);
-        rightServoArm.setPosition(.7);
-         leftServoArm.setPosition(.2);
+        rightServoArm.setPosition(1);
+         leftServoArm.setPosition(0);
         sleep(500);
     }
 
@@ -194,7 +201,7 @@ public class AutonomousBase extends LinearOpMode {
             else driveStB(.5);
         }
         driveLeft(.3);
-        robot.stopMoving();
+        stopMoving();
     }
 
     private void leftKey() {
@@ -317,7 +324,7 @@ public class AutonomousBase extends LinearOpMode {
         leftFrontMotor.setPower(0);
         rightSlideMotor.setPower(0);
         leftSlideMotor.setPower(0);
-        rightServoArm.setPosition(SLIDE_ARM_HOME);
+        rightServoArm.setPosition(-SLIDE_ARM_HOME);
         leftServoArm.setPosition(SLIDE_ARM_HOME);
         colorServoArm.setPosition(COLOR_ARM_HOME);
 

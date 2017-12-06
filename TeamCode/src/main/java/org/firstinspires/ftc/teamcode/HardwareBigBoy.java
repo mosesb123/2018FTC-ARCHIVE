@@ -139,4 +139,25 @@ public class HardwareBigBoy {
          driveBackwards(time);
          driveStraight(time);
     }
+
+    public void driveStraightDistance(double feet){
+        double wheelsCircum = 1.04719755;
+        double ticksPerRotation = 1120;
+        double rotations = feet / wheelsCircum;
+        double ticks = rotations * ticksPerRotation;
+
+        this.leftFrontMotor.setMode(DCMotorController.RunMode.RESET_ENCODERS);
+        this.leftBackMotor.setMode(DCMotorController.RunMode.RESET_ENCODERS);
+        this.rightFrontMotor.setMode(DCMotorController.RunMode.RESET_ENCODERS);
+        this.rightBackMotor.setMode(DCMotorController.RunMode.RESET_ENCODERS);
+
+        this.leftFrontMotor.setTargetPosition(ticks);
+        this.leftBackMotor.setTargetPosition(ticks);
+        this.rightFrontMotor.setTargetPosition(ticks);
+        this.rightBackMotor.setTargetPosition(ticks);
+
+        
+    }
 }
+
+

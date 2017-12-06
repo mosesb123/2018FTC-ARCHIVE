@@ -160,8 +160,8 @@ public class AutonomousBase extends LinearOpMode {
         leftSlideMotor.setPower(MOTOR_SPEED);
         rightSlideMotor.setPower(MOTOR_SPEED);
         sleep(500);
-        leftSlideMotor.SetPower(0);
-        rightSlideMoter.SetPower(0);
+        leftSlideMotor.setPower(0);
+        rightSlideMotor.setPower(0);
         robot.rightServoArm.setPosition(.5);
         robot.leftServoArm.setPosition(.5);
 

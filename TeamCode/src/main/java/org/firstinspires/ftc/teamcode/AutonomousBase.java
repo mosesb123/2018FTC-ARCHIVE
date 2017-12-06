@@ -70,6 +70,9 @@ public class AutonomousBase extends LinearOpMode {
     private DcMotor rightBackMotor = null;
     private DcMotor leftSlideMotor = null;
     private DcMotor rightSlideMotor = null;
+    private Servo leftServoArm = null;
+    private Servo rightServoArm = null;
+
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -109,6 +112,9 @@ public class AutonomousBase extends LinearOpMode {
         rightBackMotor = hardwareMap.get(DcMotor.class, "rightBackMotor");
         leftSlideMotor= hardwareMap.get(DcMotor.class, "leftSlideMotor");
         rightSlideMotor = hardwareMap.get(DcMotor.class, "rightSlideMotor");
+
+        rightServoArm = hardwareMap.servo.get("rightServoArm");
+        leftServoArm = hardwareMap.servo.get("leftServoArm");
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
         leftBackMotor.setDirection(DcMotor.Direction.REVERSE);
@@ -158,8 +164,8 @@ public class AutonomousBase extends LinearOpMode {
         leftSlideMotor.setPower(-1 * MOTOR_SPEED);
         rightSlideMotor.setPower(-1 * MOTOR_SPEED);
         sleep(1500);
-        robot.rightServoArm.setPosition(.0);
-        robot.leftServoArm.setPosition(.0);
+        rightServoArm.setPosition(.0);
+         leftServoArm.setPosition(.0);
         sleep(1500);
     }
 

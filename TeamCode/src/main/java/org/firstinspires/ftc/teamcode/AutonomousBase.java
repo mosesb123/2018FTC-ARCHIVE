@@ -56,14 +56,21 @@ public class AutonomousBase extends LinearOpMode {
     /* Declare OpMode boys. */
     HardwareBigBoy robot = new HardwareBigBoy();   // Use a Pushbot's hardware
     private ElapsedTime runtime = new ElapsedTime();
-    private ElapsedTime runtime2 = new ElapsedTime();
     static final double COLOR_ARM_ANGLE = .3; //need to test
     private String teamColor = ""; //our teams color, 2 dif autos
     public static final String TAG = "Vuforia VuMark Sample"; //Vuforia stuff
     OpenGLMatrix lastLocation = null; //Vuforia stuff
     VuforiaLocalizer vuforia; //youll never guess what this is for
+    public final static double SLIDE_ARM_HOME = 0.0; //need to test and find, probs 0.0
+    public final static double SLIDE_MIN_RANGE = 0.0; //need to test and find, probs 0.0
+    public final static double SLIDE_MAX_RANGE = 0.5; //need to test and find, probs 0.5
+    public final static double DRIVE_SPEED = .8; //TODO find real drive speed
+    public final static double COLOR_ARM_HOME = 0.0; //need to test and find
+    public final static double COLOR_ARM_DESTNATION = 0.5; //test it
     final double ARM_SPEED = .05;
     final double MOTOR_SPEED = .8;
+    final double WHEELS_CIRCUM = 1.04719755;
+    final double TICKS_PER_ROTATION = 1120;
     private DcMotor rightFrontMotor = null;
     private DcMotor leftFrontMotor = null;
     private DcMotor leftBackMotor = null;
@@ -72,6 +79,9 @@ public class AutonomousBase extends LinearOpMode {
     private DcMotor rightSlideMotor = null;
     private Servo leftServoArm = null;
     private Servo rightServoArm = null;
+    private Servo colorServoArm = null;
+    public ColorSensor colorSensor = null;
+
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -115,14 +125,8 @@ public class AutonomousBase extends LinearOpMode {
 
         rightServoArm = hardwareMap.servo.get("rightServoArm");
         leftServoArm = hardwareMap.servo.get("leftServoArm");
-        // Most robots need the motor on one side to be reversed to drive forward
-        // Reverse the motor that runs backwards when connected directly to the battery
-        leftBackMotor.setDirection(DcMotor.Direction.REVERSE);
-        leftFrontMotor.setDirection(DcMotor.Direction.REVERSE);
-        rightFrontMotor.setDirection(DcMotor.Direction.FORWARD);
-        rightBackMotor.setDirection(DcMotor.Direction.FORWARD);
-        leftSlideMotor.setDirection(DcMotor.Direction.REVERSE);
-        rightSlideMotor.setDirection(DcMotor.Direction.FORWARD);//TODO Find out which are forward and which are reverse and move to AutoBase
+        colorServoArm = hardwareMap.servo.get("colorServoArm");
+        colorSensor = hardwareMap.colorSensor.get("color");
 
 
         double leftBackPower = 0;
@@ -141,8 +145,7 @@ public class AutonomousBase extends LinearOpMode {
             String key = vuforiate();
             telemetry.addData("Image is", key);
             colorActions();
-            cryptoActions(); //unfinished
-
+            cryptoActions();
         }
 
 
@@ -171,20 +174,22 @@ public class AutonomousBase extends LinearOpMode {
 
 
     private void colorActions() throws InterruptedException { //this all assumes that teamColor == our teams color and the color sensor is in the same direction that forward drive is
+        driveRight(.3);
         robot.colorServoArm.setPosition(COLOR_ARM_ANGLE);
         double red = robot.colorSensor.red();
         double blue = robot.colorSensor.blue();
         double trueColor = red - blue;
         if (trueColor > 0 /*red*/) {
             if (teamColor.compareTo("red") == 0)
-                robot.driveBtS(2.5); //TODO find real time
-            else robot.driveStB(2.5);
+                driveBtS(.5); //
+            else driveStB(.5);
         }
         else {
             if (teamColor.compareTo("blue") == 0)
-                robot.driveBtS(2.5);
-            else robot.driveStB(2.5);
+                driveBtS(.5);
+            else driveStB(.5);
         }
+        driveLeft(.3);
         robot.stopMoving();
     }
 
@@ -206,6 +211,130 @@ public class AutonomousBase extends LinearOpMode {
         else
             rightKey(); //drive to put it in the right
         robot.stopMoving();
+    }
+
+    public void driveStB(double feet) throws InterruptedException {
+        driveStraight(feet);
+        driveBackwards(feet);
+    }
+    public void driveBtS(double feet) throws InterruptedException {
+        driveBackwards(feet);
+        driveStraight(feet);
+    }
+    public void driveLeft(double feet) {
+        double rotations = feet /WHEELS_CIRCUM;
+        double ticks = rotations * TICKS_PER_ROTATION;
+        resetEncoders();
+
+        leftFrontMotor.setTargetPosition(-1*(int)ticks);
+        leftBackMotor.setTargetPosition((int)ticks);
+        rightFrontMotor.setTargetPosition((int)ticks);
+        rightBackMotor.setTargetPosition(-1*(int)ticks);
+
+        setRunToPosition();
+
+        leftFrontMotor.setPower(-1*MOTOR_SPEED);
+        leftBackMotor.setPower(MOTOR_SPEED);
+        rightFrontMotor.setPower(MOTOR_SPEED);
+        rightBackMotor.setPower(-1*MOTOR_SPEED);
+        whileIsBusy();
+        stopMoving();
+        resetEncoders();
+    }
+    public void driveRight(double feet){
+        double rotations = feet /WHEELS_CIRCUM;
+        double ticks = rotations * TICKS_PER_ROTATION;
+        resetEncoders();
+
+        leftFrontMotor.setTargetPosition((int)ticks);
+        leftBackMotor.setTargetPosition(-1*(int)ticks);
+        rightFrontMotor.setTargetPosition(-1*(int)ticks);
+        rightBackMotor.setTargetPosition((int)ticks);
+
+        setRunToPosition();
+
+        leftFrontMotor.setPower(MOTOR_SPEED);
+        leftBackMotor.setPower(-1*MOTOR_SPEED);
+        rightFrontMotor.setPower(-1*MOTOR_SPEED);
+        rightBackMotor.setPower(MOTOR_SPEED);
+        whileIsBusy();
+        stopMoving();
+        resetEncoders();
+    }
+    public void driveStraight(double feet){
+
+        double rotations = feet /WHEELS_CIRCUM;
+        double ticks = rotations * TICKS_PER_ROTATION;
+        resetEncoders();
+
+        leftFrontMotor.setTargetPosition(-1*(int)ticks);
+        leftBackMotor.setTargetPosition(-1*(int)ticks);
+        rightFrontMotor.setTargetPosition(-1*(int)ticks);
+        rightBackMotor.setTargetPosition(-1*(int)ticks);
+
+        setRunToPosition();
+
+        leftFrontMotor.setPower(MOTOR_SPEED);
+        leftBackMotor.setPower(MOTOR_SPEED);
+        rightFrontMotor.setPower(MOTOR_SPEED);
+        rightBackMotor.setPower(MOTOR_SPEED);
+        whileIsBusy();
+        stopMoving();
+        resetEncoders();
+
+    }
+    public void driveBackwards(double feet) {
+
+        double rotations = feet / WHEELS_CIRCUM;
+        double ticks = rotations * TICKS_PER_ROTATION;
+        resetEncoders();
+
+        leftFrontMotor.setTargetPosition((int) ticks);
+        leftBackMotor.setTargetPosition((int) ticks);
+        rightFrontMotor.setTargetPosition((int) ticks);
+        rightBackMotor.setTargetPosition((int) ticks);
+
+        setRunToPosition();
+
+
+        leftFrontMotor.setPower(-1*MOTOR_SPEED);
+        leftBackMotor.setPower(-1*MOTOR_SPEED);
+        rightFrontMotor.setPower(-1*MOTOR_SPEED);
+        rightBackMotor.setPower(-1*MOTOR_SPEED);
+        whileIsBusy();
+        stopMoving();
+        resetEncoders();
+    }
+
+    public void stopMoving() {
+        rightFrontMotor.setPower(0);
+        leftBackMotor.setPower(0);
+        rightBackMotor.setPower(0);
+        leftFrontMotor.setPower(0);
+        rightSlideMotor.setPower(0);
+        leftSlideMotor.setPower(0);
+        rightServoArm.setPosition(SLIDE_ARM_HOME);
+        leftServoArm.setPosition(SLIDE_ARM_HOME);
+        colorServoArm.setPosition(COLOR_ARM_HOME);
+
+
+    }
+
+    public void resetEncoders(){
+
+        leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
+    public void setRunToPosition() {
+        leftFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+    public void whileIsBusy() {
+        while (leftFrontMotor.isBusy()|| leftBackMotor.isBusy()|| rightFrontMotor.isBusy() || rightBackMotor.isBusy()){}
     }
 
     private String vuforiate () {

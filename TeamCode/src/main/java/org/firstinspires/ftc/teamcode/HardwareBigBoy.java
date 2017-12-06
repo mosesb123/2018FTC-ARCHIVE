@@ -36,7 +36,7 @@ public class HardwareBigBoy {
 
     }
 
-    public void init(HardwareMap aMap){
+    public void init(HardwareMap aMap) {
         // Hardware Map assignment
         hwmap = aMap;
 
@@ -49,12 +49,17 @@ public class HardwareBigBoy {
         rightServoArm = hwmap.servo.get("rightServoArm");
         leftServoArm = hwmap.servo.get("leftServoArm");
         rightSlideMotor = hwmap.dcMotor.get("rightSlideMotor");
-        leftSlideMotor= hwmap.dcMotor.get("leftSlideMotor");
+        leftSlideMotor = hwmap.dcMotor.get("leftSlideMotor");
 
         colorServoArm = hwmap.servo.get("colorServoArm");
         colorSensor = hwmap.colorSensor.get("color");
 
-
+        leftBackMotor.setDirection(DcMotor.Direction.REVERSE);
+        leftFrontMotor.setDirection(DcMotor.Direction.REVERSE);
+        rightFrontMotor.setDirection(DcMotor.Direction.FORWARD);
+        rightBackMotor.setDirection(DcMotor.Direction.FORWARD);
+        leftSlideMotor.setDirection(DcMotor.Direction.REVERSE);
+        rightSlideMotor.setDirection(DcMotor.Direction.FORWARD);//TODO Find out which are forward and which are reverse
         //Set Mode
         rightFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftBackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -62,12 +67,12 @@ public class HardwareBigBoy {
         leftFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightServoArm.setPosition(SLIDE_ARM_HOME);
-        leftServoArm.setPosition(SLIDE_ARM_HOME);
-        colorServoArm.setPosition(COLOR_ARM_HOME);
 
         //Set Power to 0
         stopMoving();
+        rightServoArm.setPosition(SLIDE_ARM_HOME);
+        leftServoArm.setPosition(SLIDE_ARM_HOME);
+        colorServoArm.setPosition(COLOR_ARM_HOME);
 
     }
 
@@ -83,80 +88,7 @@ public class HardwareBigBoy {
         leftServoArm.setPosition(SLIDE_ARM_HOME);
         colorServoArm.setPosition(COLOR_ARM_HOME);
 
-    }
-    public void driveStraight(double x) throws InterruptedException {
-        leftFrontMotor.setPower(DRIVE_SPEED );
-        leftBackMotor.setPower(DRIVE_SPEED );
-        rightFrontMotor.setPower(DRIVE_SPEED);
-        rightBackMotor.setPower(DRIVE_SPEED);
-        runtime.reset();
-        while ((runtime.seconds() < x)) {
-            wait();
-        }
-        stopMoving();
-    }
-    public void driveBackwards(double x) throws InterruptedException {
-        leftFrontMotor.setPower(-1 *DRIVE_SPEED ) ;
-        leftBackMotor.setPower(-1 * DRIVE_SPEED  );
-        rightFrontMotor.setPower(-1 * DRIVE_SPEED);
-        rightBackMotor.setPower(-1 * DRIVE_SPEED);
-        runtime.reset();
-        while (runtime.seconds() < x) {
-            wait();
-        }
-        stopMoving();
-    }
-/*
-    //TODO find the proper time it takes to turn (currently 1)
-    public void turnRight() throws InterruptedException {
-        leftFrontMotor.setPower(DRIVE_SPEED + LEFT_MOTOR_OFFSET);
-        leftBackMotor.setPower(DRIVE_SPEED + LEFT_MOTOR_OFFSET);
-        rightFrontMotor.setPower(-1 * DRIVE_SPEED);
-        rightBackMotor.setPower(-1 * DRIVE_SPEED);
-        runtime.reset();
-        while (runtime.seconds() < 1) {
-            wait();
-        }
-        stopMoving();
-    }
-    public void turnLeft() throws InterruptedException {
-        leftFrontMotor.setPower(-1*(DRIVE_SPEED + LEFT_MOTOR_OFFSET));
-        leftBackMotor.setPower(-1*(DRIVE_SPEED + LEFT_MOTOR_OFFSET));
-        rightFrontMotor.setPower(DRIVE_SPEED);
-        rightBackMotor.setPower(DRIVE_SPEED);
-        runtime.reset();
-        while (runtime.seconds() < 1) {
-            wait();
-        }
-        stopMoving();
-    }
-    */ //TODO make real driving functions involving mech wheels
-    public void driveStB(double time) throws InterruptedException {
-        driveStraight(time);
-         driveBackwards(time);
-    }
-    public void driveBtS(double time) throws InterruptedException {
-         driveBackwards(time);
-         driveStraight(time);
-    }
 
-    public void driveStraightDistance(double feet){
-        double wheelsCircum = 1.04719755;
-        double ticksPerRotation = 1120;
-        double rotations = feet / wheelsCircum;
-        double ticks = rotations * ticksPerRotation;
-
-        this.leftFrontMotor.setMode(DCMotorController.RunMode.RESET_ENCODERS);
-        this.leftBackMotor.setMode(DCMotorController.RunMode.RESET_ENCODERS);
-        this.rightFrontMotor.setMode(DCMotorController.RunMode.RESET_ENCODERS);
-        this.rightBackMotor.setMode(DCMotorController.RunMode.RESET_ENCODERS);
-
-        this.leftFrontMotor.setTargetPosition(ticks);
-        this.leftBackMotor.setTargetPosition(ticks);
-        this.rightFrontMotor.setTargetPosition(ticks);
-        this.rightBackMotor.setTargetPosition(ticks);
-
-        
     }
 }
 

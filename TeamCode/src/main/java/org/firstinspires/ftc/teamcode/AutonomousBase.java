@@ -58,7 +58,6 @@ public class AutonomousBase extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     static final double COLOR_ARM_ANGLE = .3; //need to test
     private String teamColor = ""; //our teams color, 2 dif autos
-    public static final String TAG = "Vuforia VuMark Sample"; //Vuforia stuff
     OpenGLMatrix lastLocation = null; //Vuforia stuff
     VuforiaLocalizer vuforia; //you'll never guess what this is for
     public final static double SLIDE_ARM_HOME = 0.0; //need to test and find, probs 0.0
@@ -100,7 +99,9 @@ public class AutonomousBase extends LinearOpMode {
          * but differ in their instance id information.
          * @see VuMarkInstanceId
          */
-
+        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        VuforiaTrackable relicTemplate = relicTrackables.get(0);
+        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
         /*
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
@@ -141,10 +142,19 @@ public class AutonomousBase extends LinearOpMode {
 
         while (opModeIsActive()) {
             compensate();
-//            String key = vuforiate();
-//            telemetry.addData("Image is", key);
-            colorActions();
-//            cryptoActions();
+            //got a little too object oriented. Vuforia goes here now
+            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+            while (vuMark == RelicRecoveryVuMark.UNKNOWN) { //while loop until we find it
+
+                vuMark = RelicRecoveryVuMark.from(relicTemplate);
+                telemetry.addData("VuMark", "not visible");
+
+                telemetry.addData("VuMark", "%s visible", vuMark);
+            }
+            telemetry.update();
+
+ //           colorActions();
+            cryptoActions(vuMark.toString());
         }
 
 
@@ -210,8 +220,7 @@ public class AutonomousBase extends LinearOpMode {
     private void rightKey() {
 
     }
-    private void cryptoActions() throws InterruptedException { //finished, none of the other functions are written though
-        String picture = vuforiate(); //EASY DOGGY
+    private void cryptoActions(String picture) throws InterruptedException { //finished, none of the other functions are written though
         if (picture == "LEFT")
             leftKey(); // drive to put it in the left
         else if (picture == "CENTER")
@@ -345,33 +354,6 @@ public class AutonomousBase extends LinearOpMode {
         while (leftFrontMotor.isBusy()|| leftBackMotor.isBusy()|| rightFrontMotor.isBusy() || rightBackMotor.isBusy()){}
     }
 
-    private String vuforiate () {
-        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
-        VuforiaTrackable relicTemplate = relicTrackables.get(0);
-        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
-        /**
-         * See if any of the instances of {@link relicTemplate} are currently visible.
-         * {@link RelicRecoveryVuMark} is an enum which can have the following values:
-         * UNKNOWN, LEFT, CENTER, and RIGHT. When a VuMark is visible, something other than
-         * UNKNOWN will be returned by {@link RelicRecoveryVuMark#from(VuforiaTrackable)}.
-         */
-        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-        while (vuMark == RelicRecoveryVuMark.UNKNOWN) {
-
-                /* Found an instance of the template. In the actual game, you will probably
-                 * loop until this condition occurs, then move on to act accordingly depending
-                 * on which VuMark was visible. */
-            vuMark = RelicRecoveryVuMark.from(relicTemplate);
-            telemetry.addData("VuMark", "not visible");
-
-            telemetry.addData("VuMark", "%s visible", vuMark);
-        }
-        telemetry.update();
-        return vuMark + " ";
-    }
-    String format(OpenGLMatrix transformationMatrix) {
-        return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
-    }
 
 
 }

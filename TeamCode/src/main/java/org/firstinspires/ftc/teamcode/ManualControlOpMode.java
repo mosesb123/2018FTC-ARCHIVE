@@ -183,12 +183,12 @@ public class ManualControlOpMode extends LinearOpMode {
             //Slide control
             if (gamepad1.left_trigger >= DEADZONE) { //if left Trigger is pressed lower slides
                 leftSlidePower = -1 * MOTOR_SPEED; //TODO find correct motor standard power and controller deadzones
-                rightSlidePower = -1 * MOTOR_SPEED;
+                rightSlidePower = MOTOR_SPEED;
             }
             else if (gamepad1.right_trigger >= DEADZONE) //if right Trigger is pressed raise slides
             {
                 leftSlidePower = MOTOR_SPEED;
-                rightSlidePower = MOTOR_SPEED;
+                rightSlidePower = -1 * MOTOR_SPEED;
             }
             else
             {

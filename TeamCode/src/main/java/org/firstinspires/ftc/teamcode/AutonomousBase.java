@@ -60,7 +60,7 @@ public class AutonomousBase extends LinearOpMode {
     private String teamColor = ""; //our teams color, 2 dif autos
     public static final String TAG = "Vuforia VuMark Sample"; //Vuforia stuff
     OpenGLMatrix lastLocation = null; //Vuforia stuff
-    VuforiaLocalizer vuforia; //youll never guess what this is for
+    VuforiaLocalizer vuforia; //you'll never guess what this is for
     public final static double SLIDE_ARM_HOME = 0.0; //need to test and find, probs 0.0
     public final static double SLIDE_MIN_RANGE = 0.0; //need to test and find, probs 0.0
     public final static double SLIDE_MAX_RANGE = 0.5; //need to test and find, probs 0.5
@@ -135,6 +135,8 @@ public class AutonomousBase extends LinearOpMode {
         double rightBackPower = 0 ;
         double leftSlidePower = 0;
         double rightSlidePower = 0;
+        leftServoArm.setPosition(-1);
+
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         relicTrackables.activate();
@@ -142,10 +144,10 @@ public class AutonomousBase extends LinearOpMode {
 
         while (opModeIsActive()) {
             compensate();
-            String key = vuforiate();
-            telemetry.addData("Image is", key);
+//            String key = vuforiate();
+//            telemetry.addData("Image is", key);
             colorActions();
-            cryptoActions();
+//            cryptoActions();
         }
 
 
@@ -167,7 +169,7 @@ public class AutonomousBase extends LinearOpMode {
         leftSlideMotor.setPower(0);
         rightSlideMotor.setPower(0);
         rightServoArm.setPosition(0);
-        leftServoArm.setPosition(1);
+        leftServoArm.setPosition(0);
 
         sleep(500);
         leftSlideMotor.setPower(-1 * MOTOR_SPEED);
@@ -176,13 +178,14 @@ public class AutonomousBase extends LinearOpMode {
         leftSlideMotor.setPower(0);
         rightSlideMotor.setPower(0);
         rightServoArm.setPosition(1);
-         leftServoArm.setPosition(0);
+         leftServoArm.setPosition(-1);
         sleep(500);
     }
 
 
     private void colorActions() throws InterruptedException { //this all assumes that teamColor == our teams color and the color sensor is in the same direction that forward drive is
         driveRight(.3);
+        telemetry.addData("Caption", "sorta works");
         colorServoArm.setPosition(COLOR_ARM_ANGLE);
         double red = colorSensor.red();
         double blue = colorSensor.blue();
@@ -212,9 +215,9 @@ public class AutonomousBase extends LinearOpMode {
     }
     private void cryptoActions() throws InterruptedException { //finished, none of the other functions are written though
         String picture = vuforiate(); //EASY DOGGY
-        if (picture == "Left")
+        if (picture == "LEFT")
             leftKey(); // drive to put it in the left
-        else if (picture == "Middle")
+        else if (picture == "CENTER")
             middleKey(); // drive to put it in the middle
         else
             rightKey(); //drive to put it in the right

@@ -134,6 +134,7 @@ public class AutonomousBase extends LinearOpMode {
         double leftSlidePower = 0;
         double rightSlidePower = 0;
         leftServoArm.setPosition(-1);
+        rightServoArm.setPosition(1);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();

@@ -95,6 +95,9 @@ public class ManualControlOpMode extends LinearOpMode {
         rightServoArm = hardwareMap.get(Servo.class, "rightServoArm");
         leftServoArm = hardwareMap.get(Servo.class, "leftServoArm");
 
+        leftBackMotor.setDirection(DcMotor.Direction.REVERSE);
+        leftFrontMotor.setDirection(DcMotor.Direction.REVERSE);
+
         double leftBackPower = 0;
         double leftFrontPower = 0;
         double rightFrontPower = 0;
@@ -164,24 +167,22 @@ public class ManualControlOpMode extends LinearOpMode {
                 leftSlideMotor.setPower(MOTOR_SPEED);
                 rightSlideMotor.setPower(-MOTOR_SPEED);
             }
-            /*else
-            {
-                leftSlidePower = 0;
-                rightSlidePower = 0;
-            }
-            rightSlideMotor.setPower(rightSlidePower);
-            leftSlideMotor.setPower(leftSlidePower);
-            */
+
             stopMoving();
 
-
-            if(gamepad1.left_bumper) //slide clamps
+            while (gamepad1.left_bumper) {//slide clamps
                 slideArmPosition += ARM_SPEED;
-            else if(gamepad1.right_bumper)
+                slideArmPosition = Range.clip(slideArmPosition, robot.SLIDE_MIN_RANGE, robot.SLIDE_MAX_RANGE); //make sure position is allowed
+                rightServoArm.setPosition(slideArmPosition); //set position of servos
+                leftServoArm.setPosition(-slideArmPosition); //set position of servos
+            }
+            while (gamepad1.right_bumper) {
                 slideArmPosition -= ARM_SPEED;
-            slideArmPosition = Range.clip(slideArmPosition, robot.SLIDE_MIN_RANGE, robot.SLIDE_MAX_RANGE); //make sure position is allowed
-            rightServoArm.setPosition(slideArmPosition); //set position of servos
-            leftServoArm.setPosition(-slideArmPosition); //set position of servos
+                slideArmPosition = Range.clip(slideArmPosition, robot.SLIDE_MIN_RANGE, robot.SLIDE_MAX_RANGE); //make sure position is allowed
+                rightServoArm.setPosition(slideArmPosition); //set position of servos
+                leftServoArm.setPosition(-slideArmPosition); //set position of servos
+            }
+
 
 
             // Show the elapsed game time and wheel power.

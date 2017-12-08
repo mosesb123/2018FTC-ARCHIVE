@@ -19,9 +19,9 @@ public class HardwareBigBoy {
     public DcMotor rightSlideMotor = null;
     public DcMotor leftSlideMotor = null;
 
-    public final static double SLIDE_ARM_HOME = 0.2; //need to test and find, probs 0.0
-    public final static double SLIDE_MIN_RANGE = 0.2; //need to test and find, probs 0.0
-    public final static double SLIDE_MAX_RANGE = 0.5; //need to test and find, probs 0.5
+    public final static double SLIDE_ARM_HOME = 1; //need to test and find, probs 0.0
+    public final static double SLIDE_MIN_RANGE = -1; //need to test and find, probs 0.0
+    public final static double SLIDE_MAX_RANGE = 1; //need to test and find, probs 0.5
 
     public Servo colorServoArm = null;
     public ColorSensor colorSensor = null;
@@ -55,8 +55,8 @@ public class HardwareBigBoy {
         colorServoArm = hwmap.servo.get("colorServoArm");
         colorSensor = hwmap.colorSensor.get("color");
 
-        leftBackMotor.setDirection(DcMotor.Direction.FORWARD);
-        leftFrontMotor.setDirection(DcMotor.Direction.FORWARD);
+        leftBackMotor.setDirection(DcMotor.Direction.REVERSE);
+        leftFrontMotor.setDirection(DcMotor.Direction.REVERSE);
         rightFrontMotor.setDirection(DcMotor.Direction.FORWARD);
         rightBackMotor.setDirection(DcMotor.Direction.FORWARD);
         leftSlideMotor.setDirection(DcMotor.Direction.REVERSE);

@@ -63,7 +63,7 @@ public class AutonomousBase extends LinearOpMode {
     public final static double SLIDE_ARM_HOME = 0.0; //need to test and find, probs 0.0
     public final static double SLIDE_MIN_RANGE = 0.0; //need to test and find, probs 0.0
     public final static double SLIDE_MAX_RANGE = 0.5; //need to test and find, probs 0.5
-    public final static double DRIVE_SPEED = .8; //TODO find real drive speed
+    public final static double DRIVE_SPEED = .9; //TODO find real drive speed
     public final static double COLOR_ARM_HOME = 0.0; //need to test and find
     public final static double COLOR_ARM_DESTNATION = 0.5; //test it
     final double ARM_SPEED = .05;

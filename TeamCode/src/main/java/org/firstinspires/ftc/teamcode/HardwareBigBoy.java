@@ -25,8 +25,8 @@ public class HardwareBigBoy {
 
     public Servo colorServoArm = null;
     public ColorSensor colorSensor = null;
-    public final static double DRIVE_SPEED = .8; //TODO find real drive speed
-    public final static double COLOR_ARM_HOME = 1.0; //need to test and find
+    public final static double DRIVE_SPEED = .9; //TODO find real drive speed
+    public final static double COLOR_ARM_HOME = 0; //need to test and find
     public final static double COLOR_ARM_DESTNATION = 0.5; //test it
 
     public HardwareMap hwmap = null;

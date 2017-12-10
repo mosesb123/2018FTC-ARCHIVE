@@ -61,6 +61,8 @@ public class ManualControlOpMode extends LinearOpMode {
     // Declare OpMode members.
     HardwareBigBoy robot = new HardwareBigBoy();
     private ElapsedTime runtime = new ElapsedTime();
+    public final static double DRIVE_SPEED = .9; //TODO find real drive speed
+    public final static double COLOR_ARM_HOME = 0; //need to test and find
     double slideArmPosition = 1;
     final double ARM_SPEED = .05;
     final double MOTOR_SPEED = .8;
@@ -75,7 +77,9 @@ public class ManualControlOpMode extends LinearOpMode {
     private DcMotor rightSlideMotor = null;
     private Servo   leftServoArm = null;
     private Servo   rightServoArm = null;
- 
+    private Servo   colorServoArm = null;
+
+
 
     @Override
     public void runOpMode() {
@@ -95,6 +99,7 @@ public class ManualControlOpMode extends LinearOpMode {
         // Reverse the motor that runs backwards when connected directly to the battery
         rightServoArm = hardwareMap.get(Servo.class, "rightServoArm");
         leftServoArm = hardwareMap.get(Servo.class, "leftServoArm");
+        colorServoArm = hardwareMap.servo.get("colorServoArm");
 
         leftBackMotor.setDirection(DcMotor.Direction.REVERSE);
         leftFrontMotor.setDirection(DcMotor.Direction.REVERSE);
@@ -103,6 +108,7 @@ public class ManualControlOpMode extends LinearOpMode {
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
+        colorServoArm.setPosition(0);
         runtime.reset();
 
         // run until the end of the match (driver presses STOP)

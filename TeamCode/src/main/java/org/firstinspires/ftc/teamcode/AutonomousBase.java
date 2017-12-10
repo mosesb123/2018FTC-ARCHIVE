@@ -56,16 +56,13 @@ public class AutonomousBase extends LinearOpMode {
     /* Declare OpMode boys. */
     HardwareBigBoy robot = new HardwareBigBoy();   // Use a Pushbot's hardware
     private ElapsedTime runtime = new ElapsedTime();
-    static final double COLOR_ARM_ANGLE = .3; //need to test
     private String teamColor = ""; //our teams color, 2 dif autos
     OpenGLMatrix lastLocation = null; //Vuforia stuff
     VuforiaLocalizer vuforia; //you'll never guess what this is for
     public final static double SLIDE_ARM_HOME = 0.0; //need to test and find, probs 0.0
-    public final static double SLIDE_MIN_RANGE = 0.0; //need to test and find, probs 0.0
-    public final static double SLIDE_MAX_RANGE = 0.5; //need to test and find, probs 0.5
     public final static double DRIVE_SPEED = .9; //TODO find real drive speed
-    public final static double COLOR_ARM_HOME = 0.0; //need to test and find
-    public final static double COLOR_ARM_DESTNATION = 0.5; //test it
+    public final static double COLOR_ARM_HOME = 1; //need to test and find
+    public final static double COLOR_ARM_DESTNATION = 0; //test it
     final double ARM_SPEED = .05;
     final double MOTOR_SPEED = .8;
     final double WHEELS_CIRCUM = 1.04719755;
@@ -133,8 +130,8 @@ public class AutonomousBase extends LinearOpMode {
         double rightBackPower = 0 ;
         double leftSlidePower = 0;
         double rightSlidePower = 0;
-        leftServoArm.setPosition(-1);
-        rightServoArm.setPosition(1);
+        leftServoArm.setPosition(1-SLIDE_ARM_HOME);
+        rightServoArm.setPosition(SLIDE_ARM_HOME);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -142,7 +139,8 @@ public class AutonomousBase extends LinearOpMode {
 
 
         while (opModeIsActive()) {
-            compensate();
+            leftServoArm.setPosition(SLIDE_ARM_HOME);
+            rightServoArm.setPosition(1-SLIDE_ARM_HOME);
             //got a little too object oriented. Vuforia goes here now
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
             while (vuMark == RelicRecoveryVuMark.UNKNOWN) { //while loop until we find it
@@ -154,8 +152,10 @@ public class AutonomousBase extends LinearOpMode {
             }
             telemetry.update();
 
- //           colorActions();
+            colorActions();
             cryptoActions(vuMark.toString());
+            leftServoArm.setPosition(1-SLIDE_ARM_HOME);
+            rightServoArm.setPosition(SLIDE_ARM_HOME);
         }
 
 
@@ -166,35 +166,11 @@ public class AutonomousBase extends LinearOpMode {
         idle();
     }
 
-    private void compensate() throws InterruptedException { //TODO needs some testing work
-        leftSlideMotor.setPower(MOTOR_SPEED);
-        rightSlideMotor.setPower(MOTOR_SPEED);
-        sleep(500);
-        leftSlideMotor.setPower(0);
-        rightSlideMotor.setPower(0);
-        robot.rightServoArm.setPosition(.5);
-        robot.leftServoArm.setPosition(.5);
-        leftSlideMotor.setPower(0);
-        rightSlideMotor.setPower(0);
-        rightServoArm.setPosition(0);
-        leftServoArm.setPosition(0);
-
-        sleep(500);
-        leftSlideMotor.setPower(-1 * MOTOR_SPEED);
-        rightSlideMotor.setPower(-1 * MOTOR_SPEED);
-        sleep(500);
-        leftSlideMotor.setPower(0);
-        rightSlideMotor.setPower(0);
-        rightServoArm.setPosition(1);
-         leftServoArm.setPosition(-1);
-        sleep(500);
-    }
-
 
     private void colorActions() throws InterruptedException { //this all assumes that teamColor == our teams color and the color sensor is in the same direction that forward drive is
         driveRight(.3);
         telemetry.addData("Caption", "sorta works");
-        colorServoArm.setPosition(COLOR_ARM_ANGLE);
+        colorServoArm.setPosition(COLOR_ARM_DESTNATION);
         double red = colorSensor.red();
         double blue = colorSensor.blue();
         double trueColor = red - blue;

@@ -63,10 +63,10 @@ public class ManualControlOpMode extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     public final static double DRIVE_SPEED = .9; //TODO find real drive speed
     public final static double COLOR_ARM_HOME = 0; //need to test and find
-    double slideArmPosition = 1;
+    double slideArmPosition = 0;
     final double ARM_SPEED = .05;
     final double MOTOR_SPEED = .8;
-    final double DEADZONE = .3;
+    final double DEADZONE = .2;
     public final static double SLIDE_MIN_RANGE = 0; //need to test and find
     public final static double SLIDE_MAX_RANGE = 1; //need to test and find
     private DcMotor rightFrontMotor = null;
@@ -108,20 +108,20 @@ public class ManualControlOpMode extends LinearOpMode {
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        colorServoArm.setPosition(0);
+        colorServoArm.setPosition(1);
         runtime.reset();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
             //Drive train functions
-            if(gamepad1.left_stick_y >= DEADZONE && Math.abs(gamepad1.left_stick_x)<= DEADZONE) { //Forward
+            if(Math.abs(gamepad1.left_stick_y) >= DEADZONE && Math.abs(gamepad1.left_stick_x)<= DEADZONE) { //Forward Back
                 leftFrontMotor.setPower(MOTOR_SPEED * gamepad1.left_stick_y);
                 rightFrontMotor.setPower(MOTOR_SPEED * gamepad1.left_stick_y);
                 leftBackMotor.setPower(MOTOR_SPEED * gamepad1.left_stick_y);
                 rightBackMotor.setPower(MOTOR_SPEED * gamepad1.left_stick_y);
             }
-            else if(gamepad1.left_stick_x <= -DEADZONE && Math.abs(gamepad1.left_stick_y)<= DEADZONE) { //Left Right strafe
+            else if(Math.abs(gamepad1.left_stick_x) >= DEADZONE && Math.abs(gamepad1.left_stick_y)<= DEADZONE) { //Left Right strafe
                 leftFrontMotor.setPower(-MOTOR_SPEED * gamepad1.left_stick_x);
                 leftBackMotor.setPower(MOTOR_SPEED * gamepad1.left_stick_x);
                 rightBackMotor.setPower(-MOTOR_SPEED * gamepad1.left_stick_x);
@@ -129,18 +129,11 @@ public class ManualControlOpMode extends LinearOpMode {
 
             }
 
-            else if(gamepad1.right_stick_x <= -DEADZONE && Math.abs(gamepad1.right_stick_y)<= DEADZONE) { //Left turn
+            else if(Math.abs(gamepad1.right_stick_x) >= DEADZONE && Math.abs(gamepad1.right_stick_y)<= DEADZONE) { //Left Right turn
                 leftFrontMotor.setPower(-MOTOR_SPEED * gamepad1.right_stick_x);
                 leftBackMotor.setPower(-MOTOR_SPEED * gamepad1.right_stick_x);
                 rightBackMotor.setPower(MOTOR_SPEED * gamepad1.right_stick_x);
                 rightFrontMotor.setPower(MOTOR_SPEED * gamepad1.right_stick_x);
-
-            }
-            else if(gamepad1.right_stick_x >= DEADZONE && Math.abs(gamepad1.right_stick_y)<= DEADZONE) { //Right turn
-                leftFrontMotor.setPower(MOTOR_SPEED);
-                leftBackMotor.setPower(MOTOR_SPEED);
-                rightBackMotor.setPower(-MOTOR_SPEED);
-                rightFrontMotor.setPower(-MOTOR_SPEED);
 
             }
             else

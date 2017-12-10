@@ -73,10 +73,8 @@ public class AutonomousBase extends LinearOpMode {
     private DcMotor rightBackMotor = null;
     private DcMotor leftSlideMotor = null;
     private DcMotor rightSlideMotor = null;
-    private Servo leftServoTop = null;
-    private Servo rightServoTop = null;
-    private Servo leftServoBottom = null;
-    private Servo rightServoBottom = null;
+    private Servo leftServoArm = null;
+    private Servo rightServoArm = null;
     private Servo colorServoArm = null;
     public ColorSensor colorSensor = null;
 
@@ -120,10 +118,8 @@ public class AutonomousBase extends LinearOpMode {
         leftSlideMotor= hardwareMap.get(DcMotor.class, "leftSlideMotor");
         rightSlideMotor = hardwareMap.get(DcMotor.class, "rightSlideMotor");
 
-        rightServoTop = hardwareMap.servo.get("rightServoTop");
-        leftServoTop = hardwareMap.servo.get("leftServoTop");
-        rightServoBottom = hardwareMap.servo.get("rightServoBottom");
-        leftServoBottom = hardwareMap.servo.get("leftServoBottom");
+        rightServoArm = hardwareMap.servo.get("rightServoArm");
+        leftServoArm = hardwareMap.servo.get("leftServoArm");
         colorServoArm = hardwareMap.servo.get("colorServoArm");
         colorSensor = hardwareMap.colorSensor.get("color");
 
@@ -134,10 +130,8 @@ public class AutonomousBase extends LinearOpMode {
         double rightBackPower = 0 ;
         double leftSlidePower = 0;
         double rightSlidePower = 0;
-        leftServoTop.setPosition(1-SLIDE_ARM_HOME);
-        rightServoTop.setPosition(SLIDE_ARM_HOME);
-        leftServoBottom.setPosition(1-SLIDE_ARM_HOME);
-        rightServoBottom.setPosition(SLIDE_ARM_HOME);
+        leftServoArm.setPosition(1-SLIDE_ARM_HOME);
+        rightServoArm.setPosition(SLIDE_ARM_HOME);
         colorServoArm.setPosition(COLOR_ARM_HOME);
 
         // Wait for the game to start (driver presses PLAY)
@@ -146,10 +140,8 @@ public class AutonomousBase extends LinearOpMode {
 
 
         while (opModeIsActive()) {
-            leftServoTop.setPosition(SLIDE_ARM_HOME);
-            rightServoTop.setPosition(1-SLIDE_ARM_HOME);
-            leftServoBottom.setPosition(SLIDE_ARM_HOME);
-            rightServoBottom.setPosition(1-SLIDE_ARM_HOME);
+            leftServoArm.setPosition(SLIDE_ARM_HOME);
+            rightServoArm.setPosition(1-SLIDE_ARM_HOME);
             //got a little too object oriented. Vuforia goes here now
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
             while (vuMark == RelicRecoveryVuMark.UNKNOWN) { //while loop until we find it
@@ -163,10 +155,8 @@ public class AutonomousBase extends LinearOpMode {
 
             colorActions();
             cryptoActions(vuMark.toString());
-            leftServoTop.setPosition(1-SLIDE_ARM_HOME);
-            rightServoTop.setPosition(SLIDE_ARM_HOME);
-            leftServoBottom.setPosition(1-SLIDE_ARM_HOME);
-            rightServoBottom.setPosition(SLIDE_ARM_HOME);
+            leftServoArm.setPosition(1-SLIDE_ARM_HOME);
+            rightServoArm.setPosition(SLIDE_ARM_HOME);
         }
 
 

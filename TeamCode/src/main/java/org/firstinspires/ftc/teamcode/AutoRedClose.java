@@ -60,10 +60,7 @@ public class AutoRedClose extends LinearOpMode {
     private DcMotor rightBackMotor = null;
     private DcMotor leftSlideMotor = null;
     private DcMotor rightSlideMotor = null;
-    private Servo leftServoTop = null;
-    private Servo rightServoTop = null;
-    private Servo leftServoBottom = null;
-    private Servo rightServoBottom = null;
+
     private Servo colorServoArm = null;
     public ColorSensor colorSensor = null;
 
@@ -71,23 +68,23 @@ public class AutoRedClose extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+       // int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+       // VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
 
         // OR...  Do Not Activate the Camera Monitor View, to save power
         // VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
-        parameters.vuforiaLicenseKey = "AXEsTGf/////AAAAGbF6lsrAgkrrmU3OaMt7gcc7l46IpUxtcXzsdAYiAx7YESYV/QxSwRN72H5y9jgaCjE4lXFjk0K6a6n80oMQhOJ1/siCcfgrEJ1fmI6IHZPm/VAxGi29eLo1ItkuAhpi5apmatTnCamd1be54REtj10OOKPNO2W+ww7UjA23++9Rb55mtU+xRBO2wQd91ugpl6VmkUaQ3cw5YDbqc0v06cmALmoy1x4d6agXpSXDRLm6V1V+r3GYo9g1LdNiB6zSwb+dIwU6e3P8dl9iVGDM3HrBPbf/M/wmEDFEiYEOXa7nQspunnfJKEHckUJU7+qMWqddM9TBpFNLO+ExQK0rAA40plID4wZ9F83qsYh5pCcS";
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK; //front is an option
-        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+        //parameters.vuforiaLicenseKey = "AXEsTGf/////AAAAGbF6lsrAgkrrmU3OaMt7gcc7l46IpUxtcXzsdAYiAx7YESYV/QxSwRN72H5y9jgaCjE4lXFjk0K6a6n80oMQhOJ1/siCcfgrEJ1fmI6IHZPm/VAxGi29eLo1ItkuAhpi5apmatTnCamd1be54REtj10OOKPNO2W+ww7UjA23++9Rb55mtU+xRBO2wQd91ugpl6VmkUaQ3cw5YDbqc0v06cmALmoy1x4d6agXpSXDRLm6V1V+r3GYo9g1LdNiB6zSwb+dIwU6e3P8dl9iVGDM3HrBPbf/M/wmEDFEiYEOXa7nQspunnfJKEHckUJU7+qMWqddM9TBpFNLO+ExQK0rAA40plID4wZ9F83qsYh5pCcS";
+        //parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK; //front is an option
+        //this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
         /**
          * Load the data set containing the VuMarks for Relic Recovery. There's only one trackable
          * in this data set: all three of the VuMarks in the game were created from this one template,
          * but differ in their instance id information.
          * @see VuMarkInstanceId
          */
-        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
-        VuforiaTrackable relicTemplate = relicTrackables.get(0);
-        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
+        //VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        //VuforiaTrackable relicTemplate = relicTrackables.get(0);
+        //relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
         /*
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
@@ -107,12 +104,7 @@ public class AutoRedClose extends LinearOpMode {
         leftSlideMotor= hardwareMap.get(DcMotor.class, "leftSlideMotor");
         rightSlideMotor = hardwareMap.get(DcMotor.class, "rightSlideMotor");
 
-        rightServoTop = hardwareMap.servo.get("rightServoTop");
-        leftServoTop = hardwareMap.servo.get("leftServoTop");
-        rightServoBottom = hardwareMap.servo.get("rightServoBottom");
-        leftServoBottom = hardwareMap.servo.get("leftServoBottom");
-        colorServoArm = hardwareMap.servo.get("colorServoArm");
-        colorSensor = hardwareMap.colorSensor.get("color");
+
 
 
         double leftBackPower = 0;
@@ -125,35 +117,21 @@ public class AutoRedClose extends LinearOpMode {
         rightServoTop.setPosition(SLIDE_ARM_HOME);
         leftServoBottom.setPosition(1-SLIDE_ARM_HOME);
         rightServoBottom.setPosition(SLIDE_ARM_HOME);
-        colorServoArm.setPosition(COLOR_ARM_HOME);
+       // colorServoArm.setPosition(COLOR_ARM_HOME);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        relicTrackables.activate();
 
 
         while (opModeIsActive()) {
-            leftServoTop.setPosition(SLIDE_ARM_HOME);
-            rightServoTop.setPosition(1-SLIDE_ARM_HOME);
-            leftServoBottom.setPosition(SLIDE_ARM_HOME);
-            rightServoBottom.setPosition(1-SLIDE_ARM_HOME);
-            //got a little too object oriented. Vuforia goes here now
-            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-            while (vuMark == RelicRecoveryVuMark.UNKNOWN) { //while loop until we find it
-
-                vuMark = RelicRecoveryVuMark.from(relicTemplate);
-                telemetry.addData("VuMark", "not visible");
-
-                telemetry.addData("VuMark", "%s visible", vuMark);
+            runtime.reset()
+            while(runtime.seconds() < 180) {
+                rightFrontMotor.setPower(1);
+                leftFrontMotor.setPower(1);
+                leftBackMotor.setPower(1);
+                rightBackMotor.setPower(1);
             }
-            telemetry.update();
-
-            colorActions();
-            cryptoActions(vuMark.toString());
-            leftServoTop.setPosition(1-SLIDE_ARM_HOME);
-            rightServoTop.setPosition(SLIDE_ARM_HOME);
-            leftServoBottom.setPosition(1-SLIDE_ARM_HOME);
-            rightServoBottom.setPosition(SLIDE_ARM_HOME);
+            stopMoving();
         }
 
 

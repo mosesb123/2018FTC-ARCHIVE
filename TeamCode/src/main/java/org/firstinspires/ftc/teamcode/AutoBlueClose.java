@@ -50,8 +50,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Test1", group="Pushbot")
-public class AutonomousBase extends LinearOpMode {
+@Autonomous(name="Blue Close", group="Pushbot")
+public class AutoBlueClose extends LinearOpMode {
 
     /* Declare OpMode boys. */
     HardwareBigBoy robot = new HardwareBigBoy();   // Use a Pushbot's hardware
@@ -61,7 +61,7 @@ public class AutonomousBase extends LinearOpMode {
     VuforiaLocalizer vuforia; //you'll never guess what this is for
     public final static double SLIDE_ARM_HOME = 0.0; //need to test and find, probs 0.0
     public final static double DRIVE_SPEED = .9; //TODO find real drive speed
-    public final static double COLOR_ARM_HOME = 1; //need to test and find
+    public final static double COLOR_ARM_HOME = 0; //need to test and find
     public final static double COLOR_ARM_DESTNATION = 0; //test it
     final double ARM_SPEED = .05;
     final double MOTOR_SPEED = .8;
@@ -142,6 +142,7 @@ public class AutonomousBase extends LinearOpMode {
         while (opModeIsActive()) {
             leftServoArm.setPosition(SLIDE_ARM_HOME);
             rightServoArm.setPosition(1-SLIDE_ARM_HOME);
+
             //got a little too object oriented. Vuforia goes here now
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
             while (vuMark == RelicRecoveryVuMark.UNKNOWN) { //while loop until we find it
@@ -155,8 +156,10 @@ public class AutonomousBase extends LinearOpMode {
 
             colorActions();
             cryptoActions(vuMark.toString());
+
             leftServoArm.setPosition(1-SLIDE_ARM_HOME);
             rightServoArm.setPosition(SLIDE_ARM_HOME);
+
         }
 
 
@@ -174,12 +177,12 @@ public class AutonomousBase extends LinearOpMode {
         double red = colorSensor.red();
         double blue = colorSensor.blue();
         double trueColor = red - blue;
-        if (trueColor > 0 /*red*/) {
-            if (teamColor.compareTo("red") == 0)
+        if (trueColor < 0 /*blue*/) {
+            if (teamColor.compareTo("blue") == 0)
                 driveStB(.5); //
         }
         else {
-            if (teamColor.compareTo("blue") == 0)
+            if (teamColor.compareTo("red") == 0)
                 driveBtS(.5);
         }
         driveLeft(.3);

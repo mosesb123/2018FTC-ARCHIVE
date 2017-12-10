@@ -56,7 +56,7 @@ public class AutonomousBase extends LinearOpMode {
     /* Declare OpMode boys. */
     HardwareBigBoy robot = new HardwareBigBoy();   // Use a Pushbot's hardware
     private ElapsedTime runtime = new ElapsedTime();
-    private String teamColor = ""; //our teams color, 2 dif autos
+    private String teamColor = "blue"; //our teams color, 2 dif autos
     OpenGLMatrix lastLocation = null; //Vuforia stuff
     VuforiaLocalizer vuforia; //you'll never guess what this is for
     public final static double SLIDE_ARM_HOME = 0.0; //need to test and find, probs 0.0
@@ -73,8 +73,10 @@ public class AutonomousBase extends LinearOpMode {
     private DcMotor rightBackMotor = null;
     private DcMotor leftSlideMotor = null;
     private DcMotor rightSlideMotor = null;
-    private Servo leftServoArm = null;
-    private Servo rightServoArm = null;
+    private Servo leftServoTop = null;
+    private Servo rightServoTop = null;
+    private Servo leftServoBottom = null;
+    private Servo rightServoBottom = null;
     private Servo colorServoArm = null;
     public ColorSensor colorSensor = null;
 
@@ -103,7 +105,7 @@ public class AutonomousBase extends LinearOpMode {
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
          */
-        robot.init(hardwareMap);
+
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Big Boy Ready to run");    //
@@ -118,8 +120,10 @@ public class AutonomousBase extends LinearOpMode {
         leftSlideMotor= hardwareMap.get(DcMotor.class, "leftSlideMotor");
         rightSlideMotor = hardwareMap.get(DcMotor.class, "rightSlideMotor");
 
-        rightServoArm = hardwareMap.servo.get("rightServoArm");
-        leftServoArm = hardwareMap.servo.get("leftServoArm");
+        rightServoTop = hardwareMap.servo.get("rightServoTop");
+        leftServoTop = hardwareMap.servo.get("leftServoTop");
+        rightServoBottom = hardwareMap.servo.get("rightServoBottom");
+        leftServoBottom = hardwareMap.servo.get("leftServoBottom");
         colorServoArm = hardwareMap.servo.get("colorServoArm");
         colorSensor = hardwareMap.colorSensor.get("color");
 
@@ -130,8 +134,11 @@ public class AutonomousBase extends LinearOpMode {
         double rightBackPower = 0 ;
         double leftSlidePower = 0;
         double rightSlidePower = 0;
-        leftServoArm.setPosition(1-SLIDE_ARM_HOME);
-        rightServoArm.setPosition(SLIDE_ARM_HOME);
+        leftServoTop.setPosition(1-SLIDE_ARM_HOME);
+        rightServoTop.setPosition(SLIDE_ARM_HOME);
+        leftServoBottom.setPosition(1-SLIDE_ARM_HOME);
+        rightServoBottom.setPosition(SLIDE_ARM_HOME);
+        colorServoArm.setPosition(COLOR_ARM_HOME);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -139,8 +146,10 @@ public class AutonomousBase extends LinearOpMode {
 
 
         while (opModeIsActive()) {
-            leftServoArm.setPosition(SLIDE_ARM_HOME);
-            rightServoArm.setPosition(1-SLIDE_ARM_HOME);
+            leftServoTop.setPosition(SLIDE_ARM_HOME);
+            rightServoTop.setPosition(1-SLIDE_ARM_HOME);
+            leftServoBottom.setPosition(SLIDE_ARM_HOME);
+            rightServoBottom.setPosition(1-SLIDE_ARM_HOME);
             //got a little too object oriented. Vuforia goes here now
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
             while (vuMark == RelicRecoveryVuMark.UNKNOWN) { //while loop until we find it
@@ -154,8 +163,10 @@ public class AutonomousBase extends LinearOpMode {
 
             colorActions();
             cryptoActions(vuMark.toString());
-            leftServoArm.setPosition(1-SLIDE_ARM_HOME);
-            rightServoArm.setPosition(SLIDE_ARM_HOME);
+            leftServoTop.setPosition(1-SLIDE_ARM_HOME);
+            rightServoTop.setPosition(SLIDE_ARM_HOME);
+            leftServoBottom.setPosition(1-SLIDE_ARM_HOME);
+            rightServoBottom.setPosition(SLIDE_ARM_HOME);
         }
 
 
@@ -169,20 +180,17 @@ public class AutonomousBase extends LinearOpMode {
 
     private void colorActions() throws InterruptedException { //this all assumes that teamColor == our teams color and the color sensor is in the same direction that forward drive is
         driveRight(.3);
-        telemetry.addData("Caption", "sorta works");
         colorServoArm.setPosition(COLOR_ARM_DESTNATION);
         double red = colorSensor.red();
         double blue = colorSensor.blue();
         double trueColor = red - blue;
         if (trueColor > 0 /*red*/) {
             if (teamColor.compareTo("red") == 0)
-                driveBtS(.5); //
-            else driveStB(.5);
+                driveStB(.5); //
         }
         else {
             if (teamColor.compareTo("blue") == 0)
                 driveBtS(.5);
-            else driveStB(.5);
         }
         driveLeft(.3);
         stopMoving();
@@ -204,7 +212,7 @@ public class AutonomousBase extends LinearOpMode {
             middleKey(); // drive to put it in the middle
         else
             rightKey(); //drive to put it in the right
-        robot.stopMoving();
+        stopMoving();
     }
 
     public void driveStB(double feet) throws InterruptedException {
@@ -307,11 +315,6 @@ public class AutonomousBase extends LinearOpMode {
         leftFrontMotor.setPower(0);
         rightSlideMotor.setPower(0);
         leftSlideMotor.setPower(0);
-        rightServoArm.setPosition(-SLIDE_ARM_HOME);
-        leftServoArm.setPosition(SLIDE_ARM_HOME);
-        colorServoArm.setPosition(COLOR_ARM_HOME);
-
-
     }
 
     public void resetEncoders(){

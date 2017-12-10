@@ -73,7 +73,7 @@ public class HardwareBigBoy {
         stopMoving();
         rightServoArm.setPosition(1-SLIDE_ARM_HOME);
         leftServoArm.setPosition(SLIDE_ARM_HOME);
-        colorServoArm.setPosition(COLOR_ARM_HOME);
+        colorServoArm.setPosition(1-COLOR_ARM_HOME);
 
     }
 
@@ -87,7 +87,7 @@ public class HardwareBigBoy {
         leftSlideMotor.setPower(0);
         rightServoArm.setPosition(1-SLIDE_ARM_HOME);
         leftServoArm.setPosition(SLIDE_ARM_HOME);
-        colorServoArm.setPosition(COLOR_ARM_HOME);
+        colorServoArm.setPosition(1-COLOR_ARM_HOME);
 
 
     }

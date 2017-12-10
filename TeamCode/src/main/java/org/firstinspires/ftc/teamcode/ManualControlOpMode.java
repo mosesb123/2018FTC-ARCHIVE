@@ -75,8 +75,10 @@ public class ManualControlOpMode extends LinearOpMode {
     private DcMotor rightBackMotor = null;
     private DcMotor leftSlideMotor = null;
     private DcMotor rightSlideMotor = null;
-    private Servo   leftServoArm = null;
-    private Servo   rightServoArm = null;
+    private Servo   leftServoTop = null;
+    private Servo   rightServoTop = null;
+    private Servo   leftServoBottom = null;
+    private Servo   rightServoBottom = null;
     private Servo   colorServoArm = null;
 
 
@@ -97,8 +99,10 @@ public class ManualControlOpMode extends LinearOpMode {
         rightSlideMotor = hardwareMap.get(DcMotor.class, "rightSlideMotor");
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
-        rightServoArm = hardwareMap.get(Servo.class, "rightServoArm");
-        leftServoArm = hardwareMap.get(Servo.class, "leftServoArm");
+        rightServoTop = hardwareMap.get(Servo.class, "rightServoTop");
+        leftServoTop = hardwareMap.get(Servo.class, "leftServoTop");
+        rightServoBottom = hardwareMap.get(Servo.class, "rightServoBottom");
+        leftServoBottom = hardwareMap.get(Servo.class, "leftServoBottom");
         colorServoArm = hardwareMap.servo.get("colorServoArm");
 
         leftBackMotor.setDirection(DcMotor.Direction.REVERSE);
@@ -158,14 +162,18 @@ public class ManualControlOpMode extends LinearOpMode {
             if (gamepad1.left_bumper) {//slide clamps
                 slideArmPosition += ARM_SPEED;
                 slideArmPosition = Range.clip(slideArmPosition, SLIDE_MIN_RANGE, SLIDE_MAX_RANGE); //make sure position is allowed
-                rightServoArm.setPosition(slideArmPosition); //set position of servos
-                leftServoArm.setPosition(1 - slideArmPosition); //set position of servos
+                rightServoTop.setPosition(slideArmPosition); //set position of servos
+                leftServoTop.setPosition(1 - slideArmPosition); //set position of servos
+                rightServoBottom.setPosition(slideArmPosition); //set position of servos
+                leftServoBottom.setPosition(1 - slideArmPosition); //set position of servos
             }
             else if (gamepad1.right_bumper) {
                 slideArmPosition -= ARM_SPEED;
                 slideArmPosition = Range.clip(slideArmPosition, SLIDE_MIN_RANGE, SLIDE_MAX_RANGE); //make sure position is allowed
-                rightServoArm.setPosition(slideArmPosition); //set position of servos
-                leftServoArm.setPosition(1 - slideArmPosition); //set position of servos
+                rightServoTop.setPosition(slideArmPosition); //set position of servos
+                leftServoTop.setPosition(1 - slideArmPosition); //set position of servos
+                rightServoBottom.setPosition(slideArmPosition); //set position of servos
+                leftServoBottom.setPosition(1 - slideArmPosition); //set position of servos
             }
 
 

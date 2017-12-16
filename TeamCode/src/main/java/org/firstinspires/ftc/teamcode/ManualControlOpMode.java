@@ -53,7 +53,7 @@ import java.lang.Math;
  , */
 
 
-@TeleOp(name="Basic: BigBoy Linear OpMode", group="Linear Opmode")
+@TeleOp(name="BigBoy OpMode", group="Linear Opmode")
 
 
 public class ManualControlOpMode extends LinearOpMode {
@@ -61,17 +61,25 @@ public class ManualControlOpMode extends LinearOpMode {
     // Declare OpMode members.
     HardwareBigBoy robot = new HardwareBigBoy();
     private ElapsedTime runtime = new ElapsedTime();
-    double slideArmPosition = robot.SLIDE_ARM_HOME;
-    double colorArmPosition = robot.COLOR_ARM_HOME;
+    public final static double DRIVE_SPEED = .9; //TODO find real drive speed
+    public final static double COLOR_ARM_HOME = 0; //need to test and find
+    double slideArmPosition = 0;
     final double ARM_SPEED = .05;
     final double MOTOR_SPEED = .8;
-    final double DEADZONE = .3;
+    final double DEADZONE = .2;
+    public final static double SLIDE_MIN_RANGE = 0; //need to test and find
+    public final static double SLIDE_MAX_RANGE = 1; //need to test and find
     private DcMotor rightFrontMotor = null;
     private DcMotor leftFrontMotor = null;
     private DcMotor leftBackMotor = null;
     private DcMotor rightBackMotor = null;
     private DcMotor leftSlideMotor = null;
     private DcMotor rightSlideMotor = null;
+    private Servo   leftServoArm = null;
+    private Servo   rightServoArm = null;
+    private Servo   colorServoArm = null;
+
+
 
     @Override
     public void runOpMode() {
@@ -89,32 +97,97 @@ public class ManualControlOpMode extends LinearOpMode {
         rightSlideMotor = hardwareMap.get(DcMotor.class, "rightSlideMotor");
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
+        rightServoArm = hardwareMap.get(Servo.class, "rightServoArm");
+        leftServoArm = hardwareMap.get(Servo.class, "leftServoArm");
+        colorServoArm = hardwareMap.servo.get("colorServoArm");
+
         leftBackMotor.setDirection(DcMotor.Direction.REVERSE);
         leftFrontMotor.setDirection(DcMotor.Direction.REVERSE);
-        rightFrontMotor.setDirection(DcMotor.Direction.FORWARD);
-        rightBackMotor.setDirection(DcMotor.Direction.FORWARD);
         leftSlideMotor.setDirection(DcMotor.Direction.REVERSE);
-        rightSlideMotor.setDirection(DcMotor.Direction.FORWARD);//TODO Find out which are forward and which are reverse and move to AutoBase
-
-
-        double leftBackPower = 0;
-        double leftFrontPower = 0;
-        double rightFrontPower = 0;
-        double rightBackPower = 0 ;
-        double leftSlidePower = 0;
-        double rightSlidePower = 0;
-
-        //motor powers are here
 
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
+        colorServoArm.setPosition(1);
         runtime.reset();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            //Drivetrain functions
+            //Drive train functions
+            if(Math.abs(gamepad1.left_stick_y) >= DEADZONE && Math.abs(gamepad1.left_stick_x)<= DEADZONE) { //Forward Back
+                leftFrontMotor.setPower(MOTOR_SPEED * gamepad1.left_stick_y);
+                rightFrontMotor.setPower(MOTOR_SPEED * gamepad1.left_stick_y);
+                leftBackMotor.setPower(MOTOR_SPEED * gamepad1.left_stick_y);
+                rightBackMotor.setPower(MOTOR_SPEED * gamepad1.left_stick_y);
+            }
+            else if(Math.abs(gamepad1.left_stick_x) >= DEADZONE && Math.abs(gamepad1.left_stick_y)<= DEADZONE) { //Left Right strafe
+                leftFrontMotor.setPower(-MOTOR_SPEED * gamepad1.left_stick_x);
+                leftBackMotor.setPower(MOTOR_SPEED * gamepad1.left_stick_x);
+                rightBackMotor.setPower(-MOTOR_SPEED * gamepad1.left_stick_x);
+                rightFrontMotor.setPower(MOTOR_SPEED * gamepad1.left_stick_x);
+
+            }
+
+            else if(Math.abs(gamepad1.right_stick_x) >= DEADZONE && Math.abs(gamepad1.right_stick_y)<= DEADZONE) { //Left Right turn
+                leftFrontMotor.setPower(-MOTOR_SPEED * gamepad1.right_stick_x);
+                leftBackMotor.setPower(-MOTOR_SPEED * gamepad1.right_stick_x);
+                rightBackMotor.setPower(MOTOR_SPEED * gamepad1.right_stick_x);
+                rightFrontMotor.setPower(MOTOR_SPEED * gamepad1.right_stick_x);
+
+            }
+            else
+                stopMoving();
+            //Slide control
+            if (gamepad1.left_trigger >= DEADZONE) { //if left Trigger is pressed lower slides
+                leftSlideMotor.setPower(-MOTOR_SPEED); //TODO find correct motor standard power and controller deadzones
+                rightSlideMotor.setPower(-MOTOR_SPEED);
+            }
+            else if (gamepad1.right_trigger >= DEADZONE) //if right Trigger is pressed raise slides
+            {
+                leftSlideMotor.setPower(MOTOR_SPEED);
+                rightSlideMotor.setPower(MOTOR_SPEED);
+            }
+            else
+            {
+                leftSlideMotor.setPower(0);
+                rightSlideMotor.setPower(0);
+            }
+
+
+            if (gamepad1.left_bumper) {//slide clamps
+                slideArmPosition += ARM_SPEED;
+                slideArmPosition = Range.clip(slideArmPosition, SLIDE_MIN_RANGE, SLIDE_MAX_RANGE); //make sure position is allowed
+                rightServoArm.setPosition(slideArmPosition); //set position of servos
+                leftServoArm.setPosition(1 - slideArmPosition); //set position of servos
+            }
+            else if (gamepad1.right_bumper) {
+                slideArmPosition -= ARM_SPEED;
+                slideArmPosition = Range.clip(slideArmPosition, SLIDE_MIN_RANGE, SLIDE_MAX_RANGE); //make sure position is allowed
+                rightServoArm.setPosition(slideArmPosition); //set position of servos
+                leftServoArm.setPosition(1 - slideArmPosition); //set position of servos
+            }
+
+
+
+            // Show the elapsed game time and wheel power.
+            telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.addData("SlideServos", "Angle", slideArmPosition);
+           // telemetry.addData("SlideMotors", "Both", leftSlidePower); //TODO set powers better
+           // telemetry.addData("DriveMotors", "FrontLeft (%.2f), BackLeft (%.2f) ,FrontRight (%.2f,BackRight (%.2f)", leftFrontPower,  leftBackPower,rightFrontPower, rightBackPower);
+            telemetry.addData("Let's go Big Boy", "Big Boy");
+            telemetry.update();
+        }
+
+    }
+    private void stopMoving() {
+        rightFrontMotor.setPower(0);
+        leftBackMotor.setPower(0);
+        rightBackMotor.setPower(0);
+        leftFrontMotor.setPower(0);
+    }
+}
+/*
             //moving ifs
             double moveHoriz = gamepad1.left_stick_x;
             double moveVert = gamepad1.left_stick_y;
@@ -164,18 +237,18 @@ public class ManualControlOpMode extends LinearOpMode {
             {
                 if (turnVert >= 1)
                 {
-                    leftBackPower= -1* MOTOR_SPEED;
-                    rightBackPower= MOTOR_SPEED;
+                    leftBackPower = -1* MOTOR_SPEED;
+                    rightBackPower = MOTOR_SPEED;
                 }
                 else
-                    leftFrontPower =MOTOR_SPEED;
-                rightFrontPower= -1 * MOTOR_SPEED;
+                    leftFrontPower = MOTOR_SPEED;
+                rightFrontPower = -1 * MOTOR_SPEED;
             }
             else {
                 leftBackPower = 0;
                 leftFrontPower = 0;
                 rightFrontPower = 0;
-                rightBackPower =0;
+                rightBackPower = 0;
             }
             leftBackMotor.setPower(leftBackPower);
             rightBackMotor.setPower(rightBackPower);
@@ -185,12 +258,12 @@ public class ManualControlOpMode extends LinearOpMode {
             //Slide control
             if (gamepad1.left_trigger >= DEADZONE) { //if left Trigger is pressed lower slides
                 leftSlidePower = -1 * MOTOR_SPEED; //TODO find correct motor standard power and controller deadzones
-                rightSlidePower = -1 * MOTOR_SPEED;
+                rightSlidePower = MOTOR_SPEED;
             }
             else if (gamepad1.right_trigger >= DEADZONE) //if right Trigger is pressed raise slides
             {
                 leftSlidePower = MOTOR_SPEED;
-                rightSlidePower = MOTOR_SPEED;
+                rightSlidePower = -1 * MOTOR_SPEED;
             }
             else
             {
@@ -199,24 +272,4 @@ public class ManualControlOpMode extends LinearOpMode {
             }
             rightSlideMotor.setPower(rightSlidePower);
             leftSlideMotor.setPower(leftSlidePower);
-
-            if(gamepad1.left_bumper) //slide clamps
-                slideArmPosition += ARM_SPEED;
-            else if(gamepad1.right_bumper)
-                slideArmPosition -= ARM_SPEED;
-            slideArmPosition = Range.clip(slideArmPosition, robot.SLIDE_MIN_RANGE, robot.SLIDE_MAX_RANGE); //make sure position is allowed
-            robot.rightServoArm.setPosition(slideArmPosition); //set position of servos
-            robot.leftServoArm.setPosition(slideArmPosition); //set position of servos
-
-
-            // Show the elapsed game time and wheel power.
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("SlideServos", "Angle", slideArmPosition);
-            telemetry.addData("SlideMotors", "Both", leftSlidePower);
-            telemetry.addData("DriveMotors", "FrontLeft (%.2f), BackLeft (%.2f) ,FrontRight (%.2f,BackRight (%.2f)", leftFrontPower,  leftBackPower,rightFrontPower, rightBackPower);
-            telemetry.addData("Let's go Big Boy", "Big Boy");
-            telemetry.update();
-        }
-
-    }
-}
+ */

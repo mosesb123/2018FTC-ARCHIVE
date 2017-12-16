@@ -50,20 +50,23 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Test1", group="Pushbot")
-public class AutonomousBase extends LinearOpMode {
+@Autonomous(name="Blue Close", group="Pushbot")
+public class AutoBlueClose extends LinearOpMode {
 
     /* Declare OpMode boys. */
     HardwareBigBoy robot = new HardwareBigBoy();   // Use a Pushbot's hardware
     private ElapsedTime runtime = new ElapsedTime();
-    private ElapsedTime runtime2 = new ElapsedTime();
-    static final double COLOR_ARM_ANGLE = .3; //need to test
-    private String teamColor = ""; //our teams color, 2 dif autos
-    public static final String TAG = "Vuforia VuMark Sample"; //Vuforia stuff
+    private String teamColor = "blue"; //our teams color, 2 dif autos
     OpenGLMatrix lastLocation = null; //Vuforia stuff
-    VuforiaLocalizer vuforia; //youll never guess what this is for
+    VuforiaLocalizer vuforia; //you'll never guess what this is for
+    public final static double SLIDE_ARM_HOME = 0.0; //need to test and find, probs 0.0
+    public final static double DRIVE_SPEED = .9; //TODO find real drive speed
+    public final static double COLOR_ARM_HOME = 0; //need to test and find
+    public final static double COLOR_ARM_DESTNATION = 0; //test it
     final double ARM_SPEED = .05;
     final double MOTOR_SPEED = .8;
+    final double WHEELS_CIRCUM = 1.04719755;
+    final double TICKS_PER_ROTATION = 1120;
     private DcMotor rightFrontMotor = null;
     private DcMotor leftFrontMotor = null;
     private DcMotor leftBackMotor = null;
@@ -72,6 +75,9 @@ public class AutonomousBase extends LinearOpMode {
     private DcMotor rightSlideMotor = null;
     private Servo leftServoArm = null;
     private Servo rightServoArm = null;
+    private Servo colorServoArm = null;
+    public ColorSensor colorSensor = null;
+
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -93,12 +99,11 @@ public class AutonomousBase extends LinearOpMode {
         VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
-
         /*
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
          */
-        robot.init(hardwareMap);
+
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Big Boy Ready to run");    //
@@ -115,14 +120,8 @@ public class AutonomousBase extends LinearOpMode {
 
         rightServoArm = hardwareMap.servo.get("rightServoArm");
         leftServoArm = hardwareMap.servo.get("leftServoArm");
-        // Most robots need the motor on one side to be reversed to drive forward
-        // Reverse the motor that runs backwards when connected directly to the battery
-        leftBackMotor.setDirection(DcMotor.Direction.REVERSE);
-        leftFrontMotor.setDirection(DcMotor.Direction.REVERSE);
-        rightFrontMotor.setDirection(DcMotor.Direction.FORWARD);
-        rightBackMotor.setDirection(DcMotor.Direction.FORWARD);
-        leftSlideMotor.setDirection(DcMotor.Direction.REVERSE);
-        rightSlideMotor.setDirection(DcMotor.Direction.FORWARD);//TODO Find out which are forward and which are reverse and move to AutoBase
+        colorServoArm = hardwareMap.servo.get("colorServoArm");
+        colorSensor = hardwareMap.colorSensor.get("color");
 
 
         double leftBackPower = 0;
@@ -131,17 +130,35 @@ public class AutonomousBase extends LinearOpMode {
         double rightBackPower = 0 ;
         double leftSlidePower = 0;
         double rightSlidePower = 0;
+        leftServoArm.setPosition(1-SLIDE_ARM_HOME);
+        rightServoArm.setPosition(SLIDE_ARM_HOME);
+        colorServoArm.setPosition(COLOR_ARM_HOME);
+
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         relicTrackables.activate();
 
 
         while (opModeIsActive()) {
-            compensate();
-            String key = vuforiate();
-            telemetry.addData("Image is", key);
+            leftServoArm.setPosition(SLIDE_ARM_HOME);
+            rightServoArm.setPosition(1-SLIDE_ARM_HOME);
+
+            //got a little too object oriented. Vuforia goes here now
+            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+            while (vuMark == RelicRecoveryVuMark.UNKNOWN) { //while loop until we find it
+
+                vuMark = RelicRecoveryVuMark.from(relicTemplate);
+                telemetry.addData("VuMark", "not visible");
+
+                telemetry.addData("VuMark", "%s visible", vuMark);
+            }
+            telemetry.update();
+
             colorActions();
-            cryptoActions(); //unfinished
+            cryptoActions(vuMark.toString());
+
+            leftServoArm.setPosition(1-SLIDE_ARM_HOME);
+            rightServoArm.setPosition(SLIDE_ARM_HOME);
 
         }
 
@@ -153,39 +170,23 @@ public class AutonomousBase extends LinearOpMode {
         idle();
     }
 
-    private void compensate() throws InterruptedException { //TODO needs some testing work
-        leftSlideMotor.setPower(MOTOR_SPEED);
-        rightSlideMotor.setPower(MOTOR_SPEED);
-        sleep(1500);
-        robot.rightServoArm.setPosition(.5);
-        robot.leftServoArm.setPosition(.5);
-
-        sleep(1500);
-        leftSlideMotor.setPower(-1 * MOTOR_SPEED);
-        rightSlideMotor.setPower(-1 * MOTOR_SPEED);
-        sleep(1500);
-        rightServoArm.setPosition(.0);
-         leftServoArm.setPosition(.0);
-        sleep(1500);
-    }
-
 
     private void colorActions() throws InterruptedException { //this all assumes that teamColor == our teams color and the color sensor is in the same direction that forward drive is
-        robot.colorServoArm.setPosition(COLOR_ARM_ANGLE);
-        double red = robot.colorSensor.red();
-        double blue = robot.colorSensor.blue();
+        driveRight(.3);
+        colorServoArm.setPosition(COLOR_ARM_DESTNATION);
+        double red = colorSensor.red();
+        double blue = colorSensor.blue();
         double trueColor = red - blue;
-        if (trueColor > 0 /*red*/) {
-            if (teamColor.compareTo("red") == 0)
-                robot.driveBtS(2.5); //TODO find real time
-            else robot.driveStB(2.5);
+        if (trueColor < 0 /*blue*/) {
+            if (teamColor.compareTo("blue") == 0)
+                driveStB(.5); //
         }
         else {
-            if (teamColor.compareTo("blue") == 0)
-                robot.driveBtS(2.5);
-            else robot.driveStB(2.5);
+            if (teamColor.compareTo("red") == 0)
+                driveBtS(.5);
         }
-        robot.stopMoving();
+        driveLeft(.3);
+        stopMoving();
     }
 
     private void leftKey() {
@@ -197,44 +198,135 @@ public class AutonomousBase extends LinearOpMode {
     private void rightKey() {
 
     }
-    private void cryptoActions() throws InterruptedException { //finished, none of the other functions are written though
-        String picture = vuforiate(); //EASY DOGGY
-        if (picture == "Left")
+    private void cryptoActions(String picture) throws InterruptedException { //finished, none of the other functions are written though
+        if (picture == "LEFT")
             leftKey(); // drive to put it in the left
-        else if (picture == "Middle")
+        else if (picture == "CENTER")
             middleKey(); // drive to put it in the middle
         else
             rightKey(); //drive to put it in the right
-        robot.stopMoving();
+        stopMoving();
     }
 
-    private String vuforiate () {
-        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
-        VuforiaTrackable relicTemplate = relicTrackables.get(0);
-        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
-        /**
-         * See if any of the instances of {@link relicTemplate} are currently visible.
-         * {@link RelicRecoveryVuMark} is an enum which can have the following values:
-         * UNKNOWN, LEFT, CENTER, and RIGHT. When a VuMark is visible, something other than
-         * UNKNOWN will be returned by {@link RelicRecoveryVuMark#from(VuforiaTrackable)}.
-         */
-        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-        while (vuMark == RelicRecoveryVuMark.UNKNOWN) {
-
-                /* Found an instance of the template. In the actual game, you will probably
-                 * loop until this condition occurs, then move on to act accordingly depending
-                 * on which VuMark was visible. */
-            vuMark = RelicRecoveryVuMark.from(relicTemplate);
-            telemetry.addData("VuMark", "not visible");
-
-            telemetry.addData("VuMark", "%s visible", vuMark);
-        }
-        telemetry.update();
-        return vuMark + " ";
+    public void driveStB(double feet) throws InterruptedException {
+        driveStraight(feet);
+        driveBackwards(feet);
     }
-    String format(OpenGLMatrix transformationMatrix) {
-        return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
+    public void driveBtS(double feet) throws InterruptedException {
+        driveBackwards(feet);
+        driveStraight(feet);
     }
+    public void driveLeft(double feet) {
+        double rotations = feet /WHEELS_CIRCUM;
+        double ticks = rotations * TICKS_PER_ROTATION;
+        resetEncoders();
+
+        leftFrontMotor.setTargetPosition(-1*(int)ticks);
+        leftBackMotor.setTargetPosition((int)ticks);
+        rightFrontMotor.setTargetPosition((int)ticks);
+        rightBackMotor.setTargetPosition(-1*(int)ticks);
+
+        setRunToPosition();
+
+        leftFrontMotor.setPower(-1*MOTOR_SPEED);
+        leftBackMotor.setPower(MOTOR_SPEED);
+        rightFrontMotor.setPower(MOTOR_SPEED);
+        rightBackMotor.setPower(-1*MOTOR_SPEED);
+        whileIsBusy();
+        stopMoving();
+        resetEncoders();
+    }
+    public void driveRight(double feet){
+        double rotations = feet /WHEELS_CIRCUM;
+        double ticks = rotations * TICKS_PER_ROTATION;
+        resetEncoders();
+
+        leftFrontMotor.setTargetPosition((int)ticks);
+        leftBackMotor.setTargetPosition(-1*(int)ticks);
+        rightFrontMotor.setTargetPosition(-1*(int)ticks);
+        rightBackMotor.setTargetPosition((int)ticks);
+
+        setRunToPosition();
+
+        leftFrontMotor.setPower(MOTOR_SPEED);
+        leftBackMotor.setPower(-1*MOTOR_SPEED);
+        rightFrontMotor.setPower(-1*MOTOR_SPEED);
+        rightBackMotor.setPower(MOTOR_SPEED);
+        whileIsBusy();
+        stopMoving();
+        resetEncoders();
+    }
+    public void driveStraight(double feet){
+
+        double rotations = feet /WHEELS_CIRCUM;
+        double ticks = rotations * TICKS_PER_ROTATION;
+        resetEncoders();
+
+        leftFrontMotor.setTargetPosition(-1*(int)ticks);
+        leftBackMotor.setTargetPosition(-1*(int)ticks);
+        rightFrontMotor.setTargetPosition(-1*(int)ticks);
+        rightBackMotor.setTargetPosition(-1*(int)ticks);
+
+        setRunToPosition();
+
+        leftFrontMotor.setPower(MOTOR_SPEED);
+        leftBackMotor.setPower(MOTOR_SPEED);
+        rightFrontMotor.setPower(MOTOR_SPEED);
+        rightBackMotor.setPower(MOTOR_SPEED);
+        whileIsBusy();
+        stopMoving();
+        resetEncoders();
+
+    }
+    public void driveBackwards(double feet) {
+
+        double rotations = feet / WHEELS_CIRCUM;
+        double ticks = rotations * TICKS_PER_ROTATION;
+        resetEncoders();
+
+        leftFrontMotor.setTargetPosition((int) ticks);
+        leftBackMotor.setTargetPosition((int) ticks);
+        rightFrontMotor.setTargetPosition((int) ticks);
+        rightBackMotor.setTargetPosition((int) ticks);
+
+        setRunToPosition();
+
+
+        leftFrontMotor.setPower(-1*MOTOR_SPEED);
+        leftBackMotor.setPower(-1*MOTOR_SPEED);
+        rightFrontMotor.setPower(-1*MOTOR_SPEED);
+        rightBackMotor.setPower(-1*MOTOR_SPEED);
+        whileIsBusy();
+        stopMoving();
+        resetEncoders();
+    }
+
+    public void stopMoving() {
+        rightFrontMotor.setPower(0);
+        leftBackMotor.setPower(0);
+        rightBackMotor.setPower(0);
+        leftFrontMotor.setPower(0);
+        rightSlideMotor.setPower(0);
+        leftSlideMotor.setPower(0);
+    }
+
+    public void resetEncoders(){
+
+        leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
+    public void setRunToPosition() {
+        leftFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+    public void whileIsBusy() {
+        while (leftFrontMotor.isBusy()|| leftBackMotor.isBusy()|| rightFrontMotor.isBusy() || rightBackMotor.isBusy()){}
+    }
+
 
 
 }

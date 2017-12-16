@@ -156,7 +156,7 @@ public class HardwareBigBoy {
         this.rightFrontMotor.setTargetPosition(ticks);
         this.rightBackMotor.setTargetPosition(ticks);
 
-        
+
     }
 }
 

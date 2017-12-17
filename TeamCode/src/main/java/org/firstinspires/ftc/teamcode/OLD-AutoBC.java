@@ -50,8 +50,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Blue Close", group="Pushbot")
-public class AutoBlueClose extends LinearOpMode {
+@Autonomous(name="OLD-AutoBC", group="Pushbot")
+public class OLD-AutoBC extends LinearOpMode {
 
     /* Declare OpMode boys. */
     HardwareBigBoy robot = new HardwareBigBoy();   // Use a Pushbot's hardware

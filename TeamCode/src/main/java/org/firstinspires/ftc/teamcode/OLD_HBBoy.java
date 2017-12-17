@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -7,8 +8,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-
-public class HardwareBigBoy {
+@Disabled
+public class OLD_HBBoy {
     public DcMotor rightFrontMotor = null;
     public DcMotor leftFrontMotor = null;
     public DcMotor leftBackMotor = null;
@@ -33,7 +34,7 @@ public class HardwareBigBoy {
     private ElapsedTime runtime = new ElapsedTime(); //idk what it does, just trying to get public methods to work
 
 
-    public HardwareBigBoy() {
+    public OLD_HBBoy() {
 
     }
 
@@ -79,6 +80,7 @@ public class HardwareBigBoy {
 
 
     public void stopMoving() {
+
         rightFrontMotor.setPower(0);
         leftBackMotor.setPower(0);
         rightBackMotor.setPower(0);

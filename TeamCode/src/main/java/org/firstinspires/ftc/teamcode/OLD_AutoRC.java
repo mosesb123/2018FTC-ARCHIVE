@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -39,10 +40,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 @Disabled
 @Autonomous(name="Red Close", group="Pushbot")
-public class AutoRedClose extends LinearOpMode {
+public class OLD_AutoRC extends LinearOpMode {
 
     /* Declare OpMode boys. */
-    HardwareBigBoy robot = new HardwareBigBoy();   // Use a Pushbot's hardware
+    OLD_HBBoy robot = new OLD_HBBoy();   // Use a Pushbot's hardware
     private ElapsedTime runtime = new ElapsedTime();
     private String teamColor = "red"; //our teams color, 2 dif autos
     OpenGLMatrix lastLocation = null; //Vuforia stuff
@@ -114,10 +115,10 @@ public class AutoRedClose extends LinearOpMode {
         double rightBackPower = 0 ;
         double leftSlidePower = 0;
         double rightSlidePower = 0;
-        leftServoTop.setPosition(1-SLIDE_ARM_HOME);
+       /* leftServoTop.setPosition(1-SLIDE_ARM_HOME);
         rightServoTop.setPosition(SLIDE_ARM_HOME);
         leftServoBottom.setPosition(1-SLIDE_ARM_HOME);
-        rightServoBottom.setPosition(SLIDE_ARM_HOME);
+        rightServoBottom.setPosition(SLIDE_ARM_HOME);*/
        // colorServoArm.setPosition(COLOR_ARM_HOME);
 
         // Wait for the game to start (driver presses PLAY)
@@ -125,7 +126,7 @@ public class AutoRedClose extends LinearOpMode {
 
 
         while (opModeIsActive()) {
-            runtime.reset()
+            runtime.reset();
             while(runtime.seconds() < 180) {
                 rightFrontMotor.setPower(1);
                 leftFrontMotor.setPower(1);

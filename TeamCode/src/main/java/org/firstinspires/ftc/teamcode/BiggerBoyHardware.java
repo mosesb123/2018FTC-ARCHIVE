@@ -27,51 +27,53 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.robotcontroller.external.samples;
+package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 
 
-/**
- * This is NOT an opmode.
- *
- * This class can be used to define all the specific hardware for a single robot.
- * In this case that robot is a Pushbot.
- * See PushbotTeleopTank_Iterative and others classes starting with "Pushbot" for usage examples.
- *
- * This hardware class assumes the following device names have been configured on the robot:
- * Note:  All names are lower case and some have single spaces between words.
- *
- * Motor channel:  Left  drive motor:        "left_drive"
- * Motor channel:  Right drive motor:        "right_drive"
- * Motor channel:  Manipulator drive motor:  "left_arm"
- * Servo channel:  Servo to open left claw:  "left_hand"
- * Servo channel:  Servo to open right claw: "right_hand"
- */
-public class HardwarePushbot
+public class BiggerBoyHardware
 {
-    /* Public OpMode members. */
-
     // Drive Motors
     public DcMotor rightFrontMotor = null;
     public DcMotor leftFrontMotor = null;
     public DcMotor leftBackMotor = null;
     public DcMotor rightBackMotor = null;
-
-
-
+    //Glyph Mechanisms
+    public Servo rightServo = null;
+    public Servo leftServo = null;
+    public DcMotor GlyphMotor = null;
+    //Relic Mechanisms
+    public Servo clawServo = null;
+    public DcMotor RelicMotor = null;
+    //Jewel Mechanisms
+    public Servo colorServo = null;
+    public ColorSensor colorSensor = null;
+    //Useful Constants //TODO all of these constants need testing + conformation
+    public final static double RIGHT_SERVO_HOME = 1;
+    public final static double RIGHT_SERVO_MIN = -1;
+    public final static double RIGHT_SERVO_MAX = 1;
+    public final static double LEFT_SERVO_HOME = -1;
+    public final static double LEFT_SERVO_MIN = 1;
+    public final static double LEFT_SERVO_MAX = -1;
+    public final static double DRIVE_SPEED = .9;
+    public final static double COLOR_SERVO_HOME = 0;
+    public final static double COLOR_SERVO_DESTNATION = 0.5;
 
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
-    private ElapsedTime period  = new ElapsedTime();
+    private ElapsedTime runtime  = new ElapsedTime();
 
     /* Constructor */
-    public HardwarePushbot(){
+    public BiggerBoyHardware(){
 
     }
 
@@ -80,39 +82,37 @@ public class HardwarePushbot
         // Save reference to Hardware map
         hwMap = ahwMap;
 
-        // Define and Initialize Motors
-        rightFrontMotor  = hwMap.get(DcMotor.class, "rightFrontMotor");
-        leftFrontMotor   = hwMap.get(DcMotor.class, "leftFrontMotor");
-        leftBackMotor    = hwMap.get(DcMotor.class, "leftBackMotor");
-        rightBackMotor   = hwMap.get(DcMotor.class, "rightBackMotor");
-
-
-        // Set all motors to zero power
+        // Define and Initialize DRIVE Motors
+        rightFrontMotor = ahwMap.dcMotor.get("rightFrontMotor");
+        leftFrontMotor = ahwMap.dcMotor.get("leftFrontMotor");
+        leftBackMotor = ahwMap.dcMotor.get("leftBackMotor");
+        rightBackMotor = ahwMap.dcMotor.get("rightBackMotor");
+        // Set drive motors to zero power
         rightFrontMotor.setPower(0);
         leftFrontMotor.setPower(0);
         leftBackMotor.setPower(0);
         rightBackMotor.setPower(0);
+        // Set drive motors to run USING encoders.
+        rightFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftFrontMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftBackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightBackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        // Set all motors to run without encoders.
-        // May want to use RUN_USING_ENCODERS if encoders are installed.
-        rightFrontMotor.setMode(DcMotor.RunMode.RUN_WITH_ENCODER);
-        leftFrontMotor.setMode(DcMotor.RunMode.RUN_WITH_ENCODER);
-        leftBackMotor.setMode(DcMotor.RunMode.RUN_WITH_ENCODER);
-        rightBackMotor.setMode(DcMotor.RunMode.RUN_WITH_ENCODER);
+        //TODO Define and Initialize GLYPH,RELIC,COlOR items: same syntax as above, only motors need setpower 0. not doing it now bc we don't know how many motors we are using for each thing
+        // set other motors to RUN_WITHOUT_ENCODERS
     }
 
-    public void moveSpeedBasic(int direction, int speed){
+    public void moveSpeedBasic(int direction, int speed){ //TODO Make these follow laws of encoders, and put it in a different class
         telemetry.addData("Status", "About to move");    //
         telemetry.update();
        switch (direction) {
            //Move Forward
            case 1:
-               telemtry
                rightFrontMotor.setPower(speed);
                leftFrontMotor.setPower(speed);
                leftBackMotor.setPower(speed);
                rightBackMotor.setPower(speed);
-               telemetry.addData("Status", "Moving Foward");    //
+               telemetry.addData("Status", "Moving Forward");    //
                telemetry.update();
 
                //Move Backward
@@ -135,7 +135,7 @@ public class HardwarePushbot
                //Turn right
            case 4:
                rightFrontMotor.setPower(-speed);
-               leftFrontMotor.setPower(peed);
+               leftFrontMotor.setPower(speed);
                leftBackMotor.setPower(speed);
                rightBackMotor.setPower(-speed);
                telemetry.addData("Status", "Turning Right");    //

@@ -54,9 +54,9 @@ import java.lang.Math;
 
 
 @TeleOp(name="BigBoy OpMode", group="Linear Opmode")
+@Disabled
 
-
-public class ManualControlOpMode extends LinearOpMode {
+public class OLD_Manual extends LinearOpMode {
 
     // Declare OpMode members.
     HardwareBigBoy robot = new HardwareBigBoy();

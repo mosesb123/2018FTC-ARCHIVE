@@ -90,10 +90,7 @@ public class HardwareBigBoy {
         colorServoArm.setPosition(1-COLOR_ARM_HOME);
 
 
-<<<<<<< HEAD
 
-=======
->>>>>>> e81500c16dbeceab5bd6ae3d368dc85972d64570
     }
 }
 

@@ -37,7 +37,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Disable
+@Disabled
 @Autonomous(name="Red Close", group="Pushbot")
 public class AutoRedClose extends LinearOpMode {
 

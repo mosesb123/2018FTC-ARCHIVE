@@ -30,9 +30,11 @@
 package org.firstinspires.ftc.robotcontroller.external.samples;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+
 
 /**
  * This is NOT an opmode.
@@ -80,9 +82,9 @@ public class HardwarePushbot
 
         // Define and Initialize Motors
         rightFrontMotor  = hwMap.get(DcMotor.class, "rightFrontMotor");
-        leftFrontMotor = hwMap.get(DcMotor.class, "leftFrontMotor");
+        leftFrontMotor   = hwMap.get(DcMotor.class, "leftFrontMotor");
         leftBackMotor    = hwMap.get(DcMotor.class, "leftBackMotor");
-        rightBackMotor    = hwMap.get(DcMotor.class, "rightBackMotor");
+        rightBackMotor   = hwMap.get(DcMotor.class, "rightBackMotor");
 
 
         // Set all motors to zero power
@@ -94,16 +96,16 @@ public class HardwarePushbot
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         rightFrontMotor.setMode(DcMotor.RunMode.RUN_WITH_ENCODER);
-        leftFrontMotor.setMode(DcMotot.RunMode.RUN_WITH_ENCODER);
-        leftBackMotor.setMode(DcMotot.RunMode.RUN_WITH_ENCODER);
-        rightBackMotor.setMode(DcMotot.RunMode.RUN_WITH_ENCODER);
+        leftFrontMotor.setMode(DcMotor.RunMode.RUN_WITH_ENCODER);
+        leftBackMotor.setMode(DcMotor.RunMode.RUN_WITH_ENCODER);
+        rightBackMotor.setMode(DcMotor.RunMode.RUN_WITH_ENCODER);
     }
 
     public void moveSpeedBasic(int direction, int speed){
         telemetry.addData("Status", "About to move");    //
         telemetry.update();
        switch (direction) {
-           //Move Foward
+           //Move Forward
            case 1:
                telemtry
                rightFrontMotor.setPower(speed);

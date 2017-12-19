@@ -54,9 +54,9 @@ public class BiggerBoyHardware
     public Servo clawServo = null;
     public DcMotor RelicMotor = null;
     //Jewel Mechanisms
-    public Servo colorServo = null;
+    public Servo colorServoArm = null;
     public ColorSensor colorSensor = null;
-    //Useful Constants //TODO all of these constants need testing + conformation
+    //Useful Constants //TODO all of these constants need testing + confirmation
     public final static double RIGHT_SERVO_HOME = 1;
     public final static double RIGHT_SERVO_MIN = -1;
     public final static double RIGHT_SERVO_MAX = 1;
@@ -65,7 +65,7 @@ public class BiggerBoyHardware
     public final static double LEFT_SERVO_MAX = -1;
     public final static double DRIVE_SPEED = .9;
     public final static double COLOR_SERVO_HOME = 0;
-    public final static double COLOR_SERVO_DESTNATION = 0.5;
+    public final static double COLOR_SERVO_DESTINATION = 0.5;
 
 
     /* local OpMode members. */
@@ -87,6 +87,10 @@ public class BiggerBoyHardware
         leftFrontMotor = ahwMap.dcMotor.get("leftFrontMotor");
         leftBackMotor = ahwMap.dcMotor.get("leftBackMotor");
         rightBackMotor = ahwMap.dcMotor.get("rightBackMotor");
+        //Setting motor directions
+        leftBackMotor.setDirection(DcMotor.Direction.REVERSE);
+        leftFrontMotor.setDirection(DcMotor.Direction.REVERSE);
+//        leftSlideMotor.setDirection(DcMotor.Direction.REVERSE);
         // Set drive motors to zero power
         rightFrontMotor.setPower(0);
         leftFrontMotor.setPower(0);
@@ -100,6 +104,7 @@ public class BiggerBoyHardware
 
         //TODO Define and Initialize GLYPH,RELIC,COlOR items: same syntax as above, only motors need setpower 0. not doing it now bc we don't know how many motors we are using for each thing
         // set other motors to RUN_WITHOUT_ENCODERS
+
     }
 
     public void moveSpeedBasic(int direction, int speed){ //TODO Make these follow laws of encoders, and put it in a different class
@@ -142,6 +147,16 @@ public class BiggerBoyHardware
                telemetry.update();
        }
     }
-
+    public void stopMoving() {
+        rightFrontMotor.setPower(0);
+        leftBackMotor.setPower(0);
+        rightBackMotor.setPower(0);
+        leftFrontMotor.setPower(0);
+        colorServoArm.setPosition(1-COLOR_SERVO_HOME);
+//        rightSlideMotor.setPower(0);
+//        leftSlideMotor.setPower(0);
+//        rightServoArm.setPosition(1-SLIDE_ARM_HOME);
+//        leftServoArm.setPosition(SLIDE_ARM_HOME);
+    }
  }
 

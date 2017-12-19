@@ -59,7 +59,7 @@ import java.lang.Math;
 public class OLD_Manual extends LinearOpMode {
 
     // Declare OpMode members.
-    HardwareBigBoy robot = new HardwareBigBoy();
+    OLD_HBBoy robot = new OLD_HBBoy();
     private ElapsedTime runtime = new ElapsedTime();
     public final static double DRIVE_SPEED = .9; //TODO find real drive speed
     public final static double COLOR_ARM_HOME = 0; //need to test and find

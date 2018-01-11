@@ -2,13 +2,15 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-@Autonomous(name="AutoBlueRed Close", group="Pushbot")
-public class AutoRed extends NewAuto {
+@Autonomous(name="AutoBlue Far", group="Pushbot")
+public class AutoBlueFar extends NewAuto{
+
     @Override
     public void runOpMode() throws InterruptedException {
-        String teamColor = "red";
+        String teamColor = "blue";
         setTeamColor(teamColor);
-        setDistance("close");
+        setDistance("far");
         super.runOpMode();
     }
 }
+

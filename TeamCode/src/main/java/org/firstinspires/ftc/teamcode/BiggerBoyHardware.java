@@ -82,6 +82,7 @@ public class BiggerBoyHardware
         rightBackMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         //TODO Define and Initialize GLYPH,RELIC,COlOR items: same syntax as above, only motors need setpower 0. not doing it now bc we don't know how many motors we are using for each thing
+        //TODO: Make sure to initialize the COLOR SENSOR
         // set other motors to RUN_WITHOUT_ENCODERS
         rightServo = ahwMap.servo.get("rightServo");
         leftServo = ahwMap.servo.get("leftServo");

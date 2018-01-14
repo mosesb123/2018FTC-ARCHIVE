@@ -41,26 +41,29 @@ public class NewAuto extends LinearOpMode {
     private BiggerBoyHardware robot = new BiggerBoyHardware();   // Use a Pushbot's hardware
     private ElapsedTime runtime = new ElapsedTime();
     private String teamColor = "blue"; //our teams color, 2 dif autos
-    private String distance = "close";
+    private String distance = "close"; //NOTE: close and far is relative to the relic mat
     OpenGLMatrix lastLocation = null; //Vuforia stuff
     VuforiaLocalizer vuforia; //you'll never guess what this is for
 
 
-    public void setTeamColor(String color){
-        teamColor = color;
-    }
-    public void setDistance(String distanceIn) {distance = distanceIn; };
+    public void setTeamColor(String color) { teamColor = color; }
+    public void setDistance(String distanceIn) { distance = distanceIn; }
 
     @Override
     public void runOpMode() throws InterruptedException {
-        //Todo: Make changes so that code acts differently for "close", "far", "red", "blue"
+        //Done: Make changes so that code acts differently for "close", "far", "red", "blue"
         robot.init(hardwareMap);
 
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+                "cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
         // OR...  Do Not Activate the Camera Monitor View, to save power
         // VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
-        parameters.vuforiaLicenseKey = "AXEsTGf/////AAAAGbF6lsrAgkrrmU3OaMt7gcc7l46IpUxtcXzsdAYiAx7YESYV/QxSwRN72H5y9jgaCjE4lXFjk0K6a6n80oMQhOJ1/siCcfgrEJ1fmI6IHZPm/VAxGi29eLo1ItkuAhpi5apmatTnCamd1be54REtj10OOKPNO2W+ww7UjA23++9Rb55mtU+xRBO2wQd91ugpl6VmkUaQ3cw5YDbqc0v06cmALmoy1x4d6agXpSXDRLm6V1V+r3GYo9g1LdNiB6zSwb+dIwU6e3P8dl9iVGDM3HrBPbf/M/wmEDFEiYEOXa7nQspunnfJKEHckUJU7+qMWqddM9TBpFNLO+ExQK0rAA40plID4wZ9F83qsYh5pCcS";
+        parameters.vuforiaLicenseKey = "AXEsTGf/////AAAAGbF6lsrAgkrrmU3OaMt7gcc7l46IpUxtcXzsdAYiAx7" +
+                "YESYV/QxSwRN72H5y9jgaCjE4lXFjk0K6a6n80oMQhOJ1/siCcfgrEJ1fmI6IHZPm/VAxGi29eLo1ItkuA" +
+                "hpi5apmatTnCamd1be54REtj10OOKPNO2W+ww7UjA23++9Rb55mtU+xRBO2wQd91ugpl6VmkUaQ3cw5YDb" +
+                "qc0v06cmALmoy1x4d6agXpSXDRLm6V1V+r3GYo9g1LdNiB6zSwb+dIwU6e3P8dl9iVGDM3HrBPbf/M/wmED" +
+                "FEiYEOXa7nQspunnfJKEHckUJU7+qMWqddM9TBpFNLO+ExQK0rAA40plID4wZ9F83qsYh5pCcS";
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK; //front is an option
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
         /*
@@ -86,19 +89,46 @@ public class NewAuto extends LinearOpMode {
             robot.colorServoArm.setPosition(1);
             int blueReading = robot.colorSensor.blue();
             int redReading = robot.colorSensor.red();
-            if(blueReading < redReading){
-                driveStB(.3);
+            if (teamColor.equals("blue")) {
+                if(blueReading > redReading){
+                    driveStB(.3);
+                }
+                else{
+                    driveBtS(.3);
+                }
             }
-            else{
-                driveBtS(.3);
+            if (teamColor.equals("red")) {
+                if(blueReading < redReading){
+                    driveStB(.3);
+                }
+                else{
+                    driveBtS(.3);
+                }
             }
             robot.colorServoArm.setPosition(0);
             String key = imageSense();
-            driveStraight(1);
-            if(key.equals("LEFT"))
-                driveLeft(.5);
-            else if(key.equals("RIGHT"))
-                driveStraight(.7);
+            if (teamColor.equals("blue")) aboutFace();
+
+            if (distance.equals("close")) {
+                if (key.equals("LEFT")) driveStraight(2.5);
+                else if (key.equals("RIGHT")) driveStraight(1.5);
+                else driveStraight(2);
+                if (teamColor.equals("blue")) turnLeft();
+                if (teamColor.equals("red")) turnRight();
+            }
+            if (distance.equals("far")) {
+                driveStraight(2);
+                if (teamColor.equals("blue")) {
+                    if (key.equals("LEFT")) driveRight(.5);
+                    if (key.equals("RIGHT")) driveRight(1.5);
+                    else driveRight(1);
+                }
+                if (teamColor.equals("red")) {
+                    if (key.equals("LEFT")) driveLeft(1.5);
+                    if (key.equals("RIGHT")) driveLeft(.5);
+                    else driveLeft(1);
+                }
+            }
             driveStraight(.7);
             openServos();
         }
@@ -128,6 +158,16 @@ public class NewAuto extends LinearOpMode {
     public void driveBtS(double feet) throws InterruptedException {
         driveBackwards(feet);
         driveStraight(feet);
+    }
+    public void aboutFace() {
+        //TODO implement
+        //theoretically just turnLeft twice
+    }
+    public void turnLeft() {
+        //Todo implement
+    }
+    public void turnRight() {
+        //Todo implement
     }
     public void driveLeft(double feet) {
         double rotations = feet /robot.WHEELS_CIRCUM;
@@ -230,7 +270,8 @@ public class NewAuto extends LinearOpMode {
         robot.rightBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
     public void whileIsBusy() {
-        while (robot.leftFrontMotor.isBusy()|| robot.leftBackMotor.isBusy()|| robot.rightFrontMotor.isBusy() || robot.rightBackMotor.isBusy()){}
+        while (robot.leftFrontMotor.isBusy()|| robot.leftBackMotor.isBusy()||
+                robot.rightFrontMotor.isBusy() || robot.rightBackMotor.isBusy()){}
     }
 
 

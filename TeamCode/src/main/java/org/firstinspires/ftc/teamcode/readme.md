@@ -1,3 +1,14 @@
+
+
+## Field Setup Guide
+It has a good picture of the field
+https://www.firstinspires.org/sites/default/files/uploads/resource_library/ftc/2017-2018/field-setup-guide.pdf
+
+## One Page Summary of Game
+https://firstinspiresst01.blob.core.windows.net/ftc/first-kj-relic-recovery-onepage.pdf
+
+
+
 ## TeamCode Module
 
 Welcome!

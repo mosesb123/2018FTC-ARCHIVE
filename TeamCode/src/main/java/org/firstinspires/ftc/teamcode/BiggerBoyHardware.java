@@ -9,7 +9,9 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 
-
+enum MotorDirection{
+    FORWARD, BACKWARD, LEFT, RIGHT
+}
 
 public class BiggerBoyHardware
 {
@@ -95,12 +97,12 @@ public class BiggerBoyHardware
 
     /***Other Stuff***/
 
-    public void moveSpeedBasic(int direction, double speed){ //TODO Make these follow laws of encoders, and put it in a different class
+    public void moveSpeedBasic(MotorDirection direction, double speed){ //TODO Make these follow laws of encoders, and put it in a different class
 //        telemetry.addData("Status", "About to move");
 //        telemetry.update();
        switch (direction) {
            //Move Forward
-           case 1:
+           case FORWARD:
                rightFrontMotor.setPower(speed);
                rightBackMotor.setPower(speed);
                leftFrontMotor.setPower(speed);
@@ -109,7 +111,7 @@ public class BiggerBoyHardware
 //               telemetry.update();
 
                //Move Backward
-           case 2:
+           case BACKWARD:
                rightFrontMotor.setPower(-speed);
                rightBackMotor.setPower(-speed);
                leftFrontMotor.setPower(-speed);
@@ -118,7 +120,7 @@ public class BiggerBoyHardware
 //               telemetry.update();
 
                //Turn Left
-           case 3:
+           case LEFT:
                rightFrontMotor.setPower(speed);
                rightBackMotor.setPower(speed);
                leftFrontMotor.setPower(-speed);
@@ -126,7 +128,7 @@ public class BiggerBoyHardware
 //               telemetry.addData("Status", "Turning Left");
 //               telemetry.update();
                //Turn right
-           case 4:
+           case RIGHT:
                rightFrontMotor.setPower(-speed);
                rightBackMotor.setPower(-speed);
                leftFrontMotor.setPower(speed);

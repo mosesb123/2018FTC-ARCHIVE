@@ -55,10 +55,10 @@ public class Manual extends LinearOpMode {
 
             //Drive train functions
             if(Math.abs(gamepad1.left_stick_y) >= DEADZONE && Math.abs(gamepad1.left_stick_x)<= DEADZONE) { //Forward Back
-                robot.moveSpeedBasic(1, robot.DRIVE_SPEED*gamepad1.left_stick_y);
+                robot.moveSpeedBasic(MotorDirection.FORWARD, robot.DRIVE_SPEED*gamepad1.left_stick_y);
             }
             else if(Math.abs(gamepad1.left_stick_x) >= DEADZONE && Math.abs(gamepad1.left_stick_y)<= DEADZONE) { //Left Right turn
-                robot.moveSpeedBasic(3, robot.DRIVE_SPEED * gamepad1.right_stick_x);
+                robot.moveSpeedBasic(MotorDirection.LEFT, robot.DRIVE_SPEED * gamepad1.right_stick_x);
             }
             //NOTE: strafe is not a thing with basic wheels
             else if(Math.abs(gamepad1.left_stick_x) >= DEADZONE && Math.abs(gamepad1.left_stick_y)<= DEADZONE) { //Left Right strafe

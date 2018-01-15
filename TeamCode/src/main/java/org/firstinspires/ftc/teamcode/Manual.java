@@ -55,17 +55,17 @@ public class Manual extends LinearOpMode {
 
             //Drive train functions
             if(Math.abs(gamepad1.left_stick_y) >= DEADZONE && Math.abs(gamepad1.left_stick_x)<= DEADZONE) { //Forward Back
-                robot.moveSpeedBasic(MotorDirection.FORWARD, robot.DRIVE_SPEED*gamepad1.left_stick_y);
+                robot.moveSpeedBasic(MotorDirection.FORWARD, BiggerBoyHardware.DRIVE_SPEED *gamepad1.left_stick_y);
             }
             else if(Math.abs(gamepad1.left_stick_x) >= DEADZONE && Math.abs(gamepad1.left_stick_y)<= DEADZONE) { //Left Right turn
-                robot.moveSpeedBasic(MotorDirection.LEFT, robot.DRIVE_SPEED * gamepad1.right_stick_x);
+                robot.moveSpeedBasic(MotorDirection.LEFT, BiggerBoyHardware.DRIVE_SPEED * gamepad1.right_stick_x);
             }
             //NOTE: strafe is not a thing with basic wheels
             else if(Math.abs(gamepad1.left_stick_x) >= DEADZONE && Math.abs(gamepad1.left_stick_y)<= DEADZONE) { //Left Right strafe
-                robot.leftFrontMotor.setPower(-robot.DRIVE_SPEED * gamepad1.left_stick_x);
-                robot.leftBackMotor.setPower(robot.DRIVE_SPEED * gamepad1.left_stick_x);
-                robot.rightBackMotor.setPower(-robot.DRIVE_SPEED * gamepad1.left_stick_x);
-                robot.rightFrontMotor.setPower(robot.DRIVE_SPEED * gamepad1.left_stick_x);
+                robot.leftFrontMotor.setPower(-BiggerBoyHardware.DRIVE_SPEED * gamepad1.left_stick_x);
+                robot.leftBackMotor.setPower(BiggerBoyHardware.DRIVE_SPEED * gamepad1.left_stick_x);
+                robot.rightBackMotor.setPower(-BiggerBoyHardware.DRIVE_SPEED * gamepad1.left_stick_x);
+                robot.rightFrontMotor.setPower(BiggerBoyHardware.DRIVE_SPEED * gamepad1.left_stick_x);
 
             }
             else
@@ -73,11 +73,11 @@ public class Manual extends LinearOpMode {
 
             //Slide control
             if (gamepad1.left_trigger >= DEADZONE) { //lower slides
-                robot.GlyphMotor.setPower(-robot.DRIVE_SPEED); //TODO find correct motor standard power and controller deadzones
+                robot.GlyphMotor.setPower(-BiggerBoyHardware.DRIVE_SPEED); //TODO find correct motor standard power and controller deadzones
             }
             else if (gamepad1.right_trigger >= DEADZONE) //raise slides
             {
-                robot.GlyphMotor.setPower(robot.DRIVE_SPEED);
+                robot.GlyphMotor.setPower(BiggerBoyHardware.DRIVE_SPEED);
             }
             else
             {
@@ -87,13 +87,13 @@ public class Manual extends LinearOpMode {
             //Glyph clamps
             if (gamepad1.left_bumper) {
                 slideArmPosition += armSpeed;
-                slideArmPosition = Range.clip(slideArmPosition, robot.SERVO_MIN, robot.SERVO_MAX); //make sure position is allowed
+                slideArmPosition = Range.clip(slideArmPosition, BiggerBoyHardware.SERVO_MIN, BiggerBoyHardware.SERVO_MAX); //make sure position is allowed
                 robot.rightServo.setPosition(slideArmPosition); //set position of servos
                 robot.leftServo.setPosition(1 - slideArmPosition); //set position of servos
             }
             else if (gamepad1.right_bumper) {
                 slideArmPosition -= armSpeed;
-                slideArmPosition = Range.clip(slideArmPosition, robot.SERVO_MIN, robot.SERVO_MAX); //make sure position is allowed
+                slideArmPosition = Range.clip(slideArmPosition, BiggerBoyHardware.SERVO_MIN, BiggerBoyHardware.SERVO_MAX); //make sure position is allowed
                 robot.rightServo.setPosition(slideArmPosition); //set position of servos
                 robot.leftServo.setPosition(1 - slideArmPosition); //set position of servos
             }

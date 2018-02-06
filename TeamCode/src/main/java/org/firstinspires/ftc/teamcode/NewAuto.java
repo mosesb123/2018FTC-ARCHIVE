@@ -86,6 +86,8 @@ public class NewAuto extends LinearOpMode {
 
 
         while (opModeIsActive()) {
+            robot.rightServo.setPosition(0);
+            robot.leftServo.setPosition(0);
             robot.colorServoArm.setPosition(1);
             int blueReading = robot.colorSensor.blue();
             int redReading = robot.colorSensor.red();
@@ -142,7 +144,10 @@ public class NewAuto extends LinearOpMode {
     }
 
     private void openServos(){
-        //Todo: implement
+        //Todo: test values (might be the opposite)
+        robot.rightServo.setPosition(1);
+        robot.leftServo.setPosition(-1);
+
     }
 
     private String imageSense(){

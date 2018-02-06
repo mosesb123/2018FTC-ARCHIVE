@@ -40,6 +40,7 @@ import com.qualcomm.robotcore.util.Range;
 
 
 @TeleOp(name="Manual Control", group="Linear Opmode")
+@Disabled
 public class BasicOpMode_Linear extends LinearOpMode {
 
     // Declare OpMode members.

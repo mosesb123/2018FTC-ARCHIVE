@@ -41,8 +41,7 @@ public class Manual extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        robot.init(hardwareMap
-        );
+        robot.init(hardwareMap);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 

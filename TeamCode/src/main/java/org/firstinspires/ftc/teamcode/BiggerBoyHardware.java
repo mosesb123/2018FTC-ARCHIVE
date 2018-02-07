@@ -69,9 +69,8 @@ public class BiggerBoyHardware
         leftBackMotor = ahwMap.dcMotor.get("leftBackMotor");
         rightBackMotor = ahwMap.dcMotor.get("rightBackMotor");
         //Setting motor directions
-//        leftBackMotor.setDirection(DcMotor.Direction.REVERSE);
-//        leftFrontMotor.setDirection(DcMotor.Direction.REVERSE);
-//        leftSlideMotor.setDirection(DcMotor.Direction.REVERSE);
+        leftBackMotor.setDirection(DcMotor.Direction.REVERSE);
+        leftFrontMotor.setDirection(DcMotor.Direction.REVERSE);
         // Set drive motors to zero power
         rightFrontMotor.setPower(0);
         leftFrontMotor.setPower(0);
@@ -86,11 +85,11 @@ public class BiggerBoyHardware
         //TODO Define and Initialize GLYPH,RELIC,COlOR items: same syntax as above, only motors need setpower 0. not doing it now bc we don't know how many motors we are using for each thing
         //TODO: Make sure to initialize the COLOR SENSOR
         // set other motors to RUN_WITHOUT_ENCODERS
+        GlyphMotor = ahwMap.dcMotor.get("GlyphMotor");
+        RelicMotor = ahwMap.dcMotor.get("RelicMotor");
         rightServo = ahwMap.servo.get("rightServo");
         leftServo = ahwMap.servo.get("leftServo");
-        GlyphMotor = ahwMap.dcMotor.get("GlyphMotor");
         clawServo = ahwMap.servo.get("clawServo");
-        RelicMotor = ahwMap.dcMotor.get("RelicMotor");
         colorServoArm = ahwMap.servo.get("colorServoArm");
 
     }

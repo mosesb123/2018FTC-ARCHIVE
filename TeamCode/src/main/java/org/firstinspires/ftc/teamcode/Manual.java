@@ -52,11 +52,20 @@ public class Manual extends LinearOpMode {
         while (opModeIsActive()) {
 
             //Drive train functions
+            //todo: multiplying DRIVE_SPEED by left_stick_y might be causing the issue
             if(Math.abs(gamepad1.left_stick_y) >= DEADZONE && Math.abs(gamepad1.left_stick_x)<= DEADZONE) { //Forward Back
-                robot.moveSpeedBasic(MotorDirection.FORWARD, BiggerBoyHardware.DRIVE_SPEED * gamepad1.left_stick_y);
+//                robot.moveSpeedBasic(MotorDirection.FORWARD, BiggerBoyHardware.DRIVE_SPEED * gamepad1.left_stick_y);
+                robot.rightFrontMotor.setPower(BiggerBoyHardware.DRIVE_SPEED * gamepad1.left_stick_y);
+                robot.rightBackMotor.setPower(BiggerBoyHardware.DRIVE_SPEED * gamepad1.left_stick_y);
+                robot.leftFrontMotor.setPower(BiggerBoyHardware.DRIVE_SPEED * gamepad1.left_stick_y);
+                robot.leftBackMotor.setPower(BiggerBoyHardware.DRIVE_SPEED * gamepad1.left_stick_y);
             }
             else if(Math.abs(gamepad1.left_stick_x) >= DEADZONE && Math.abs(gamepad1.left_stick_y)<= DEADZONE) { //Left Right turn
-                robot.moveSpeedBasic(MotorDirection.LEFT, BiggerBoyHardware.DRIVE_SPEED * gamepad1.left_stick_x);
+//                robot.moveSpeedBasic(MotorDirection.LEFT, BiggerBoyHardware.DRIVE_SPEED * gamepad1.left_stick_x);
+                robot.rightFrontMotor.setPower(-BiggerBoyHardware.DRIVE_SPEED * gamepad1.left_stick_x);
+                robot.rightBackMotor.setPower(-BiggerBoyHardware.DRIVE_SPEED * gamepad1.left_stick_x);
+                robot.leftFrontMotor.setPower(BiggerBoyHardware.DRIVE_SPEED * gamepad1.left_stick_x);
+                robot.leftBackMotor.setPower(BiggerBoyHardware.DRIVE_SPEED * gamepad1.left_stick_x);
             }
             //NOTE: strafe is not a thing with basic wheels
 //            else if(Math.abs(gamepad1.left_stick_x) >= DEADZONE && Math.abs(gamepad1.left_stick_y)<= DEADZONE) { //Left Right strafe

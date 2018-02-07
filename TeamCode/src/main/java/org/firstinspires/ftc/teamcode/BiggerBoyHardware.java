@@ -69,8 +69,8 @@ public class BiggerBoyHardware
         leftBackMotor = ahwMap.dcMotor.get("leftBackMotor");
         rightBackMotor = ahwMap.dcMotor.get("rightBackMotor");
         //Setting motor directions
-        leftBackMotor.setDirection(DcMotor.Direction.REVERSE);
-        leftFrontMotor.setDirection(DcMotor.Direction.REVERSE);
+//        leftBackMotor.setDirection(DcMotor.Direction.REVERSE);
+//        leftFrontMotor.setDirection(DcMotor.Direction.REVERSE);
 //        leftSlideMotor.setDirection(DcMotor.Direction.REVERSE);
         // Set drive motors to zero power
         rightFrontMotor.setPower(0);
@@ -91,13 +91,14 @@ public class BiggerBoyHardware
         GlyphMotor = ahwMap.dcMotor.get("GlyphMotor");
         clawServo = ahwMap.servo.get("clawServo");
         RelicMotor = ahwMap.dcMotor.get("RelicMotor");
+        colorServoArm = ahwMap.servo.get("colorServoArm");
 
     }
 
 
     /***Other Stuff***/
 
-    public void moveSpeedBasic(MotorDirection direction, double speed){ //TODO Make these follow laws of encoders, and put it in a different class
+    public void moveSpeedBasic(MotorDirection direction, double speed) throws InterruptedException { //TODO Make these follow laws of encoders, and put it in a different class
 //        telemetry.addData("Status", "About to move");
 //        telemetry.update();
        switch (direction) {
@@ -142,7 +143,7 @@ public class BiggerBoyHardware
         leftBackMotor.setPower(0);
         rightBackMotor.setPower(0);
         leftFrontMotor.setPower(0);
-        GlyphMotor.setPower(0);
+//        GlyphMotor.setPower(0);
     }
     public void resetPosition() {
         rightFrontMotor.setPower(0);

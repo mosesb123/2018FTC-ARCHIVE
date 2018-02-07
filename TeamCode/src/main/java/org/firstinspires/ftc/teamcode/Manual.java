@@ -25,7 +25,7 @@ import java.lang.Math;
 
 
 @TeleOp(name="Manual Control", group="Linear Opmode")
-@Disabled
+//@Disabled
 
 public class Manual extends LinearOpMode {
 
@@ -39,12 +39,11 @@ public class Manual extends LinearOpMode {
 
 
     @Override
-    public void runOpMode() {
+    public void runOpMode() throws InterruptedException {
 
         robot.init(hardwareMap);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
@@ -54,19 +53,19 @@ public class Manual extends LinearOpMode {
 
             //Drive train functions
             if(Math.abs(gamepad1.left_stick_y) >= DEADZONE && Math.abs(gamepad1.left_stick_x)<= DEADZONE) { //Forward Back
-                robot.moveSpeedBasic(MotorDirection.FORWARD, BiggerBoyHardware.DRIVE_SPEED *gamepad1.left_stick_y);
+                robot.moveSpeedBasic(MotorDirection.FORWARD, BiggerBoyHardware.DRIVE_SPEED * gamepad1.left_stick_y);
             }
             else if(Math.abs(gamepad1.left_stick_x) >= DEADZONE && Math.abs(gamepad1.left_stick_y)<= DEADZONE) { //Left Right turn
-                robot.moveSpeedBasic(MotorDirection.LEFT, BiggerBoyHardware.DRIVE_SPEED * gamepad1.right_stick_x);
+                robot.moveSpeedBasic(MotorDirection.LEFT, BiggerBoyHardware.DRIVE_SPEED * gamepad1.left_stick_x);
             }
             //NOTE: strafe is not a thing with basic wheels
-            else if(Math.abs(gamepad1.left_stick_x) >= DEADZONE && Math.abs(gamepad1.left_stick_y)<= DEADZONE) { //Left Right strafe
-                robot.leftFrontMotor.setPower(-BiggerBoyHardware.DRIVE_SPEED * gamepad1.left_stick_x);
-                robot.leftBackMotor.setPower(BiggerBoyHardware.DRIVE_SPEED * gamepad1.left_stick_x);
-                robot.rightBackMotor.setPower(-BiggerBoyHardware.DRIVE_SPEED * gamepad1.left_stick_x);
-                robot.rightFrontMotor.setPower(BiggerBoyHardware.DRIVE_SPEED * gamepad1.left_stick_x);
-
-            }
+//            else if(Math.abs(gamepad1.left_stick_x) >= DEADZONE && Math.abs(gamepad1.left_stick_y)<= DEADZONE) { //Left Right strafe
+//                robot.leftFrontMotor.setPower(-BiggerBoyHardware.DRIVE_SPEED * gamepad1.left_stick_x);
+//                robot.leftBackMotor.setPower(BiggerBoyHardware.DRIVE_SPEED * gamepad1.left_stick_x);
+//                robot.rightBackMotor.setPower(-BiggerBoyHardware.DRIVE_SPEED * gamepad1.left_stick_x);
+//                robot.rightFrontMotor.setPower(BiggerBoyHardware.DRIVE_SPEED * gamepad1.left_stick_x);
+//
+//            }
             else
                 robot.stopMoving();
 

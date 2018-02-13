@@ -79,8 +79,9 @@ public class Manual extends LinearOpMode {
                 robot.stopMoving();
 
             //Slide control
+            //todo make stopper
             if (gamepad1.left_trigger >= DEADZONE) { //lower slides
-                robot.GlyphMotor.setPower(-BiggerBoyHardware.DRIVE_SPEED); //TODO find correct motor standard power and controller deadzones
+                robot.GlyphMotor.setPower(-BiggerBoyHardware.DRIVE_SPEED);
             }
             else if (gamepad1.right_trigger >= DEADZONE) //raise slides
             {
@@ -89,6 +90,14 @@ public class Manual extends LinearOpMode {
             else
             {
                 robot.GlyphMotor.setPower(0);
+            }
+            //relic boy motor
+            //todo make a stopper so it doesn't break
+            if(gamepad1.x) {
+                robot.RelicMotor.setPower(robot.DRIVE_SPEED);
+            }
+            else if (gamepad1.y) {
+                robot.RelicMotor.setPower(robot.DRIVE_SPEED);
             }
 
             //Glyph clamps

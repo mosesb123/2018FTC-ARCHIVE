@@ -52,7 +52,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  */
 @Disabled
 @Autonomous(name="AutoBlueTest", group="Pushbot")
-public class AutoOpMode extends LinearOpMode {
+public class OLD_Auto extends LinearOpMode {
 
     /* Declare OpMode boys. */
     BiggerBoyHardware robot = new BiggerBoyHardware();   // Use a Pushbot's hardware

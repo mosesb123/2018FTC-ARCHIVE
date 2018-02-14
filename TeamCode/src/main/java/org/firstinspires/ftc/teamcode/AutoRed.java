@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-@Autonomous(name="AutoBlueRed Close", group="Pushbot")
+@Autonomous(name="Red Close", group="Pushbot")
 public class AutoRed extends NewAuto {
     @Override
     public void runOpMode() throws InterruptedException {

@@ -36,7 +36,7 @@ public class Manual extends LinearOpMode {
     double slideArmPosition = 0;
     double armSpeed = 0.5;
     double timerstart = 9.87;
-    double timer = 9.87;
+    double timer = 9.87; // Should be 10 imo
 
 
 

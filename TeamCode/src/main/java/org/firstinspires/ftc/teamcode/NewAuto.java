@@ -86,6 +86,16 @@ public class NewAuto extends LinearOpMode {
 
 
         while (opModeIsActive()) {
+            //got a little too object oriented. Vuforia goes here now
+            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+            while (vuMark == RelicRecoveryVuMark.UNKNOWN) { //while loop until we find it, might take a sec
+
+                vuMark = RelicRecoveryVuMark.from(relicTemplate);
+                telemetry.addData("VuMark", "not visible");
+
+                telemetry.addData("VuMark", "%s visible", vuMark);
+            }
+            telemetry.update();
             robot.rightServo.setPosition(0);
             robot.leftServo.setPosition(0);
             robot.colorServoArm.setPosition(1);
@@ -108,7 +118,7 @@ public class NewAuto extends LinearOpMode {
                 }
             }
             robot.colorServoArm.setPosition(0);
-            String key = imageSense();
+            String key = vuMark.toString(); //TODO Test this, theoretically should work
             if (teamColor.equals("blue")) aboutFace();
 
             if (distance.equals("close")) {
@@ -121,14 +131,16 @@ public class NewAuto extends LinearOpMode {
             if (distance.equals("far")) {
                 driveStraight(2);
                 if (teamColor.equals("blue")) {
-                    if (key.equals("LEFT")) driveRight(.5);
-                    if (key.equals("RIGHT")) driveRight(1.5);
-                    else driveRight(1);
+                    turnRight();
+                    if (key.equals("LEFT")) driveStraight(.5);
+                    if (key.equals("RIGHT")) driveStraight(1.5);
+                    else driveStraight(1);
                 }
                 if (teamColor.equals("red")) {
-                    if (key.equals("LEFT")) driveLeft(1.5);
-                    if (key.equals("RIGHT")) driveLeft(.5);
-                    else driveLeft(1);
+                    turnLeft();
+                    if (key.equals("LEFT")) driveStraight(1.5);
+                    if (key.equals("RIGHT")) driveStraight(.5);
+                    else driveStraight(1);
                 }
             }
             driveStraight(.7);
@@ -150,12 +162,6 @@ public class NewAuto extends LinearOpMode {
 
     }
 
-    private String imageSense(){
-        //Todo: Implement
-        return "Not yet implemented";
-    }
-
-
     public void driveStB(double feet) throws InterruptedException {
         driveStraight(feet);
         driveBackwards(feet);
@@ -167,14 +173,32 @@ public class NewAuto extends LinearOpMode {
     public void aboutFace() {
         //TODO implement
         //theoretically just turnLeft twice
+        turnLeft();
+        turnLeft();
     }
     public void turnLeft() {
-        //Todo implement
+        robot.rightFrontMotor.setPower(BiggerBoyHardware.DRIVE_SPEED);
+        robot.rightBackMotor.setPower(BiggerBoyHardware.DRIVE_SPEED);
+        robot.leftFrontMotor.setPower(-BiggerBoyHardware.DRIVE_SPEED);
+        robot.leftBackMotor.setPower(-BiggerBoyHardware.DRIVE_SPEED);
+        sleep(2000); //placeholder
+        stopMoving();
     }
     public void turnRight() {
-        //Todo implement
+        robot.rightFrontMotor.setPower(-BiggerBoyHardware.DRIVE_SPEED);
+        robot.rightBackMotor.setPower(-BiggerBoyHardware.DRIVE_SPEED);
+        robot.leftFrontMotor.setPower(BiggerBoyHardware.DRIVE_SPEED);
+        robot.leftBackMotor.setPower(BiggerBoyHardware.DRIVE_SPEED);
+        sleep(2000); //TODO find real number by testing
+        stopMoving();
     }
-    public void driveLeft(double feet) {
+    public void stopMoving() {
+        robot.rightFrontMotor.setPower(0);
+        robot.rightBackMotor.setPower(0);
+        robot.leftFrontMotor.setPower(0);
+        robot.leftBackMotor.setPower(0);
+    }
+    /*public void driveLeft(double feet) { //Mech wheels only
         double rotations = feet /robot.WHEELS_CIRCUM;
         double ticks = rotations * robot.TICKS_PER_ROTATION;
         resetEncoders();
@@ -194,7 +218,7 @@ public class NewAuto extends LinearOpMode {
         robot.stopMoving();
         resetEncoders();
     }
-    public void driveRight(double feet){
+    public void driveRight(double feet){ // Mech Wheels only
         double rotations = feet /robot.WHEELS_CIRCUM;
         double ticks = rotations * robot.TICKS_PER_ROTATION;
         resetEncoders();
@@ -214,6 +238,7 @@ public class NewAuto extends LinearOpMode {
         robot.stopMoving();
         resetEncoders();
     }
+    */
     public void driveStraight(double feet){
 
         double rotations = feet /robot.WHEELS_CIRCUM;

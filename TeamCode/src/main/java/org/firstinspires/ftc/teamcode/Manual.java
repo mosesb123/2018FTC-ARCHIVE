@@ -35,6 +35,8 @@ public class Manual extends LinearOpMode {
     final double DEADZONE = .2;
     double slideArmPosition = 0;
     double armSpeed = 0.5;
+    double timerstart = 9.87;
+    double timer = 9.87;
 
 
 
@@ -78,26 +80,56 @@ public class Manual extends LinearOpMode {
             else
                 robot.stopMoving();
 
+//            telemetry.addData("timer",timer);
+//            telemetry.update();
             //Slide control
             //todo make stopper
-            if (gamepad1.left_trigger >= DEADZONE) { //lower slides
+//            runtime.startTime();
+            if (gamepad1.left_trigger >= DEADZONE && timer < 2 * timerstart) { //lower slides
+//                runtime.reset();
                 robot.GlyphMotor.setPower(-BiggerBoyHardware.DRIVE_SPEED);
+//                if (runtime.seconds() > 1){
+//                    timer++;
+//                    runtime.reset();
+//                }
+//                telemetry.addData("timer",timer);
+//                telemetry.update();
             }
-            else if (gamepad1.right_trigger >= DEADZONE) //raise slides
+            else if (gamepad1.right_trigger >= DEADZONE && timer > 0) //raise slides
             {
+//                runtime.reset();
+
                 robot.GlyphMotor.setPower(BiggerBoyHardware.DRIVE_SPEED);
+
+//                if (runtime.seconds() > 1){
+//                    timer--;
+//                    runtime.reset();
+//                }
+//                telemetry.addData("timer",timer);
+//                telemetry.update();
             }
             else
             {
                 robot.GlyphMotor.setPower(0);
+                telemetry.addData("timer",timer);
+                telemetry.update();
             }
+//            telemetry.addData("timer",timer);
+//            telemetry.update();
+
             //relic boy motor
             //todo make a stopper so it doesn't break
-            if(gamepad1.x) {
+            while(gamepad1.x) {
+                robot.RelicMotor.setPower(-robot.DRIVE_SPEED);
+            }
+            if (!gamepad1.x) {
+                robot.RelicMotor.setPower(0);
+            }
+            while (gamepad1.y) {
                 robot.RelicMotor.setPower(robot.DRIVE_SPEED);
             }
-            else if (gamepad1.y) {
-                robot.RelicMotor.setPower(robot.DRIVE_SPEED);
+            if (!gamepad1.y) {
+                robot.RelicMotor.setPower(0);
             }
 
             //Glyph clamps

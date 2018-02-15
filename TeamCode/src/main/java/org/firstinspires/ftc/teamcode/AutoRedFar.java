@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 @Autonomous(name="Red Far", group="Pushbot")
-public class AutoRedFar extends NewAuto {
+public class AutoRedFar extends BaseAuto {
     @Override
     public void runOpMode() throws InterruptedException {
         String teamColor = "red";

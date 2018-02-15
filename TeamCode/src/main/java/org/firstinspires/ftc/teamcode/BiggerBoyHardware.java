@@ -25,7 +25,10 @@ public class BiggerBoyHardware
     public Servo leftServo = null;
     public DcMotor GlyphMotor = null;
     //Relic Mechanisms
-    public Servo clawServo = null;
+    public Servo clawServoX = null;
+    public Servo clawServoY = null;
+    public Servo clawServoZ = null;
+    public Servo clawServoArm = null;
     public DcMotor RelicMotor = null;
     //Jewel Mechanisms
     public Servo colorServoArm = null;
@@ -89,7 +92,10 @@ public class BiggerBoyHardware
         RelicMotor = ahwMap.dcMotor.get("RelicMotor");
         rightServo = ahwMap.servo.get("rightServo");
         leftServo = ahwMap.servo.get("leftServo");
-        clawServo = ahwMap.servo.get("clawServo");
+        clawServoX = ahwMap.servo.get("clawServoX");
+        clawServoY = ahwMap.servo.get("clawServoY");
+        clawServoZ = ahwMap.servo.get("clawServoZ");
+        clawServoArm = ahwMap.servo.get("clawServoArm");
         colorServoArm = ahwMap.servo.get("colorServoArm");
 
     }

@@ -34,8 +34,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 //@Disabled
-@Autonomous(name="NewAuto Joey", group="Pushbot")
-public class NewAuto extends LinearOpMode {
+@Autonomous(name="BaseAuto", group="Pushbot")
+public class BaseAuto extends LinearOpMode {
 
     /* Declare OpMode boys. */
     private BiggerBoyHardware robot = new BiggerBoyHardware();   // Use a Pushbot's hardware

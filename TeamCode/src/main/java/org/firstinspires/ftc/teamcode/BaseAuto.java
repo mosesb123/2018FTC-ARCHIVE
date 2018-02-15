@@ -77,7 +77,7 @@ public class BaseAuto extends LinearOpMode {
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
 
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Status", "Big Boy Ready to run");    //
+        telemetry.addData("Status", "Bigger Boy Powered");    //
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)

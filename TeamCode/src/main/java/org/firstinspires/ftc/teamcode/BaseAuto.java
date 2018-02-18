@@ -98,7 +98,9 @@ public class BaseAuto extends LinearOpMode {
             telemetry.update();
             robot.rightServo.setPosition(0);
             robot.leftServo.setPosition(0);
-            robot.colorServoArm.setPosition(1);
+            for (int i = 1; i > 0; i-=.1)
+                robot.colorServoArm.setPosition(i);
+            sleep(1000) //waiting for the servo to get there happy
             int blueReading = robot.colorSensor.blue();
             int redReading = robot.colorSensor.red();
             if (teamColor.equals("blue")) {
@@ -117,7 +119,7 @@ public class BaseAuto extends LinearOpMode {
                     driveBtS(.3);
                 }
             }
-            robot.colorServoArm.setPosition(0);
+            robot.colorServoArm.setPosition(1);
             String key = vuMark.toString(); //TODO Test this, theoretically should work
             if (teamColor.equals("blue")) aboutFace();
 

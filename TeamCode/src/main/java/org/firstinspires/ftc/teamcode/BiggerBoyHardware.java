@@ -34,11 +34,11 @@ public class BiggerBoyHardware
     public ColorSensor colorSensor = null;
 
     //Useful Constants //TODO all of these constants need testing + confirmation
-    public final static double RIGHT_SERVO_HOME = .8;
-    public final static double RIGHT_SERVO_MIN = -.8;
+    public final static double RIGHT_SERVO_HOME = -1;
+    public final static double RIGHT_SERVO_MIN = -1;
     public final static double RIGHT_SERVO_MAX = .8;
-    public final static double LEFT_SERVO_HOME = .8;
-    public final static double LEFT_SERVO_MIN = .8;
+    public final static double LEFT_SERVO_HOME = 1;
+    public final static double LEFT_SERVO_MIN = 1;
     public final static double LEFT_SERVO_MAX = -.8;
     public final static double SERVO_MIN = -.8;
     public final static double SERVO_MAX = .8;
@@ -95,7 +95,6 @@ public class BiggerBoyHardware
         clawServoZ = ahwMap.servo.get("clawServoZ");
         clawServoArm = ahwMap.servo.get("clawServoArm");
         colorServoArm = ahwMap.servo.get("colorServoArm");
-        colorServoArm.setPosition(COLOR_SERVO_HOME);
         colorSensor = ahwMap.colorSensor.get("colorSensor");
     }
 

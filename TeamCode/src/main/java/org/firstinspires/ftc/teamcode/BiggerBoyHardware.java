@@ -96,6 +96,7 @@ public class BiggerBoyHardware
         clawServoArm = ahwMap.servo.get("clawServoArm");
         colorServoArm = ahwMap.servo.get("colorServoArm");
         colorServoArm.setPosition(COLOR_SERVO_HOME);
+        colorSensor = ahwMap.colorSensor.get("colorSensor");
     }
 
 

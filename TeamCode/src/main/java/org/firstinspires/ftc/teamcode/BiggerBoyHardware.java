@@ -35,6 +35,7 @@ public class BiggerBoyHardware
 
     //Useful Constants //TODO all of these constants need testing + confirmation
     public final static double RIGHT_SERVO_HOME = -1;
+    public final static double CLAW_SERVO_Y_BUFFER = .2;
     public final static double RIGHT_SERVO_MIN = -1;
     public final static double RIGHT_SERVO_MAX = .8;
     public final static double LEFT_SERVO_HOME = 1;

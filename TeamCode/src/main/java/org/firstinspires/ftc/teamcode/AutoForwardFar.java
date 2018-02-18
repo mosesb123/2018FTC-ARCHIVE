@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name="Auto-Forward", group="Pushbot")
-public class AutoForward extends LinearOpMode {
+@Autonomous(name="Auto-Forward-Far", group="Pushbot")
+public class AutoForwardFar extends LinearOpMode {
     private BiggerBoyHardware robot = new BiggerBoyHardware();   // Use a Pushbot's hardware
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -19,7 +19,7 @@ public class AutoForward extends LinearOpMode {
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        driveStraight(4);
+        driveStraight(6);
         driveBackwards(.5);
 
         telemetry.addData("Path", "Complete");

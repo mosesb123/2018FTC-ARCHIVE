@@ -48,6 +48,7 @@ public class BaseAuto extends LinearOpMode {
 
     public void setTeamColor(String color) { teamColor = color; }
     public void setDistance(String distanceIn) { distance = distanceIn; }
+    private boolean vumarkFound = false;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -88,19 +89,27 @@ public class BaseAuto extends LinearOpMode {
         while (opModeIsActive()) {
             //got a little too object oriented. Vuforia goes here now
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-            while (vuMark == RelicRecoveryVuMark.UNKNOWN) { //while loop until we find it, might take a sec
+            runtime.reset();
+
+            while (vuMark == RelicRecoveryVuMark.UNKNOWN && runtime.seconds() <= 10) { //while loop until we find it, might take a sec
 
                 vuMark = RelicRecoveryVuMark.from(relicTemplate);
                 telemetry.addData("VuMark", "not visible");
 
                 telemetry.addData("VuMark", "%s visible", vuMark);
             }
+
+            if(vuMark != RelicRecoveryVuMark.UNKNOWN){
+                vumarkFound = true;
+            }
+
+            runtime.reset();
             telemetry.update();
             robot.rightServo.setPosition(0);
             robot.leftServo.setPosition(0);
             for (int i = 1; i > 0; i-=.1)
                 robot.colorServoArm.setPosition(i);
-            sleep(1000) //waiting for the servo to get there happy
+            sleep(1000); //waiting for the servo to get there happy
             int blueReading = robot.colorSensor.blue();
             int redReading = robot.colorSensor.red();
             if (teamColor.equals("blue")) {

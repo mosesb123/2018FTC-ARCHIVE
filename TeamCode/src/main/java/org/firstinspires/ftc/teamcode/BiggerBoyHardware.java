@@ -25,7 +25,6 @@ public class BiggerBoyHardware
     public Servo leftServo = null;
     public DcMotor GlyphMotor = null;
     //Relic Mechanisms
-    public Servo clawServoX = null;
     public Servo clawServoY = null;
     public Servo clawServoZ = null;
     public Servo clawServoArm = null;
@@ -35,14 +34,14 @@ public class BiggerBoyHardware
     public ColorSensor colorSensor = null;
 
     //Useful Constants //TODO all of these constants need testing + confirmation
-    public final static double RIGHT_SERVO_HOME = 1;
-    public final static double RIGHT_SERVO_MIN = -1;
-    public final static double RIGHT_SERVO_MAX = 1;
-    public final static double LEFT_SERVO_HOME = -1;
-    public final static double LEFT_SERVO_MIN = 1;
-    public final static double LEFT_SERVO_MAX = -1;
-    public final static double SERVO_MIN = -1;
-    public final static double SERVO_MAX = 1;
+    public final static double RIGHT_SERVO_HOME = .8;
+    public final static double RIGHT_SERVO_MIN = -.8;
+    public final static double RIGHT_SERVO_MAX = .8;
+    public final static double LEFT_SERVO_HOME = .8;
+    public final static double LEFT_SERVO_MIN = .8;
+    public final static double LEFT_SERVO_MAX = -.8;
+    public final static double SERVO_MIN = -.8;
+    public final static double SERVO_MAX = .8;
     public final static double DRIVE_SPEED = .9;
     public final static double COLOR_SERVO_HOME = 1;
     public final static double COLOR_SERVO_DESTINATION = 0.5;
@@ -92,12 +91,11 @@ public class BiggerBoyHardware
         RelicMotor = ahwMap.dcMotor.get("RelicMotor");
         rightServo = ahwMap.servo.get("rightServo");
         leftServo = ahwMap.servo.get("leftServo");
-        clawServoX = ahwMap.servo.get("clawServoX");
         clawServoY = ahwMap.servo.get("clawServoY");
         clawServoZ = ahwMap.servo.get("clawServoZ");
         clawServoArm = ahwMap.servo.get("clawServoArm");
         colorServoArm = ahwMap.servo.get("colorServoArm");
-
+        colorServoArm.setPosition(COLOR_SERVO_HOME);
     }
 
 

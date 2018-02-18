@@ -35,7 +35,7 @@ public class Manual extends LinearOpMode {
     final double DEADZONE = .2;
     final double SERVO_SPEED = .15;
     double slideArmPosition = 0;
-    double ClawServoXPos = 0;
+    //double ClawServoXPos = 0;
     double ClawServoYPos = 0;
     double ClawServoZPos = 0;
     double ClawServoArmPos = 0;
@@ -150,27 +150,21 @@ public class Manual extends LinearOpMode {
                 robot.rightServo.setPosition(slideArmPosition); //set position of servos
                 robot.leftServo.setPosition(1 - slideArmPosition); //set position of servos
             }
-            while(Math.abs(gamepad1.right_stick_x) > DEADZONE)
+           /* while(Math.abs(gamepad1.right_stick_x) > DEADZONE)
             {
                 ClawServoXPos += SERVO_SPEED * gamepad1.right_stick_x;
                 ClawServoXPos = Range.clip(ClawServoXPos, BiggerBoyHardware.SERVO_MIN, BiggerBoyHardware.SERVO_MAX); //make sure position is allowed
                 robot.clawServoX.setPosition(ClawServoXPos);
-            }
+            } */
             while(Math.abs(gamepad1.right_stick_y) > DEADZONE)
             {
                 ClawServoYPos += SERVO_SPEED * gamepad1.right_stick_y;
                 ClawServoYPos = Range.clip(ClawServoYPos, BiggerBoyHardware.SERVO_MIN, BiggerBoyHardware.SERVO_MAX); //make sure position is allowed
                 robot.clawServoY.setPosition(ClawServoYPos);
             }
-            while(gamepad1.dpad_left)
+            while(Math.abs(gamepad1.right_stick_x) > DEADZONE)
             {
-                ClawServoZPos -= SERVO_SPEED;
-                ClawServoZPos = Range.clip(ClawServoZPos, BiggerBoyHardware.SERVO_MIN, BiggerBoyHardware.SERVO_MAX); //make sure position is allowed
-                robot.clawServoZ.setPosition(ClawServoZPos);
-            }
-            while(gamepad1.dpad_right)
-            {
-                ClawServoZPos += SERVO_SPEED;
+                ClawServoZPos += SERVO_SPEED * gamepad1.right_stick_x;
                 ClawServoZPos = Range.clip(ClawServoZPos, BiggerBoyHardware.SERVO_MIN, BiggerBoyHardware.SERVO_MAX); //make sure position is allowed
                 robot.clawServoZ.setPosition(ClawServoZPos);
             }

@@ -44,6 +44,7 @@ public class BiggerBoyHardware
     public final static double SERVO_MIN = -.8;
     public final static double SERVO_MAX = .8;
     public final static double DRIVE_SPEED = .9;
+    public final static double TURN_SPEED = .7;
     public final static double COLOR_SERVO_HOME = 1;
     public final static double COLOR_SERVO_DESTINATION = 0.5;
     public final static double SLIDE_ARM_HOME = 0.0; //need to test and find, probs 0.0

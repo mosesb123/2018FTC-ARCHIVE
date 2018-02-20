@@ -34,7 +34,7 @@ public class Manual extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     final double DEADZONE = .2;
     final double SERVO_SPEED = .15;
-    double slideArmPosition = 0;
+    double slideArmPosition = 0.8;
     //double ClawServoXPos = 0;
     double ClawServoYPos = 0;
     double ClawServoZPos = 0;
@@ -56,9 +56,9 @@ public class Manual extends LinearOpMode {
         runtime.reset();
         robot.clawServoY.scaleRange(robot.CLAW_SERVO_Y_BUFFER, 1-robot.CLAW_SERVO_Y_BUFFER);
 
-        robot.colorServoArm.setPosition(robot.COLOR_SERVO_HOME);
-        robot.leftServo.setPosition(.2);
-        robot.rightServo.setPosition(.8);
+        robot.colorServoArm.setPosition(.25);
+        robot.leftServo.setPosition(1-slideArmPosition);
+        robot.rightServo.setPosition(slideArmPosition);
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 

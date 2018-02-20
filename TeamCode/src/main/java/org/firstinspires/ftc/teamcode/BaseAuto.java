@@ -118,8 +118,10 @@ public class BaseAuto extends LinearOpMode {
             runtime.reset();
             robot.rightServo.setPosition(slideArmClosedPosition);
             robot.leftServo.setPosition(1-slideArmClosedPosition);
+            raiseGlyph();
 
-            /*for (int i = 1; i > 0; i-=.1)
+            /*
+            for (int i = 1; i > 0; i-=.1)
                 robot.colorServoArm.setPosition(i);
             sleep(1000); //waiting for the servo to get there happy
             int blueReading = robot.colorSensor.blue();
@@ -142,13 +144,14 @@ public class BaseAuto extends LinearOpMode {
             }
             robot.colorServoArm.setPosition(1);
             */
+
             String key = vuMark.toString(); //TODO Test this, theoretically should work
             if (teamColor.equals("blue")) aboutFace();
 
             if (distance.equals("close")) {
-                if (key.equals("LEFT")) driveStraight(2.8);
-                else if (key.equals("RIGHT")) driveStraight(4.5);
-                else driveStraight(3.2);
+                if (key.equals("LEFT")) driveStraight(2.65);
+                else if (key.equals("RIGHT")) driveStraight(5.5);
+                else driveStraight(4.15);
                 if (teamColor.equals("blue")) turnLeft();
                 if (teamColor.equals("red")) turnRight();
             }
@@ -167,9 +170,10 @@ public class BaseAuto extends LinearOpMode {
                     else driveStraight(1);
                 }
             }
+            lowerGlyph();
+            openServos();
             driveStraight(3);
 
-            openServos();
 
             driveBackwards(.5);
             break;
@@ -303,19 +307,7 @@ public class BaseAuto extends LinearOpMode {
     }
     */
 
-    public void raiseGlyph(double feet){
-        robot.GlyphMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        robot.GlyphMotor.setPower(BiggerBoyHardware.TURN_SPEED);
-        runtime.reset();
-        while(runtime.seconds() < 1.5)
-            idle();
-
-        robot.GlyphMotor.setPower(0);
-    }
-
-    public void lowerGlyph(double feet){
-
+    public void raiseGlyph(){
         robot.GlyphMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         robot.GlyphMotor.setPower(-BiggerBoyHardware.TURN_SPEED);
@@ -326,10 +318,22 @@ public class BaseAuto extends LinearOpMode {
         robot.GlyphMotor.setPower(0);
     }
 
+    public void lowerGlyph(){
+
+        robot.GlyphMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        robot.GlyphMotor.setPower(BiggerBoyHardware.TURN_SPEED);
+        runtime.reset();
+        while(runtime.seconds() < 1.5)
+            idle();
+
+        robot.GlyphMotor.setPower(0);
+    }
+
     public void turnRight(){
         telemetry.addData("Motion", "Driving Right");
         telemetry.update();
-        double rotations = 2.5 / BiggerBoyHardware.WHEELS_CIRCUM;
+        double rotations = 2.25 / BiggerBoyHardware.WHEELS_CIRCUM;
         double ticks = rotations * BiggerBoyHardware.TICKS_PER_ROTATION;
         resetEncoders();
         setRunToPosition();

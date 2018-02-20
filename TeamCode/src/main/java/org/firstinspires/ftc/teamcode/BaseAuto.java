@@ -96,8 +96,6 @@ public class BaseAuto extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-
-
             //got a little too object oriented. Vuforia goes here now
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
             runtime.reset();
@@ -120,7 +118,7 @@ public class BaseAuto extends LinearOpMode {
             runtime.reset();
             robot.rightServo.setPosition(slideArmClosedPosition);
             robot.leftServo.setPosition(1-slideArmClosedPosition);
-            raiseGlyph(1);
+
             /*for (int i = 1; i > 0; i-=.1)
                 robot.colorServoArm.setPosition(i);
             sleep(1000); //waiting for the servo to get there happy
@@ -149,8 +147,8 @@ public class BaseAuto extends LinearOpMode {
 
             if (distance.equals("close")) {
                 if (key.equals("LEFT")) driveStraight(2.8);
-                else if (key.equals("RIGHT")) driveStraight(4.8);
-                else driveStraight(3.8);
+                else if (key.equals("RIGHT")) driveStraight(4.5);
+                else driveStraight(3.2);
                 if (teamColor.equals("blue")) turnLeft();
                 if (teamColor.equals("red")) turnRight();
             }
@@ -169,10 +167,9 @@ public class BaseAuto extends LinearOpMode {
                     else driveStraight(1);
                 }
             }
-            driveStraight(2);
+            driveStraight(3);
 
             openServos();
-            lowerGlyph(1);
 
             driveBackwards(.5);
             break;
@@ -205,28 +202,39 @@ public class BaseAuto extends LinearOpMode {
         turnLeft();
         turnLeft();
     }
-    public void turnLeft() {
-        telemetry.addData("Motion", "Turning Right");
-        telemetry.update();
-        runtime.reset();
 
-        setNoEncoder();
+    public void turnLeft(){
+        telemetry.addData("Motion", "Driving Left");
+        telemetry.update();
+        double rotations = 2.5 / BiggerBoyHardware.WHEELS_CIRCUM;
+        double ticks = rotations * BiggerBoyHardware.TICKS_PER_ROTATION;
+        resetEncoders();
+        setRunToPosition();
+
+        robot.leftFrontMotor.setTargetPosition(robot.leftFrontMotor.getCurrentPosition() + (int)ticks);
+        robot.leftBackMotor.setTargetPosition(robot.leftBackMotor.getCurrentPosition() + (int)ticks);
+        robot.rightFrontMotor.setTargetPosition(robot.rightFrontMotor.getCurrentPosition() - (int)ticks);
+        robot.rightBackMotor.setTargetPosition(robot.rightBackMotor.getCurrentPosition() - (int)ticks);
+
 
         robot.leftFrontMotor.setPower(BiggerBoyHardware.TURN_SPEED);
         robot.leftBackMotor.setPower(BiggerBoyHardware.TURN_SPEED);
-        robot.rightFrontMotor.setPower(-BiggerBoyHardware.TURN_SPEED);
-        robot.rightBackMotor.setPower(-BiggerBoyHardware.TURN_SPEED);
-
-        while(runtime.seconds() < 1.5){
-            idle();
-        }
-
+        robot.rightFrontMotor.setPower(BiggerBoyHardware.TURN_SPEED);
+        robot.rightBackMotor.setPower(BiggerBoyHardware.TURN_SPEED);
+        whileIsBusy();
         robot.stopMoving();
-
-        telemetry.addData("Motion", "Done Turning Right");
+        resetEncoders();
+        telemetry.addData("Motion", "Done Driving Left");
         telemetry.update();
+
     }
-    public void turnRight() {
+
+
+    /**
+     * Turn based on timing
+     * Try to avoid using this because timing varies based on battery level
+     */
+    public void turnRightOld() {
         telemetry.addData("Motion", "Turning Right");
         telemetry.update();
         runtime.reset();
@@ -296,7 +304,6 @@ public class BaseAuto extends LinearOpMode {
     */
 
     public void raiseGlyph(double feet){
-
         robot.GlyphMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         robot.GlyphMotor.setPower(BiggerBoyHardware.TURN_SPEED);
@@ -319,6 +326,32 @@ public class BaseAuto extends LinearOpMode {
         robot.GlyphMotor.setPower(0);
     }
 
+    public void turnRight(){
+        telemetry.addData("Motion", "Driving Right");
+        telemetry.update();
+        double rotations = 2.5 / BiggerBoyHardware.WHEELS_CIRCUM;
+        double ticks = rotations * BiggerBoyHardware.TICKS_PER_ROTATION;
+        resetEncoders();
+        setRunToPosition();
+
+        robot.leftFrontMotor.setTargetPosition(robot.leftFrontMotor.getCurrentPosition() - (int)ticks);
+        robot.leftBackMotor.setTargetPosition(robot.leftBackMotor.getCurrentPosition() - (int)ticks);
+        robot.rightFrontMotor.setTargetPosition(robot.rightFrontMotor.getCurrentPosition() + (int)ticks);
+        robot.rightBackMotor.setTargetPosition(robot.rightBackMotor.getCurrentPosition() + (int)ticks);
+
+
+        robot.leftFrontMotor.setPower(BiggerBoyHardware.TURN_SPEED);
+        robot.leftBackMotor.setPower(BiggerBoyHardware.TURN_SPEED);
+        robot.rightFrontMotor.setPower(BiggerBoyHardware.TURN_SPEED);
+        robot.rightBackMotor.setPower(BiggerBoyHardware.TURN_SPEED);
+        whileIsBusy();
+        robot.stopMoving();
+        resetEncoders();
+        telemetry.addData("Motion", "Done Driving Right");
+        telemetry.update();
+
+    }
+
     public void driveStraight(double feet){
         telemetry.addData("Motion", "Driving Straight");
         telemetry.update();
@@ -326,10 +359,10 @@ public class BaseAuto extends LinearOpMode {
         double ticks = rotations * BiggerBoyHardware.TICKS_PER_ROTATION;
         resetEncoders();
 
-        robot.leftFrontMotor.setTargetPosition((int)ticks);
-        robot.leftBackMotor.setTargetPosition((int)ticks);
-        robot.rightFrontMotor.setTargetPosition((int)ticks);
-        robot.rightBackMotor.setTargetPosition((int)ticks);
+        robot.leftFrontMotor.setTargetPosition(robot.leftFrontMotor.getCurrentPosition() + (int)ticks);
+        robot.leftBackMotor.setTargetPosition(robot.leftBackMotor.getCurrentPosition() + (int)ticks);
+        robot.rightFrontMotor.setTargetPosition(robot.rightFrontMotor.getCurrentPosition() + (int)ticks);
+        robot.rightBackMotor.setTargetPosition(robot.rightBackMotor.getCurrentPosition() + (int)ticks);
 
         setRunToPosition();
 

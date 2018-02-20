@@ -39,7 +39,7 @@ public class Manual extends LinearOpMode {
     double ClawServoYPos = 0;
     double ClawServoZPos = 0;
     double ClawServoArmPos = 0;
-    double armSpeed = 0.25;
+    double armSpeed = 0.05;
     double timerstart = 9.87;
     double timer = 9.87; // Should be 10 imo
 
@@ -57,8 +57,8 @@ public class Manual extends LinearOpMode {
         robot.clawServoY.scaleRange(robot.CLAW_SERVO_Y_BUFFER, 1-robot.CLAW_SERVO_Y_BUFFER);
 
         robot.colorServoArm.setPosition(robot.COLOR_SERVO_HOME);
-        robot.leftServo.setPosition(1);
-        robot.rightServo.setPosition(-1);
+        robot.leftServo.setPosition(.2);
+        robot.rightServo.setPosition(.8);
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
@@ -66,17 +66,17 @@ public class Manual extends LinearOpMode {
             //todo: multiplying DRIVE_SPEED by left_stick_y might be causing the issue
             if(Math.abs(gamepad1.left_stick_y) >= DEADZONE && Math.abs(gamepad1.left_stick_x)<= DEADZONE) { //Forward Back
 //                robot.moveSpeedBasic(MotorDirection.FORWARD, BiggerBoyHardware.DRIVE_SPEED * gamepad1.left_stick_y);
-                robot.rightFrontMotor.setPower(gamepad1.left_stick_y);
-                robot.rightBackMotor.setPower(gamepad1.left_stick_y);
-                robot.leftFrontMotor.setPower(gamepad1.left_stick_y);
-                robot.leftBackMotor.setPower(gamepad1.left_stick_y);
+                robot.rightFrontMotor.setPower(-gamepad1.left_stick_y);
+                robot.rightBackMotor.setPower(-gamepad1.left_stick_y);
+                robot.leftFrontMotor.setPower(-gamepad1.left_stick_y);
+                robot.leftBackMotor.setPower(-gamepad1.left_stick_y);
             }
             else if(Math.abs(gamepad1.left_stick_x) >= DEADZONE && Math.abs(gamepad1.left_stick_y)<= DEADZONE) { //Left Right turn
 //                robot.moveSpeedBasic(MotorDirection.LEFT, BiggerBoyHardware.DRIVE_SPEED * gamepad1.left_stick_x);
-                robot.rightFrontMotor.setPower(-gamepad1.left_stick_x);
-                robot.rightBackMotor.setPower(-gamepad1.left_stick_x);
-                robot.leftFrontMotor.setPower(gamepad1.left_stick_x);
-                robot.leftBackMotor.setPower(gamepad1.left_stick_x);
+                robot.rightFrontMotor.setPower(gamepad1.left_stick_x);
+                robot.rightBackMotor.setPower(gamepad1.left_stick_x);
+                robot.leftFrontMotor.setPower(-gamepad1.left_stick_x);
+                robot.leftBackMotor.setPower(-gamepad1.left_stick_x);
             }
 
             //Forward
@@ -93,16 +93,16 @@ public class Manual extends LinearOpMode {
                 robot.leftBackMotor.setPower(-.5*BiggerBoyHardware.DRIVE_SPEED);
             }
             else if(gamepad1.dpad_left){
-                robot.rightFrontMotor.setPower(.5*BiggerBoyHardware.DRIVE_SPEED);
-                robot.rightBackMotor.setPower(.5*BiggerBoyHardware.DRIVE_SPEED);
-                robot.leftFrontMotor.setPower(-.5*BiggerBoyHardware.DRIVE_SPEED);
-                robot.leftBackMotor.setPower(-.5*BiggerBoyHardware.DRIVE_SPEED);
-            }
-            else if(gamepad1.dpad_right){
                 robot.rightFrontMotor.setPower(-.5*BiggerBoyHardware.DRIVE_SPEED);
                 robot.rightBackMotor.setPower(-.5*BiggerBoyHardware.DRIVE_SPEED);
                 robot.leftFrontMotor.setPower(.5*BiggerBoyHardware.DRIVE_SPEED);
                 robot.leftBackMotor.setPower(.5*BiggerBoyHardware.DRIVE_SPEED);
+            }
+            else if(gamepad1.dpad_right){
+                robot.rightFrontMotor.setPower(.5*BiggerBoyHardware.DRIVE_SPEED);
+                robot.rightBackMotor.setPower(.5*BiggerBoyHardware.DRIVE_SPEED);
+                robot.leftFrontMotor.setPower(-.5*BiggerBoyHardware.DRIVE_SPEED);
+                robot.leftBackMotor.setPower(-.5*BiggerBoyHardware.DRIVE_SPEED);
             }
 
 
@@ -149,7 +149,7 @@ public class Manual extends LinearOpMode {
             {
                 robot.GlyphMotor.setPower(0);
                 //telemetry.addData("timer",timer);
-                telemetry.update();
+                //telemetry.update();
             }
 //            telemetry.addData("timer",timer);
 //            telemetry.update();
@@ -223,7 +223,7 @@ public class Manual extends LinearOpMode {
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("SlideServos", "Angle", slideArmPosition);
+            telemetry.addData("slidearm", "position, %.2f", slideArmPosition);
             // telemetry.addData("SlideMotors", "Both", leftSlidePower); //TODO set powers better
             // telemetry.addData("DriveMotors", "FrontLeft (%.2f), BackLeft (%.2f) ,FrontRight (%.2f,BackRight (%.2f)", leftFrontPower,  leftBackPower,rightFrontPower, rightBackPower);
             telemetry.addData("Let's go Big Boy", "Big Boy");

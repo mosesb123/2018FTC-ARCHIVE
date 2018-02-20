@@ -97,14 +97,16 @@ public class BaseAuto extends LinearOpMode {
                 telemetry.addData("VuMark", "not visible");
 
                 telemetry.addData("VuMark", "%s visible", vuMark);
+                telemetry.update();
             }
 
             if(vuMark != RelicRecoveryVuMark.UNKNOWN){
                 vumarkFound = true;
             }
+            telemetry.addData("VuMark" , "%s", vuMark.toString());
+            telemetry.update();
 
             runtime.reset();
-            telemetry.update();
             robot.rightServo.setPosition(0);
             robot.leftServo.setPosition(0);
             for (int i = 1; i > 0; i-=.1)
@@ -161,7 +163,7 @@ public class BaseAuto extends LinearOpMode {
 
         telemetry.addData("Path", "Complete");
 
-        telemetry.update();
+        //telemetry.update();
         sleep(1000);
         idle();
     }

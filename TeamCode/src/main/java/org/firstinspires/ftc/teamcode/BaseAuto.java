@@ -146,14 +146,19 @@ public class BaseAuto extends LinearOpMode {
             */
 
             String key = vuMark.toString(); //TODO Test this, theoretically should work
-            if (teamColor.equals("blue")) aboutFace();
 
             if (distance.equals("close")) {
-                if (key.equals("LEFT")) driveStraight(2.65);
-                else if (key.equals("RIGHT")) driveStraight(5.5);
-                else driveStraight(4.15);
-                if (teamColor.equals("blue")) turnLeft();
-                if (teamColor.equals("red")) turnRight();
+                if(teamColor.equals("red")) {
+                    if (key.equals("LEFT")) driveStraight(2.65);
+                    else if (key.equals("RIGHT")) driveStraight(5.5);
+                    else driveStraight(4.15);
+                }
+                else {
+                    if (key.equals("LEFT")) driveBackwards(2.65);
+                    else if (key.equals("RIGHT")) driveBackwards(5.5);
+                    else driveBackwards(4.15);
+                }
+                turnRight();
             }
             if (distance.equals("far")) {
                 driveStraight(2);

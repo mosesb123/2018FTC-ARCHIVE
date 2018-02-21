@@ -366,13 +366,13 @@ public class BaseAuto extends LinearOpMode {
         double rotations = feet / BiggerBoyHardware.WHEELS_CIRCUM;
         double ticks = rotations * BiggerBoyHardware.TICKS_PER_ROTATION;
         resetEncoders();
+        setRunToPosition();
 
         robot.leftFrontMotor.setTargetPosition(robot.leftFrontMotor.getCurrentPosition() + (int)ticks);
         robot.leftBackMotor.setTargetPosition(robot.leftBackMotor.getCurrentPosition() + (int)ticks);
         robot.rightFrontMotor.setTargetPosition(robot.rightFrontMotor.getCurrentPosition() + (int)ticks);
         robot.rightBackMotor.setTargetPosition(robot.rightBackMotor.getCurrentPosition() + (int)ticks);
 
-        setRunToPosition();
 
         robot.leftFrontMotor.setPower(BiggerBoyHardware.TURN_SPEED);
         robot.leftBackMotor.setPower(BiggerBoyHardware.TURN_SPEED);
@@ -392,19 +392,19 @@ public class BaseAuto extends LinearOpMode {
         double rotations = feet / BiggerBoyHardware.WHEELS_CIRCUM;
         double ticks = rotations * BiggerBoyHardware.TICKS_PER_ROTATION;
         resetEncoders();
+        setRunToPosition();
 
         robot.leftFrontMotor.setTargetPosition((int) -ticks);
         robot.leftBackMotor.setTargetPosition((int) -ticks);
         robot.rightFrontMotor.setTargetPosition((int) -ticks);
         robot.rightBackMotor.setTargetPosition((int) -ticks);
 
-        setRunToPosition();
 
 
-        robot.leftFrontMotor.setPower(-1* BiggerBoyHardware.TURN_SPEED);
-        robot.leftBackMotor.setPower(-1* BiggerBoyHardware.TURN_SPEED);
-        robot.rightFrontMotor.setPower(-1* BiggerBoyHardware.TURN_SPEED);
-        robot.rightBackMotor.setPower(-1* BiggerBoyHardware.TURN_SPEED);
+        robot.leftFrontMotor.setPower(BiggerBoyHardware.TURN_SPEED);
+        robot.leftBackMotor.setPower(BiggerBoyHardware.TURN_SPEED);
+        robot.rightFrontMotor.setPower(BiggerBoyHardware.TURN_SPEED);
+        robot.rightBackMotor.setPower(BiggerBoyHardware.TURN_SPEED);
         whileIsBusy();
         robot.stopMoving();
         resetEncoders();
@@ -437,9 +437,17 @@ public class BaseAuto extends LinearOpMode {
     }
     public void whileIsBusy() {
         runtime.reset();
-        while ((robot.leftFrontMotor.isBusy()|| robot.leftBackMotor.isBusy()||
-                robot.rightFrontMotor.isBusy() || robot.rightBackMotor.isBusy() ) && runtime.seconds() < 5){
-            idle();
+        int countBusy = 4;
+        while (countBusy > 2 && runtime.seconds() < 5){
+            countBusy = 0;
+            if(robot.leftFrontMotor.isBusy())
+                countBusy++;
+            if(robot.leftBackMotor.isBusy())
+                countBusy++;
+            if(robot.rightBackMotor.isBusy())
+                countBusy++;
+            if(robot.rightFrontMotor.isBusy())
+                countBusy++;
         }
     }
 

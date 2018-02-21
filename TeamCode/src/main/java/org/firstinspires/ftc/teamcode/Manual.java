@@ -63,7 +63,6 @@ public class Manual extends LinearOpMode {
         while (opModeIsActive()) {
 
             //Drive train functions
-            //todo: multiplying DRIVE_SPEED by left_stick_y might be causing the issue
             if(Math.abs(gamepad1.left_stick_y) >= DEADZONE && Math.abs(gamepad1.left_stick_x)<= DEADZONE) { //Forward Back
 //                robot.moveSpeedBasic(MotorDirection.FORWARD, BiggerBoyHardware.DRIVE_SPEED * gamepad1.left_stick_y);
                 robot.rightFrontMotor.setPower(-gamepad1.left_stick_y);
@@ -169,7 +168,6 @@ public class Manual extends LinearOpMode {
                 robot.RelicMotor.setPower(0);
             }
 
-            //todo: limit left and right servos so they don't get stuck on side
             //Glyph clamps
             if (gamepad1.left_bumper) {
                 slideArmPosition += armSpeed;

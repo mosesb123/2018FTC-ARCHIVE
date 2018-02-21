@@ -145,7 +145,7 @@ public class BaseAuto extends LinearOpMode {
             robot.colorServoArm.setPosition(1);
             */
 
-            String key = vuMark.toString(); //TODO Test this, theoretically should work
+            String key = vuMark.toString();
 
             if (distance.equals("close")) {
                 if(teamColor.equals("red")) {
@@ -206,7 +206,6 @@ public class BaseAuto extends LinearOpMode {
         driveStraight(feet);
     }
     public void aboutFace() {
-        //TODO implement
         //theoretically just turnLeft twice
         turnLeft();
         turnLeft();

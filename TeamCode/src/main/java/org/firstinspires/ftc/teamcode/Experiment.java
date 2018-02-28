@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.app.Activity;
+import android.view.View;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -11,6 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 
 
 /**
@@ -34,12 +38,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 //@Disabled
-@Autonomous(name="BaseAuto", group="Pushbot")
-public class BaseAuto extends LinearOpMode {
+@Autonomous(name="Experiment - DO NOT USE", group="Pushbot")
+public class Experiment extends LinearOpMode {
 
     /* Declare OpMode boys. */
     private BiggerBoyHardware robot = new BiggerBoyHardware();   // Use a Pushbot's hardware
     private ElapsedTime runtime = new ElapsedTime();
+    ColorSensor colorSensor;
     private String teamColor = "blue"; //our teams color, 2 dif autos
     private String distance = "close"; //NOTE: close and far is relative to the relic mat
     OpenGLMatrix lastLocation = null; //Vuforia stuff
@@ -59,6 +64,30 @@ public class BaseAuto extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         //Done: Make changes so that code acts differently for "close", "far", "red", "blue"
         robot.init(hardwareMap);
+
+        // hsvValues is an array that will hold the hue, saturation, and value information.
+        float hsvValues[] = {0F,0F,0F};
+
+        // values is a reference to the hsvValues array.
+        final float values[] = hsvValues;
+
+        // get a reference to the RelativeLayout so we can change the background
+        // color of the Robot Controller app to match the hue detected by the RGB sensor.
+        int relativeLayoutId = hardwareMap.appContext.getResources().getIdentifier("RelativeLayout", "id", hardwareMap.appContext.getPackageName());
+        final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
+
+        // bPrevState and bCurrState represent the previous and current state of the button.
+        boolean bPrevState = false;
+        boolean bCurrState = false;
+
+        // bLedOn represents the state of the LED.
+        boolean bLedOn = true;
+
+        // get a reference to our ColorSensor object.
+        colorSensor = hardwareMap.get(ColorSensor.class, "ColorSensor");
+
+        // Set the LED in the beginning
+        colorSensor.enableLed(bLedOn);
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -99,14 +128,6 @@ public class BaseAuto extends LinearOpMode {
             //got a little too object oriented. Vuforia goes here now
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
             runtime.reset();
-            if(teamColor.equals("red"))
-                driveStraight(.5);
-            else
-                driveStraight(.5);
-
-            robot.rightServo.setPosition(slideArmClosedPosition);
-            robot.leftServo.setPosition(1-slideArmClosedPosition);
-            raiseGlyph();
 
             while (vuMark == RelicRecoveryVuMark.UNKNOWN && runtime.seconds() <= 10) { //while loop until we find it, might take a sec
 
@@ -120,21 +141,20 @@ public class BaseAuto extends LinearOpMode {
             if(vuMark != RelicRecoveryVuMark.UNKNOWN){
                 vumarkFound = true;
             }
-
-            if(teamColor.equals("blue"))
-                driveBackwards(.5);
             telemetry.addData("VuMark" , "%s", vuMark.toString());
             telemetry.update();
 
             runtime.reset();
+            robot.rightServo.setPosition(slideArmClosedPosition);
+            robot.leftServo.setPosition(1-slideArmClosedPosition);
+            raiseGlyph();
 
 
-            /*
-            for (int i = 1; i > 0; i-=.1)
+            for (int i = 0; i < 1; i+=.1)
                 robot.colorServoArm.setPosition(i);
             sleep(1000); //waiting for the servo to get there happy
-            int blueReading = robot.colorSensor.blue();
-            int redReading = robot.colorSensor.red();
+            int blueReading = colorSensor.blue();
+            int redReading = colorSensor.red();
             if (teamColor.equals("blue")) {
                 if(blueReading > redReading){
                     driveStB(.3);
@@ -151,20 +171,20 @@ public class BaseAuto extends LinearOpMode {
                     driveBtS(.3);
                 }
             }
-            robot.colorServoArm.setPosition(1);
-            */
+            robot.colorServoArm.setPosition(0);
+
 
             String key = vuMark.toString();
 
             if (distance.equals("close")) {
                 if(teamColor.equals("red")) {
-                    if (key.equals("RIGHT")) driveStraight(2.65);
-                    else if (key.equals("LEFT")) driveStraight(5.2);
-                    else driveStraight(3.85);
+                    if (key.equals("LEFT")) driveStraight(2.65);
+                    else if (key.equals("RIGHT")) driveStraight(5.5);
+                    else driveStraight(4.15);
                 }
                 else {
-                    if (key.equals("LEFT")) driveBackwards(2.65 + .2);
-                    else if (key.equals("RIGHT")) driveBackwards(5.5 );
+                    if (key.equals("LEFT")) driveBackwards(2.65);
+                    else if (key.equals("RIGHT")) driveBackwards(5.5);
                     else driveBackwards(4.15);
                 }
                 turnRight();
@@ -337,7 +357,7 @@ public class BaseAuto extends LinearOpMode {
 
         robot.GlyphMotor.setPower(BiggerBoyHardware.TURN_SPEED);
         runtime.reset();
-        while(runtime.seconds() < 1.2)
+        while(runtime.seconds() < 1.5)
             idle();
 
         robot.GlyphMotor.setPower(0);
@@ -346,7 +366,7 @@ public class BaseAuto extends LinearOpMode {
     public void turnRight(){
         telemetry.addData("Motion", "Driving Right");
         telemetry.update();
-        double rotations = 2 / BiggerBoyHardware.WHEELS_CIRCUM;
+        double rotations = 2.25 / BiggerBoyHardware.WHEELS_CIRCUM;
         double ticks = rotations * BiggerBoyHardware.TICKS_PER_ROTATION;
         resetEncoders();
         setRunToPosition();

@@ -30,51 +30,57 @@ public class AutoForward extends LinearOpMode {
 
     }
 
-    public void driveBackwards(double feet) {
-
-        double rotations = feet / robot.WHEELS_CIRCUM;
-        double ticks = rotations * robot.TICKS_PER_ROTATION;
-        resetEncoders();
-
-        robot.leftFrontMotor.setTargetPosition((int) ticks);
-        robot.leftBackMotor.setTargetPosition((int) ticks);
-        robot.rightFrontMotor.setTargetPosition((int) ticks);
-        robot.rightBackMotor.setTargetPosition((int) ticks);
-
-        setRunToPosition();
-
-
-        robot.leftFrontMotor.setPower(-1*robot.DRIVE_SPEED);
-        robot.leftBackMotor.setPower(-1*robot.DRIVE_SPEED);
-        robot.rightFrontMotor.setPower(-1*robot.DRIVE_SPEED);
-        robot.rightBackMotor.setPower(-1*robot.DRIVE_SPEED);
-        whileIsBusy();
-        robot.stopMoving();
-        resetEncoders();
-    }
-
-
     public void driveStraight(double feet){
-
-        double rotations = feet /robot.WHEELS_CIRCUM;
-        double ticks = rotations * robot.TICKS_PER_ROTATION;
+        telemetry.addData("Motion", "Driving Straight");
+        telemetry.update();
+        double rotations = feet / BiggerBoyHardware.WHEELS_CIRCUM;
+        double ticks = rotations * BiggerBoyHardware.TICKS_PER_ROTATION;
         resetEncoders();
-
-        robot.leftFrontMotor.setTargetPosition(-1*(int)ticks);
-        robot.leftBackMotor.setTargetPosition(-1*(int)ticks);
-        robot.rightFrontMotor.setTargetPosition(-1*(int)ticks);
-        robot.rightBackMotor.setTargetPosition(-1*(int)ticks);
-
         setRunToPosition();
 
-        robot.leftFrontMotor.setPower(robot.DRIVE_SPEED);
-        robot.leftBackMotor.setPower(robot.DRIVE_SPEED);
-        robot.rightFrontMotor.setPower(robot.DRIVE_SPEED);
-        robot.rightBackMotor.setPower(robot.DRIVE_SPEED);
+        robot.leftFrontMotor.setTargetPosition(robot.leftFrontMotor.getCurrentPosition() + (int)ticks);
+        robot.leftBackMotor.setTargetPosition(robot.leftBackMotor.getCurrentPosition() + (int)ticks);
+        robot.rightFrontMotor.setTargetPosition(robot.rightFrontMotor.getCurrentPosition() + (int)ticks);
+        robot.rightBackMotor.setTargetPosition(robot.rightBackMotor.getCurrentPosition() + (int)ticks);
+
+
+        robot.leftFrontMotor.setPower(BiggerBoyHardware.TURN_SPEED);
+        robot.leftBackMotor.setPower(BiggerBoyHardware.TURN_SPEED);
+        robot.rightFrontMotor.setPower(BiggerBoyHardware.TURN_SPEED);
+        robot.rightBackMotor.setPower(BiggerBoyHardware.TURN_SPEED);
+        whileIsBusy();
+        robot.stopMoving();
+        resetEncoders();
+        telemetry.addData("Motion", "Done Driving Straight");
+        telemetry.update();
+
+    }
+    public void driveBackwards(double feet) {
+        telemetry.addData("Motion", "Driving Backwards");
+        telemetry.update();
+
+        double rotations = feet / BiggerBoyHardware.WHEELS_CIRCUM;
+        double ticks = rotations * BiggerBoyHardware.TICKS_PER_ROTATION;
+        resetEncoders();
+        setRunToPosition();
+
+        robot.leftFrontMotor.setTargetPosition((int) -ticks);
+        robot.leftBackMotor.setTargetPosition((int) -ticks);
+        robot.rightFrontMotor.setTargetPosition((int) -ticks);
+        robot.rightBackMotor.setTargetPosition((int) -ticks);
+
+
+
+        robot.leftFrontMotor.setPower(BiggerBoyHardware.TURN_SPEED);
+        robot.leftBackMotor.setPower(BiggerBoyHardware.TURN_SPEED);
+        robot.rightFrontMotor.setPower(BiggerBoyHardware.TURN_SPEED);
+        robot.rightBackMotor.setPower(BiggerBoyHardware.TURN_SPEED);
         whileIsBusy();
         robot.stopMoving();
         resetEncoders();
 
+        telemetry.addData("Motion", "Done Driving Backwards");
+        telemetry.update();
     }
 
     public void resetEncoders(){
@@ -90,9 +96,28 @@ public class AutoForward extends LinearOpMode {
         robot.rightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.rightBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
-    public void whileIsBusy() {
-        while (robot.leftFrontMotor.isBusy()|| robot.leftBackMotor.isBusy()||
-                robot.rightFrontMotor.isBusy() || robot.rightBackMotor.isBusy()){}
+
+    public void setNoEncoder() {
+        robot.leftFrontMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.leftBackMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.rightFrontMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.rightBackMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
+    public void whileIsBusy() {
+        runtime.reset();
+        int countBusy = 4;
+        while (countBusy > 2 && runtime.seconds() < 5){
+            countBusy = 0;
+            if(robot.leftFrontMotor.isBusy())
+                countBusy++;
+            if(robot.leftBackMotor.isBusy())
+                countBusy++;
+            if(robot.rightBackMotor.isBusy())
+                countBusy++;
+            if(robot.rightFrontMotor.isBusy())
+                countBusy++;
+        }
+    }
+
 }
 
